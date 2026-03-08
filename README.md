@@ -1,4 +1,4 @@
-# bazar_book
+# Exhibition_book
 
 A new Flutter project.
 
