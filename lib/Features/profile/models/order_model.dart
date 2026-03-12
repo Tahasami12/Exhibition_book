@@ -1,15 +1,16 @@
-import 'package:exhibition_book/Features/profile/constants.dart';
+import 'package:exhibition_book/core/enums/order_status.dart';
 
 class OrderModel {
-  int? itemsCount;
-  String? orderLabel;
-  OrderStatus? status;
-  String? coverURL;
+  int? booksCount;
+  String? bookTitle;
+  String? orderStatus;
+  String? bookCoverURL;
+  // OrderStatus? orderStatus;
 
-  OrderModel.fromJson({
-    this.orderLabel,
-    this.itemsCount,
-    this.status,
-    this.coverURL,
-  });
+  OrderModel.fromJson(Map<String, dynamic> json) {
+    bookTitle = json["bookTitle"];
+    booksCount = json["booksCount"];
+    orderStatus = json["orderStatus"];
+    bookCoverURL = json["bookCoverURL"];
+  }
 }

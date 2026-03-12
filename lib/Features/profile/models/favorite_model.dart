@@ -1,12 +1,12 @@
 class FavoriteModel {
-  String? title;
-  double? price;
-  String? coverURL;
+  String? bookTitle;
+  double? bookPrice;
+  String? bookCoverURL;
 
-  FavoriteModel(this.title, this.price, this.coverURL);
-  FavoriteModel.fromJson({
-    required String this.title,
-    required double this.price,
-    required String this.coverURL,
-  });
+  FavoriteModel(this.bookTitle, this.bookPrice, this.bookCoverURL);
+  FavoriteModel.fromJson(Map<String, dynamic> json) {
+    bookTitle = json["bookTitle"];
+    bookPrice = json["bookPrice"];
+    bookCoverURL = json["bookCoverURL"];
+  }
 }
