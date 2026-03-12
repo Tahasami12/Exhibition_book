@@ -1,7 +1,14 @@
+import 'package:exhibition_book/Features/profile/screens/profile.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  // runApp(MyAccount());
+  // runApp(HelpCenter());
+  // runApp(Offers());
+  // runApp(OrderHistory());
+  // runApp(YourFavorites());
+  runApp(Profile());
 }
 
 class MyApp extends StatelessWidget {
@@ -34,5 +41,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
