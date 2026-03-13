@@ -1,5 +1,7 @@
-import 'package:exhibition_book/Features/profile/screens/profile.dart';
+import 'package:exhibition_book/features/profile/screens/profile.dart';
 import 'package:flutter/material.dart';
+
+import 'features/notification_feature/presentation/views/notification.dart';
 
 void main() {
   // runApp(const MyApp());
@@ -8,7 +10,7 @@ void main() {
   // runApp(Offers());
   // runApp(OrderHistory());
   // runApp(YourFavorites());
-  runApp(Profile());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MaterialApp(),
+      home: const MaterialApp(home: NotificationScreen(),),
     );
   }
 }
