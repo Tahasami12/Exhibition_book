@@ -1,5 +1,5 @@
-import 'package:bookle_app/core/utils/assets.dart';
-import 'package:bookle_app/costants.dart';
+import 'package:exhibition_book/core/utils/assets.dart';
+import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

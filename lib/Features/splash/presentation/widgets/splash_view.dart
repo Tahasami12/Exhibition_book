@@ -1,5 +1,5 @@
-import 'package:bookle_app/costants.dart';
-import 'package:bookle_app/features/presentation/views/widgets/splash_view_body.dart';
+import 'package:exhibition_book/Features/splash/presentation/widgets/splash_view_body.dart';
+import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 
 class SplashView extends StatelessWidget {

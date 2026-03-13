@@ -1,6 +1,6 @@
 import 'dart:ui';
+import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:flutter/material.dart';
-import 'package:bookle_app/core/utils/assets.dart';
 
 const kPrimaryColor = Color(0xff54408C);
 final kGrey400 = Colors.grey[400];

@@ -1,7 +1,7 @@
-import 'package:bookle_app/core/utils/assets.dart';
-import 'package:bookle_app/costants.dart';
-import 'package:bookle_app/features/presentation/views/signUp.dart';
-import 'package:bookle_app/features/presentation/views/widgets/on_boarding_3.dart';
+import 'package:exhibition_book/Features/splash/presentation/widgets/on_boarding_3.dart';
+import 'package:exhibition_book/Features/splash/presentation/widgets/signUp.dart';
+import 'package:exhibition_book/core/utils/assets.dart';
+import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
