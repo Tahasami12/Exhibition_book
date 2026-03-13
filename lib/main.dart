@@ -9,7 +9,7 @@ void main() {
   // runApp(Offers());
   // runApp(OrderHistory());
   // runApp(YourFavorites());
-  runApp(Profile());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: " Bookly App",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // This is the theme of your application.
         //
