@@ -1,4 +1,5 @@
 import 'package:exhibition_book/Features/profile/screens/profile.dart';
+import 'package:exhibition_book/Features/splash/presentation/widgets/splash_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: " Bookly App",
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MaterialApp(),
+      home: const SplashView(),
     );
   }
 }
