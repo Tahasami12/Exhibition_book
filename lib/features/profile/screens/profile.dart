@@ -1,8 +1,8 @@
-import 'package:exhibition_book/Features/profile/screens/favorites.dart';
-import 'package:exhibition_book/Features/profile/screens/help_center.dart';
-import 'package:exhibition_book/Features/profile/screens/my_account.dart';
-import 'package:exhibition_book/Features/profile/screens/offers.dart';
-import 'package:exhibition_book/Features/profile/screens/order_history.dart';
+import 'package:exhibition_book/features/profile/screens/favorites.dart';
+import 'package:exhibition_book/features/profile/screens/help_center.dart';
+import 'package:exhibition_book/features/profile/screens/my_account.dart';
+import 'package:exhibition_book/features/profile/screens/offers.dart';
+import 'package:exhibition_book/features/profile/screens/order_history.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';

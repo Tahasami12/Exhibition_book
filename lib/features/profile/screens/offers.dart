@@ -1,4 +1,4 @@
-import 'package:exhibition_book/Features/profile/models/offer_model.dart';
+import 'package:exhibition_book/features/profile/models/offer_model.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
