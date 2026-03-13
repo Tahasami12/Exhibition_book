@@ -55,7 +55,7 @@ class Images extends StatelessWidget {
   Widget build(BuildContext context) {
     return   Padding(
       padding: const EdgeInsets.only(left: 27,right: 28),
-      child: Image.asset("images/Frame_3.png"),
+      child: Image.asset("assets/images/Frame_3.png"),
     );
   }
 }
