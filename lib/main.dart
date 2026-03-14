@@ -1,4 +1,4 @@
-import 'package:exhibition_book/features_temp/splash/presentation/widgets/splash_view.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/splash_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

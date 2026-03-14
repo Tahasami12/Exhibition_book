@@ -1,7 +1,7 @@
 import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:exhibition_book/costants.dart';
-import 'package:exhibition_book/features_temp/splash/presentation/widgets/login_screen.dart';
-import 'package:exhibition_book/features_temp/splash/presentation/widgets/signUp.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/login_screen.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/signUp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';

@@ -1,7 +1,7 @@
 import 'package:exhibition_book/core/enums/order_status.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
-import 'package:exhibition_book/features_temp/profile/models/order_model.dart';
+import 'package:exhibition_book/features/profile/models/order_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
