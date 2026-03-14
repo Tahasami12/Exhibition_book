@@ -1,5 +1,5 @@
-import 'package:exhibition_book/features/splash/presentation/widgets/splash_view_body.dart';
 import 'package:exhibition_book/costants.dart';
+import 'package:exhibition_book/features_temp/splash/presentation/widgets/splash_view_body.dart';
 import 'package:flutter/material.dart';
 
 class SplashView extends StatelessWidget {

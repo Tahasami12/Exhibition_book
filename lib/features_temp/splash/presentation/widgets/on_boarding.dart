@@ -1,14 +1,14 @@
-import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding_3.dart';
-import 'package:exhibition_book/features/splash/presentation/widgets/signUp.dart';
 import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:exhibition_book/costants.dart';
+import 'package:exhibition_book/features_temp/splash/presentation/widgets/on_boarding_2.dart';
+import 'package:exhibition_book/features_temp/splash/presentation/widgets/signUp.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
 
-class OnBoarding2 extends StatelessWidget {
-  const OnBoarding2({super.key});
+class OnBoarding extends StatelessWidget {
+  const OnBoarding({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class Images extends StatelessWidget {
   Widget build(BuildContext context) {
     return   Padding(
       padding: const EdgeInsets.only(left: 27,right: 28),
-      child: Image.asset("assets/images/Frame_2.png"),
+      child: Image.asset("assets/images/Frame_1.png"),
     );
   }
 }
@@ -66,11 +66,11 @@ class Text1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-       Container(
+       Padding(
             padding: const EdgeInsets.only(left: 66, right: 66),
 
             child: Text(
-               "Your Bookish Soulmate\nAwaits",
+               "Now reading books\n will be easier",
               style: GoogleFonts.openSans(
                 fontWeight: FontWeight.w700,
                 fontSize: 26,
@@ -85,7 +85,7 @@ class Text1 extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
-  "Let us be your guide to the perfect read.\n Discover books tailored to your tastes\n for a truly rewarding experience.",              style: GoogleFonts.roboto(
+" Discover new worlds, join a vibrant\n reading community. Start your reading\n adventure effortlessly with us.",              style: GoogleFonts.roboto(
                 fontSize: 18,
                 fontWeight: FontWeight.w400,
                 letterSpacing: 0,
@@ -96,7 +96,7 @@ class Text1 extends StatelessWidget {
             ),
           ),
           SizedBox(height: 45),
-          Image.asset(AssetData.second),
+          Image.asset(AssetData.first),
     ],);
   }
 }
@@ -113,7 +113,7 @@ class TwoButtons extends StatelessWidget {
             padding: const EdgeInsets.only(left: 24, right: 24),
             child: ElevatedButton(
               onPressed: () {
-                Get.to(OnBoarding3());
+                Get.to(OnBoarding2());
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 15),
@@ -123,7 +123,7 @@ class TwoButtons extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: Text("Get started", style: GoogleFonts.openSans(
+                child: Text("Continue", style: GoogleFonts.openSans(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
                   fontSize: 18,

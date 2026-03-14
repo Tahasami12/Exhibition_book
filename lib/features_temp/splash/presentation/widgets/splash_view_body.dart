@@ -1,5 +1,5 @@
-import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding.dart';
 import 'package:exhibition_book/core/utils/assets.dart';
+import 'package:exhibition_book/features_temp/splash/presentation/widgets/on_boarding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
