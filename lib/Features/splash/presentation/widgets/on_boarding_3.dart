@@ -1,5 +1,5 @@
-import 'package:exhibition_book/Features/splash/presentation/widgets/login_screen.dart';
-import 'package:exhibition_book/Features/splash/presentation/widgets/signUp.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/login_screen.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/signUp.dart';
 import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';

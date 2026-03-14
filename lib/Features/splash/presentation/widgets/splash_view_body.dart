@@ -1,4 +1,4 @@
-import 'package:exhibition_book/Features/splash/presentation/widgets/on_boarding.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding.dart';
 import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
