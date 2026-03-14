@@ -1,5 +1,8 @@
-import 'package:exhibition_book/Features/profile/screens/profile.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/splash_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+
 
 import 'core/utils/app_colors.dart';
 import 'core/utils/app_router.dart';

@@ -1,5 +1,6 @@
 import 'package:exhibition_book/features/profile/models/offer_model.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
+import 'package:exhibition_book/features/profile/models/offer_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
