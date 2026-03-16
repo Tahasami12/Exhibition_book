@@ -1,4 +1,4 @@
-import 'package:exhibition_book/Features/profile/models/offer_model.dart';
+import 'package:exhibition_book/features/profile/models/offer_model.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class Offers extends StatelessWidget {
   List<OfferModel> offers = tmp.map((e) => OfferModel.fromJson(e)).toList();
 
   // store the colors in an array to be dynamic in assigning to the offers.
-  static const List<Color> offersColors = [
+  static final List<Color> offersColors = [
     AppColors.orange,
     AppColors.primary,
     AppColors.blue,
