@@ -19,7 +19,7 @@ class Offers extends StatelessWidget {
   List<OfferModel> offers = tmp.map((e) => OfferModel.fromJson(e)).toList();
 
   // store the colors in an array to be dynamic in assigning to the offers.
-  static const List<Color> offersColors = [
+  static final List<Color> offersColors = [
     AppColors.orange,
     AppColors.primary,
     AppColors.blue,

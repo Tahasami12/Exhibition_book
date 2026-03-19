@@ -1,35 +1,38 @@
-import 'package:exhibition_book/features/cart_feature/presentation/view_model/cart_view_model.dart';
+import 'package:exhibition_book/features/splash/presentation/widgets/splash_view.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 
-import 'features/cart_feature/presentation/views/cart_screen.dart';
-import 'features/notification_feature/presentation/views/notification.dart';
-import 'features/profile/screens/profile.dart';
+
+
+import 'core/utils/app_colors.dart';
+import 'core/utils/app_router.dart';
 
 void main() {
+  //runApp(Profile());
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => CartViewModel(),
-
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+        routerConfig: AppRouter.router,
         title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        ),
-        home: const CartScreen(),
-      ),
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light().copyWith(
+
+          scaffoldBackgroundColor: AppColors.background,
+
+
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.background,
+            elevation: 0,),)
+      // home: Category(),
     );
+
   }
 }
+
