@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/responsive.dart';
 import 'book_card.dart';
 
 class BooksGridView extends StatelessWidget {
@@ -8,13 +9,19 @@ class BooksGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 38),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.responsiveSpacing(context, 20),
+        vertical: Responsive.responsiveSpacing(context, 38),
+      ),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: Responsive.responsiveGridCount(context),
         childAspectRatio: 0.73,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        crossAxisSpacing:
+        Responsive.responsiveSpacing(context, 10),
+        mainAxisSpacing:
+        Responsive.responsiveSpacing(context, 10),
       ),
       itemCount: 10,
       itemBuilder: (context, index) {

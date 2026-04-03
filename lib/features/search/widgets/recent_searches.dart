@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/responsive.dart';
 import '../../../core/utils/styles.dart';
 
 class RecentSearches extends StatelessWidget {
@@ -7,16 +8,21 @@ class RecentSearches extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    return Padding(padding: const EdgeInsets.symmetric(horizontal: 12,vertical: 2),
-
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.responsiveSpacing(context, 12),
+        vertical: Responsive.responsiveSpacing(context, 2),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Recent Searches',style: Styles.heading2.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w700
-          ),),
+          Text(
+            'Recent Searches',
+            style: Styles.heading2.copyWith(
+              fontSize: Responsive.responsiveFontSize(context, 16),
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ],
       ),
     );

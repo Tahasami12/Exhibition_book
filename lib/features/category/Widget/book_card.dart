@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/responsive.dart';
 import '../../../core/utils/styles.dart';
 
 class BookCard extends StatelessWidget {
@@ -10,45 +11,58 @@ class BookCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        AspectRatio(aspectRatio: 1/1,
+        AspectRatio(
+          aspectRatio: 1 / 1,
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12),
-                image:  DecorationImage(fit: BoxFit.cover,
-                    image: AssetImage('assets/images/Frame.png')
-                )
+              borderRadius: BorderRadius.circular(
+                Responsive.responsiveSpacing(context, 12),
+              ),
+              image: const DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage('assets/images/Frame.png'),
+              ),
             ),
           ),
         ),
-        const SizedBox(height: 8),
 
+        SizedBox(
+          height: Responsive.responsiveSpacing(context, 8),
+        ),
 
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 3),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.responsiveSpacing(context, 3),
+          ),
           child: Text(
             "The Da vinci Code",
             style: Styles.body.copyWith(
-                fontWeight: FontWeight.w500,
-                color: Color(0xff121212)
+              fontWeight: FontWeight.w500,
+              color: const Color(0xff121212),
+              fontSize: Responsive.responsiveFontSize(context, 14),
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
         ),
 
-        const SizedBox(height: 6),
-
+        SizedBox(
+          height: Responsive.responsiveSpacing(context, 6),
+        ),
 
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 3),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.responsiveSpacing(context, 3),
+          ),
           child: Text(
             "\$19.99",
             style: Styles.small.copyWith(
-                fontWeight: FontWeight.w700,
-                color: Color(0xff54408C)
+              fontWeight: FontWeight.w700,
+              color: const Color(0xff54408C),
+              fontSize: Responsive.responsiveFontSize(context, 12),
             ),
           ),
-        )
+        ),
       ],
     );
   }

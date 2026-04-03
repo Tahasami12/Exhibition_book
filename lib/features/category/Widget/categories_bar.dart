@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/utils/responsive.dart';
 import 'category_item.dart';
 
 class CategoriesBar extends StatelessWidget {
@@ -13,7 +14,9 @@ class CategoriesBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.responsiveSpacing(context, 24),
+      ),
       child: Row(
         children: categories.map((name) {
           return CategoryItem(
@@ -24,5 +27,4 @@ class CategoriesBar extends StatelessWidget {
       ),
     );
   }
-
 }
