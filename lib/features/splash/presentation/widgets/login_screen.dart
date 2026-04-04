@@ -15,7 +15,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: PreferredSize(
+     appBar: PreferredSize(
         preferredSize: Size.fromHeight(65),
         child: Container(
           padding: EdgeInsets.only(top: 30),
