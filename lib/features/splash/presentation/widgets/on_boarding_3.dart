@@ -1,4 +1,5 @@
 import 'package:exhibition_book/core/utils/assets.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/login_screen.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/signUp.dart';
@@ -17,13 +18,13 @@ class OnBoarding3 extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [        
-          SizedBox(height: 60,),
+          SizedBox(height: Responsive.responsiveSpacing(context, 60)),
           SkipButton(),
-          SizedBox(height: 13,),
+          SizedBox(height: Responsive.responsiveSpacing(context, 13)),
           Images(),
-          SizedBox(height: 14,),
+          SizedBox(height: Responsive.responsiveSpacing(context, 14)),
           Text1(),
-          SizedBox(height: 32,),
+          SizedBox(height: Responsive.responsiveSpacing(context, 32)),
           TwoButtons(),
           
         ],
@@ -41,8 +42,10 @@ class SkipButton extends StatelessWidget {
       padding: EdgeInsets.only(left: 24),
       child: TextButton(onPressed: (){},
        child: Text("Skip",style: GoogleFonts.roboto(
-                fontWeight: FontWeight.w500,fontSize: 18,
-                height: 1.4,color: kPrimaryColor
+                fontWeight: FontWeight.w500,
+                fontSize: Responsive.responsiveFontSize(context, 18),
+                height: Responsive.responsiveSpacing(context, 1.4)
+                ,color: kPrimaryColor
                ),),)
     );
   }
@@ -73,30 +76,30 @@ class Text1 extends StatelessWidget {
                "Start Your Adventure",
               style: GoogleFonts.openSans(
                 fontWeight: FontWeight.w700,
-                fontSize: 26,
+                fontSize: Responsive.responsiveFontSize(context, 26),
                 letterSpacing: -1.2,
                 color: Colors.grey[900],
-                height: 1.35,
+                height: Responsive.responsiveSpacing(context, 1.35),
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 47),
+          SizedBox(height: Responsive.responsiveSpacing(context, 47)),
           Container(
             padding: const EdgeInsets.only(left: 65, right: 41),
             child: Text(
   "Ready to embark on a quest for \ninspiration and knowledge? Your\n adventure begins now. Let's go!",
               style: GoogleFonts.roboto(
-                fontSize: 18,
+                fontSize: Responsive.responsiveFontSize(context, 18),
                 fontWeight: FontWeight.w400,
                 letterSpacing: 0,
                 color: Colors.grey[500],
-                height: 1.6,
+                height: Responsive.responsiveSpacing(context, 1.6),
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 90),
+          SizedBox(height: Responsive.responsiveSpacing(context, 90)),
           Image.asset(AssetData.third),
     ],);
   }
@@ -127,13 +130,13 @@ class TwoButtons extends StatelessWidget {
                 child: Text("Get started", style: GoogleFonts.openSans(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  height: 1.5,
+                  fontSize: Responsive.responsiveFontSize(context, 18),
+                  height: Responsive.responsiveSpacing(context, 1.5),
                   letterSpacing: .3)),
               ),
             ),
           ),
-          SizedBox(height: 8),
+          SizedBox(height: Responsive.responsiveSpacing(context, 8)),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.only(left: 24, right: 24),
@@ -151,8 +154,8 @@ class TwoButtons extends StatelessWidget {
               child: Text("Sign in", style:  GoogleFonts.openSans(
                   color: kPrimaryColor,
                   fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  height: 1.5,
+                  fontSize: Responsive.responsiveFontSize(context, 18),
+                  height: Responsive.responsiveSpacing(context, 1.5),
                   letterSpacing: .3)),
             ),),
     ],);

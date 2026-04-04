@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:exhibition_book/features/cart_feature/presentation/views/confirm_order_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -227,7 +228,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           // Navigate to home and clear all previous routes
-                          Get.offAll(() => const HomeScreen());
+                          Get.offAll(() => const ConfirmOrderScreen());
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6C47FF),
