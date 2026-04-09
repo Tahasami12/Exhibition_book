@@ -111,54 +111,56 @@ class TwoButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-
-      Container(
-            padding: const EdgeInsets.only(left: 24, right: 24),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.to(LoginScreen());
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                backgroundColor: kPrimaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+    return SingleChildScrollView(
+      child: Column(children: [
+      
+        Container(
+              padding: const EdgeInsets.only(left: 24, right: 24),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.to(LoginScreen());
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: kPrimaryColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              child: Center(
-                child: Text("Get started", style: GoogleFonts.openSans(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: Responsive.responsiveFontSize(context, 18),
-                  height: Responsive.responsiveSpacing(context, 1.5),
-                  letterSpacing: .3)),
+                child: Center(
+                  child: Text("Get started", style: GoogleFonts.openSans(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: Responsive.responsiveFontSize(context, 18),
+                    height: Responsive.responsiveSpacing(context, 1.5),
+                    letterSpacing: .3)),
+                ),
               ),
             ),
-          ),
-          SizedBox(height: Responsive.responsiveSpacing(context, 8)),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.only(left: 24, right: 24),
-            child: ElevatedButton(
-              onPressed: () {
-                Get.to(Signup());
-              },
-              style: ElevatedButton.styleFrom(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+            SizedBox(height: Responsive.responsiveSpacing(context, 8)),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.only(left: 24, right: 24),
+              child: ElevatedButton(
+                onPressed: () {
+                  Get.to(Signup());
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  backgroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-              ),
-              child: Text("Sign in", style:  GoogleFonts.openSans(
-                  color: kPrimaryColor,
-                  fontWeight: FontWeight.w700,
-                  fontSize: Responsive.responsiveFontSize(context, 18),
-                  height: Responsive.responsiveSpacing(context, 1.5),
-                  letterSpacing: .3)),
-            ),),
-    ],);
+                child: Text("Sign in", style:  GoogleFonts.openSans(
+                    color: kPrimaryColor,
+                    fontWeight: FontWeight.w700,
+                    fontSize: Responsive.responsiveFontSize(context, 18),
+                    height: Responsive.responsiveSpacing(context, 1.5),
+                    letterSpacing: .3)),
+              ),),
+      ],),
+    );
   }
 }
  

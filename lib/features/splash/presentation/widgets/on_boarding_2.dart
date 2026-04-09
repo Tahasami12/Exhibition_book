@@ -68,39 +68,41 @@ class Text1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-       Container(
-            padding: const EdgeInsets.only(left: 66, right: 66),
-
-            child: Text(
-               "Your Bookish Soulmate\nAwaits",
-              style: GoogleFonts.openSans(
-                fontWeight: FontWeight.w700,
-                fontSize: Responsive.responsiveFontSize(context, 26),
-                letterSpacing: -1.2,
-                color: Colors.grey[900],
-                height: 1.35,
+    return SingleChildScrollView(
+      child: Column(children: [
+         Container(
+              padding: const EdgeInsets.only(left: 66, right: 66),
+      
+              child: Text(
+                 "Your Bookish Soulmate\nAwaits",
+                style: GoogleFonts.openSans(
+                  fontWeight: FontWeight.w700,
+                  fontSize: Responsive.responsiveFontSize(context, 26),
+                  letterSpacing: -1.2,
+                  color: Colors.grey[900],
+                  height: 1.35,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-          SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
-  "Let us be your guide to the perfect read.\n Discover books tailored to your tastes\n for a truly rewarding experience.",              style: GoogleFonts.roboto(
-                fontSize: Responsive.responsiveFontSize(context, 18),
-                fontWeight: FontWeight.w400,
-                letterSpacing: 0,
-                color: Colors.grey[500],
-                height: Responsive.responsiveSpacing(context, 1.6),
+            SizedBox(height: Responsive.responsiveSpacing(context, 15)),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: Text(
+        "Let us be your guide to the perfect read.\n Discover books tailored to your tastes\n for a truly rewarding experience.",              style: GoogleFonts.roboto(
+                  fontSize: Responsive.responsiveFontSize(context, 18),
+                  fontWeight: FontWeight.w400,
+                  letterSpacing: 0,
+                  color: Colors.grey[500],
+                  height: Responsive.responsiveSpacing(context, 1.6),
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
-          ),
-         SizedBox(height: Responsive.responsiveSpacing(context, 28)),
-          Image.asset(AssetData.second),
-    ],);
+           SizedBox(height: Responsive.responsiveSpacing(context, 28)),
+            Image.asset(AssetData.second),
+      ],),
+    );
   }
 }
 

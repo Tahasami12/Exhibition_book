@@ -15,19 +15,21 @@ class OnBoarding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [        
-          SizedBox(height: Responsive.responsiveSpacing(context, 16)),
-          SkipButton(),
-          SizedBox(height: Responsive.responsiveSpacing(context, 13)),
-          Images(),
-          SizedBox(height: Responsive.responsiveSpacing(context, 14)),
-          Text1(),
-          SizedBox(height: Responsive.responsiveSpacing(context, 35)),
-          TwoButtons(),
-          
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [        
+            SizedBox(height: Responsive.responsiveSpacing(context, 16)),
+            SkipButton(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 13)),
+            Images(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 14)),
+            Text1(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 35)),
+            TwoButtons(),
+            
+          ],
+        ),
       ),
     );
   }
