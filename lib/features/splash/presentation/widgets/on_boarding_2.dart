@@ -15,7 +15,7 @@ class OnBoarding2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
+      body: Expanded(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [        
