@@ -3,7 +3,14 @@ import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
 
+// these offers will be substituted by those returned by API.
 List<Map<String, dynamic>> tmp = [
+  {"offerValue": 20, "offerCode": "SAVE20"},
+  {"offerValue": 10, "offerCode": "OFF10"},
+  {"offerValue": 20, "offerCode": "SAVE20"},
+  {"offerValue": 50, "offerCode": "BIG50"},
+  {"offerValue": 100, "offerCode": "SUPER100"},
+  {"offerValue": 50, "offerCode": "BIG50"},
   {"offerValue": 20, "offerCode": "SAVE20"},
   {"offerValue": 10, "offerCode": "OFF10"},
   {"offerValue": 20, "offerCode": "SAVE20"},
@@ -18,7 +25,7 @@ class Offers extends StatelessWidget {
   // load the offers from API.
   List<OfferModel> offers = tmp.map((e) => OfferModel.fromJson(e)).toList();
 
-  // store the colors in an array to be dynamic in assigning to the offers.
+  // store the colors in an array to assign them dynamically.
   static final List<Color> offersColors = [
     AppColors.orange,
     AppColors.primary,
@@ -32,45 +39,49 @@ class Offers extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: AppColors.background,
         appBar: makeAppBar(
           title: "Order History",
-          titleColor: AppColors.textPrimary,
+          titleColor: AppColors.grey900,
           enableLeading: true,
           barBackgroundColor: AppColors.background,
         ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.only(right: 30.0, left: 30.0, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
 
-              Text(
-                "You Have ${offers.length} Copons to use",
-                style: TextStyle(
-                  color: const Color.fromARGB(255, 49, 45, 45),
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
+                Text(
+                  "You Have ${offers.length} Coupons to use",
+                  style: TextStyle(
+                    color: AppColors.grey900,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-              SizedBox(height: 30),
+                SizedBox(height: 30),
 
-              GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 30,
-                  crossAxisCount: 2,
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: ScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisSpacing: 20,
+                    mainAxisSpacing: 30,
+                    crossAxisCount: 2,
+                  ),
+                  itemCount: offers.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return makeOffers(
+                      offer: offers[index],
+                      color: offersColors[index % offersColors.length],
+                    );
+                  },
                 ),
-                itemCount: offers.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return makeOffers(
-                    offer: offers[index],
-                    color: offersColors[index],
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,12 +1,72 @@
 import 'package:exhibition_book/features/profile/models/order_model.dart';
-import 'package:exhibition_book/core/enums/order_status.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-///TODO: Delete it after getting the data from API.
+///TODO: Delete it after getting the data from an API.
 List<Map<String, dynamic>> books = [
+  {
+    "bookTitle": "The Great Gatsby",
+    "booksCount": 12,
+    "orderStatus": "Delivered",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "To Kill a Mockingbird",
+    "booksCount": 8,
+    "orderStatus": "Delivered",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "1984",
+    "booksCount": 15,
+    "orderStatus": "Cancelled",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "Pride and Prejudice",
+    "booksCount": 5,
+    "orderStatus": "Delivered",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "The Hobbit",
+    "booksCount": 10,
+    "orderStatus": "Cancelled",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "The Great Gatsby",
+    "booksCount": 12,
+    "orderStatus": "Delivered",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "To Kill a Mockingbird",
+    "booksCount": 8,
+    "orderStatus": "Delivered",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "1984",
+    "booksCount": 15,
+    "orderStatus": "Cancelled",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "Pride and Prejudice",
+    "booksCount": 5,
+    "orderStatus": "Delivered",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
+  {
+    "bookTitle": "The Hobbit",
+    "booksCount": 10,
+    "orderStatus": "Cancelled",
+    "bookCoverURL": "assets/images/test-img.jpg",
+  },
   {
     "bookTitle": "The Great Gatsby",
     "booksCount": 12,
@@ -40,9 +100,11 @@ List<Map<String, dynamic>> books = [
 ];
 
 class OrderHistory extends StatelessWidget {
+  // get access to the local date & time.
   final DateTime today = DateTime.now();
-  final DateFormat formatter = DateFormat('MMMM');
-  late final String monthName = formatter.format(today);
+  late final String monthName = DateFormat('MMMM').format(today);
+
+  // convert data from API form to list of OrderModel objects.
   final orders = books.map((e) => OrderModel.fromJson(e)).toList();
 
   OrderHistory({super.key});
@@ -65,8 +127,12 @@ class OrderHistory extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "$monthName ${today.day}",
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+                  "$monthName ${today.year}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                    color: AppColors.grey900,
+                  ),
                 ),
                 SizedBox(height: 20),
                 Container(
@@ -75,8 +141,10 @@ class OrderHistory extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: AppColors.grey300, width: 3.0),
                   ),
+
                   child: ListView.separated(
                     shrinkWrap: true,
+                    physics: ScrollPhysics(),
                     itemCount: orders.length,
                     itemBuilder:
                         (c, i) => Padding(
@@ -103,6 +171,7 @@ class OrderHistory extends StatelessWidget {
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
                                           fontSize: 16,
+                                          color: AppColors.grey900,
                                         ),
                                       ),
                                     ],
@@ -110,32 +179,36 @@ class OrderHistory extends StatelessWidget {
                                   Row(
                                     children: [
                                       Text(
-                                        "${orders[i].orderStatus}",
+                                        "${orders[i].orderStatus?.capitalize}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           fontSize: 16,
                                           color:
                                               orders[i].orderStatus!
-                                                          .toLowerCase() ==
-                                                      "delivered"
+                                                      .toLowerCase()
+                                                      .contains("delivered")
                                                   ? AppColors.green
                                                   : AppColors.red,
                                         ),
                                       ),
-
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
+                                          decoration: BoxDecoration(
+                                            color: AppColors.grey300,
+                                            borderRadius: BorderRadius.circular(
+                                              40,
+                                            ),
+                                          ),
                                           width: 4,
                                           height: 4,
-                                          color: AppColors.grey500,
                                         ),
                                       ),
                                       Text(
                                         "${orders[i].booksCount} items",
                                         style: TextStyle(
                                           color: AppColors.grey700,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w500,
                                           fontSize: 14,
                                         ),
                                       ),

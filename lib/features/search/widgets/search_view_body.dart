@@ -1,4 +1,4 @@
-import 'package:exhibition_book/Features/search/widgets/recent_searches.dart';
+import 'package:exhibition_book/features/search/widgets/recent_searches.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

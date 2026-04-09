@@ -65,7 +65,7 @@ class Profile extends StatelessWidget {
                   //  big enough to touch it using our fingers.
                   GestureDetector(
                     child: Container(
-                      width: 100,
+                      width: 60,
                       height: 50,
                       child: Center(
                         child: Text(
@@ -108,16 +108,16 @@ class Profile extends StatelessWidget {
                                 Text(
                                   "Are you sure you want to logout?",
                                   style: TextStyle(
-                                    fontFamily: "Roboto",
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
+                                    color: AppColors.grey900,
                                   ),
                                 ),
                                 SizedBox(height: 15),
 
                                 // Logout button
                                 GestureDetector(
-                                  child: _makeBottomSheetButton(
+                                  child: makeBottomSheetButton(
                                     label: "Logout",
                                     labelColor: AppColors.background,
                                     buttonColor: AppColors.primary,
@@ -130,7 +130,7 @@ class Profile extends StatelessWidget {
 
                                 // cancel button.
                                 GestureDetector(
-                                  child: _makeBottomSheetButton(
+                                  child: makeBottomSheetButton(
                                     label: "Cancel",
                                     buttonColor: AppColors.grey300,
                                     labelColor: AppColors.primary,
@@ -150,8 +150,11 @@ class Profile extends StatelessWidget {
               ),
             ),
             Divider(),
+
+            // Navigation bars.
+            
             InkWell(
-              child: _makeNavigationRecord(
+              child: makeNavigationRecord(
                 label: "My Account",
                 avatarName: "profile.svg",
               ),
@@ -159,9 +162,8 @@ class Profile extends StatelessWidget {
                 Get.to(MyAccount());
               },
             ),
-
             InkWell(
-              child: _makeNavigationRecord(
+              child: makeNavigationRecord(
                 label: "Address",
                 avatarName: "address.svg",
               ),
@@ -169,9 +171,8 @@ class Profile extends StatelessWidget {
                 // Get.to(Address());
               },
             ),
-
             InkWell(
-              child: _makeNavigationRecord(
+              child: makeNavigationRecord(
                 label: "Offers & Promos",
                 avatarName: "offer.svg",
               ),
@@ -180,7 +181,7 @@ class Profile extends StatelessWidget {
               },
             ),
             InkWell(
-              child: _makeNavigationRecord(
+              child: makeNavigationRecord(
                 label: "Your Favorites",
                 avatarName: "favorite.svg",
               ),
@@ -189,7 +190,7 @@ class Profile extends StatelessWidget {
               },
             ),
             InkWell(
-              child: _makeNavigationRecord(
+              child: makeNavigationRecord(
                 label: "Order History",
                 avatarName: "history.svg",
               ),
@@ -198,7 +199,7 @@ class Profile extends StatelessWidget {
               },
             ),
             InkWell(
-              child: _makeNavigationRecord(
+              child: makeNavigationRecord(
                 label: "Help Center",
                 avatarName: "help.svg",
               ),
@@ -208,106 +209,7 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
-        bottomNavigationBar: Container(
-          color: AppColors.grey50,
-          height: 83,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              children: [
-                _makeNavBarIcon(iconName: "home.svg", label: "Home"),
-                _makeNavBarIcon(iconName: "history.svg", label: "Category"),
-                _makeNavBarIcon(iconName: "cart.svg", label: "Cart"),
-                _makeNavBarIcon(iconName: "profile.svg", label: "Profile"),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
-}
-
-// make the icons of the bottom navigation bar.
-Widget _makeNavBarIcon({required String iconName, required String label}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 30.0),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        SvgPicture.asset(
-          "assets/images/$iconName",
-          width: 20,
-          height: 20,
-          color: AppColors.grey500,
-        ),
-        Text(
-          label,
-          style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),
-        ),
-      ],
-    ),
-  );
-}
-
-// the records to navigat to the offers, history, favorites, ...
-Widget _makeNavigationRecord({
-  required String label,
-  required String avatarName,
-}) {
-  return Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Row(
-      children: [
-        Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppColors.grey300,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: SvgPicture.asset(
-            "assets/images/$avatarName",
-            fit: BoxFit.scaleDown,
-          ),
-        ),
-        SizedBox(width: 10),
-        Text(
-          label,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            fontFamily: "Roboto",
-          ),
-        ),
-        Spacer(),
-        Icon(Icons.arrow_forward_ios, color: AppColors.grey500),
-      ],
-    ),
-  );
-}
-
-Widget _makeBottomSheetButton({
-  required Color buttonColor,
-  required Color labelColor,
-  required String label,
-}) {
-  return Container(
-    height: 50,
-    width: double.infinity,
-    decoration: BoxDecoration(
-      color: buttonColor,
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Center(
-      child: Text(
-        label,
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-          color: labelColor,
-        ),
-      ),
-    ),
-  );
 }

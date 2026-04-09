@@ -36,7 +36,7 @@ class HelpCenter extends StatelessWidget {
                       style: TextStyle(fontSize: 20, color: AppColors.grey500),
                     ),
                     Text(
-                      "Chapters are standing by for services & supper!",
+                      "Chapters are standing by for services & support!",
                       style: TextStyle(fontSize: 20, color: AppColors.grey500),
                     ),
                   ],
@@ -49,13 +49,13 @@ class HelpCenter extends StatelessWidget {
               child: Row(
                 children: [
                   makeHelpMethod(
-                    icon: Icon(Icons.message),
+                    icon: AssetImage("assets/images/message.png"),
                     label: "Email",
                     description: "Send to your email",
                   ),
                   SizedBox(width: 16),
                   makeHelpMethod(
-                    icon: Icon(Icons.phone),
+                    icon: AssetImage("assets/images/phone.png"),
                     label: "Phone Number",
                     description: "Send to your phone",
                   ),

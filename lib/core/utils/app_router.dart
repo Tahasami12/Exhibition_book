@@ -1,10 +1,6 @@
-
-
-
+import 'package:exhibition_book/features/category/view/category_screen.dart';
+import 'package:exhibition_book/features/search/%20view/search_home.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../Features/category/view/category_screen.dart';
-import '../../Features/search/ view/search_home.dart';
 
 abstract class AppRouter {
   static const kSearchHome = '/searchHome';

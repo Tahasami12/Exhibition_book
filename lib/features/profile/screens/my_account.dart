@@ -12,11 +12,14 @@ class MyAccount extends StatefulWidget {
 }
 
 class _MyAccountScreenState extends State<MyAccount> {
-  bool _isObscure = false;
+  // get access to the text fields' data.
   TextEditingController nameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  TextEditingController passwdController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  // password-related variables.
+  bool _isObscure = false;
+  TextEditingController passwdController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -42,12 +45,17 @@ class _MyAccountScreenState extends State<MyAccount> {
                     backgroundImage: AssetImage("assets/images/test-img.jpg"),
                   ),
                   SizedBox(height: 15),
-                  Text(
-                    "Change Picture",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                  InkWell(
+                    onTap: () {
+                      ///What should this do?
+                    },
+                    child: Text(
+                      "Change Picture",
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                   SizedBox(height: 40),
@@ -100,6 +108,7 @@ class _MyAccountScreenState extends State<MyAccount> {
     );
   }
 
+  // a private method to build each text field.
   Widget _makeTextFiled({
     required TextEditingController controller,
     required String filedLabel,
@@ -113,10 +122,12 @@ class _MyAccountScreenState extends State<MyAccount> {
           Text(
             filedLabel,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w500,
+              color: AppColors.grey900,
+              fontSize: 14,
             ),
           ),
+          SizedBox(height: 5),
           TextFormField(
             obscureText: type == FieldType.password && _isObscure,
             keyboardType:
@@ -125,14 +136,14 @@ class _MyAccountScreenState extends State<MyAccount> {
                     : null,
             autovalidateMode: AutovalidateMode.onUnfocus,
             style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w500,
+              color: AppColors.grey900,
             ),
             validator: (value) {
               // return value == "" ? "Invalid name." : null;
             },
             decoration: InputDecoration(
-              fillColor: AppColors.grey300,
+              fillColor: AppColors.grey200,
               filled: true,
               hintText: filedLabel,
 
@@ -146,7 +157,13 @@ class _MyAccountScreenState extends State<MyAccount> {
                 borderSide: BorderSide(color: AppColors.grey500, width: 1.0),
               ),
 
-              prefixIcon: type == FieldType.phone ? Icon(Icons.phone) : null,
+              prefixIcon:
+                  type == FieldType.phone
+                      ? Image.asset(
+                        scale: 3.5,
+                        "assets/images/phoneoftextfield.png",
+                      )
+                      : null,
               suffixIcon:
                   type == FieldType.password
                       ? IconButton(
