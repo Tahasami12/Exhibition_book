@@ -18,7 +18,7 @@ class OnBoarding3 extends StatelessWidget {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [        
-          SizedBox(height: Responsive.responsiveSpacing(context, 24)),
+          SizedBox(height: Responsive.responsiveSpacing(context, 16)),
           SkipButton(),
           SizedBox(height: Responsive.responsiveSpacing(context, 13)),
           Images(),
@@ -99,7 +99,7 @@ class Text1 extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: Responsive.responsiveSpacing(context, 90)),
+          SizedBox(height: Responsive.responsiveSpacing(context, 28)),
           Image.asset(AssetData.third),
     ],);
   }
