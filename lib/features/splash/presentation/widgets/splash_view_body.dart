@@ -20,7 +20,7 @@ class _SplasViewBodyState extends State<SplasViewBody>
     super.initState();
     animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 200),
     );
     slidingAnimation = Tween<Offset>(
       begin: const Offset(0, 1),
