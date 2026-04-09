@@ -15,35 +15,25 @@ class OnBoarding2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: Responsive.responsiveSpacing(context, 16)),
-          SkipButton(),
-
-          // 🔥 الجزء اللي يتمد
-          Expanded(
-            child: Column(
-              children: [
-                SizedBox(height: Responsive.responsiveSpacing(context, 13)),
-                Images(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 14)),
-                Text1(),
-              ],
-            ),
-          ),
-
-          // 🔽 الأزرار تحت ثابتة
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: TwoButtons(),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [        
+            SizedBox(height: Responsive.responsiveSpacing(context, 16)),
+            SkipButton(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 13)),
+            Images(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 14)),
+            Text1(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 35)),
+            TwoButtons(),
+            
+          ],
+        ),
       ),
     );
   }
 }
-
 class SkipButton extends StatelessWidget {
   const SkipButton({super.key});
 
@@ -81,8 +71,9 @@ class Text1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: [
        Container(
-            padding: const EdgeInsets.only(left: 66, right: 66),
-    
+padding: EdgeInsets.symmetric(
+  horizontal: Responsive.responsiveSpacing(context, 66),
+),    
             child: Text(
                "Your Bookish Soulmate\nAwaits",
               style: GoogleFonts.openSans(
@@ -97,8 +88,9 @@ class Text1 extends StatelessWidget {
           ),
           SizedBox(height: Responsive.responsiveSpacing(context, 15)),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: Text(
+padding: EdgeInsets.symmetric(
+  horizontal: Responsive.responsiveSpacing(context, 40),
+),            child: Text(
       "Let us be your guide to the perfect read.\n Discover books tailored to your tastes\n for a truly rewarding experience.",              style: GoogleFonts.roboto(
                 fontSize: Responsive.responsiveFontSize(context, 18),
                 fontWeight: FontWeight.w400,
