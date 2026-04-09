@@ -17,16 +17,27 @@ class OnBoarding2 extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [        
+        children: [
           SizedBox(height: Responsive.responsiveSpacing(context, 16)),
           SkipButton(),
-          SizedBox(height: Responsive.responsiveSpacing(context, 13)),
-          Images(),
-          SizedBox(height: Responsive.responsiveSpacing(context, 14)),
-          Text1(),
-          SizedBox(height: Responsive.responsiveSpacing(context, 35)),
-          TwoButtons(),
-          
+
+          // 🔥 الجزء اللي يتمد
+          Expanded(
+            child: Column(
+              children: [
+                SizedBox(height: Responsive.responsiveSpacing(context, 13)),
+                Images(),
+                SizedBox(height: Responsive.responsiveSpacing(context, 14)),
+                Text1(),
+              ],
+            ),
+          ),
+
+          // 🔽 الأزرار تحت ثابتة
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: TwoButtons(),
+          ),
         ],
       ),
     );
