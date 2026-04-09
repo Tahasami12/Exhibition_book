@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,9 +14,11 @@ class _SignupState extends State<Signup> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(65),
+        preferredSize: Size.fromHeight(
+          Responsive.responsiveSpacing(context, 60),
+        ),
         child: Container(
           padding: EdgeInsets.only(top: 30),
           child: AppBar(
@@ -23,42 +26,42 @@ class _SignupState extends State<Signup> {
             elevation: 0,
             leading: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.arrow_back, size: 30),
+              icon: Icon(
+                Icons.arrow_back,
+                size: Responsive.responsiveIconSize(context, 30),
+              ),
             ),
           ),
         ),
       ),
 
-    body: SafeArea(
-        child:SingleChildScrollView(
-           physics: BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 25),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: 25),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-            _SignUpHeader(),
-            SizedBox(height: 20),
-            _TextForm1(),
-            SizedBox(height: 3),
-            _TextForm2(),
-            SizedBox(height: 3),
-            _TextForm3(),
-            SizedBox(height: 15),
-            Register(),
-            SizedBox(height: 15),
-            _Line(),
-            SizedBox(height: 140),
-            _SignUpFooter(),
-          
-          
-          ],)
-        ) ),
-
-
+              _SignUpHeader(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
+              _TextForm1(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 3)),
+              _TextForm2(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 3)),
+              _TextForm3(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
+              Register(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
+              _Line(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 140)),
+              _SignUpFooter(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
-
 
 class _SignUpHeader extends StatelessWidget {
   @override
@@ -66,23 +69,23 @@ class _SignUpHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 30),
+        SizedBox(height: Responsive.responsiveSpacing(context, 30)),
         Text(
           "Sign Up",
           style: GoogleFonts.openSans(
             fontWeight: FontWeight.w700,
-            fontSize: 24,
-            height: 1.35,
+            fontSize: Responsive.responsiveFontSize(context, 24),
+            height: Responsive.responsiveSpacing(context, 1.35),
             color: Colors.grey[900],
           ),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: Responsive.responsiveSpacing(context, 10)),
         Text(
           "Create account and choose favorite menu",
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
             color: Colors.grey[500],
           ),
         ),
@@ -91,31 +94,28 @@ class _SignUpHeader extends StatelessWidget {
   }
 }
 
-
 class _TextForm1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label("Name"), _input1()],
+      children: [_label(context, "Name"), _input1(context)],
     );
   }
 
-  Widget _label(String text) => Padding(
+  Widget _label(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(bottom: 10, left: 4),
-
     child: Text(
       text,
       style: GoogleFonts.roboto(
-        fontSize: 20,
+        fontSize: Responsive.responsiveFontSize(context, 20),
         fontWeight: FontWeight.w500,
         color: kGrey900,
         height: 1.4,
       ),
     ),
   );
-
-  Widget _input1() {
+  Widget _input1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -135,7 +135,7 @@ class _TextForm1 extends StatelessWidget {
           hintText: "Your name",
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
+            fontSize: Responsive.responsiveFontSize(context, 16),
             height: 1.5,
             color: Color(0xFFE0E0E0),
           ),
@@ -147,31 +147,29 @@ class _TextForm1 extends StatelessWidget {
   }
 }
 
-
 class _TextForm2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label("Email"), _input1()],
+      children: [_label(context,"Email"), _input1(context)],
     );
   }
 
-  Widget _label(String text) => Padding(
+  Widget _label(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(bottom: 10, left: 4),
-
     child: Text(
       text,
       style: GoogleFonts.roboto(
-        fontSize: 20,
+        fontSize: Responsive.responsiveFontSize(context, 20),
         fontWeight: FontWeight.w500,
         color: kGrey900,
-        height: 1.4,
+        height: Responsive.responsiveSpacing(context, 1.4),
       ),
     ),
   );
 
-  Widget _input1() {
+  Widget _input1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -191,8 +189,8 @@ class _TextForm2 extends StatelessWidget {
           hintText: "Your email",
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
             color: Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
@@ -203,31 +201,28 @@ class _TextForm2 extends StatelessWidget {
   }
 }
 
-
 class _TextForm3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_labe2("Password"), _input2()],
+      children: [_labe2(context,"Password"), _input2(context)],
     );
   }
 
-  Widget _labe2(String text) => Padding(
-    padding: const EdgeInsets.only(bottom: 10, left: 4),
-
-    child: Text(
-      text,
-      style: GoogleFonts.roboto(
-        fontSize: 20,
-        fontWeight: FontWeight.w500,
-        color: kGrey900,
-        height: 1.4,
-      ),
+ Widget _labe2(BuildContext context, String text) => Padding(
+  padding: const EdgeInsets.only(bottom: 10, left: 4),
+  child: Text(
+    text,
+    style: GoogleFonts.roboto(
+      fontSize: Responsive.responsiveFontSize(context, 20),
+      fontWeight: FontWeight.w500,
+      color: kGrey900,
+      height: Responsive.responsiveSpacing(context, 1.4),
     ),
-  );
-
-  Widget _input2() {
+  ),
+);
+  Widget _input2(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -243,18 +238,21 @@ class _TextForm3 extends StatelessWidget {
       ),
       child: TextField(
         obscureText: true,
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.w400,
+        ),
         decoration: InputDecoration(
           hintText: "Your password",
           suffixIcon: IconButton(
             onPressed: () {},
-            icon: Icon(Icons.visibility_off),
+            icon: const Icon(Icons.visibility_off),
           ),
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
-            color: Color(0xFFE0E0E0),
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
+            color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
           contentPadding: const EdgeInsets.symmetric(vertical: 18),
@@ -263,7 +261,6 @@ class _TextForm3 extends StatelessWidget {
     );
   }
 }
-
 
 class Register extends StatelessWidget {
   @override
@@ -280,7 +277,7 @@ class Register extends StatelessWidget {
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w700,
-          fontSize: 16,
+          fontSize: Responsive.responsiveFontSize(context, 16),
         ),
       ),
     );
@@ -297,8 +294,8 @@ class _Line extends StatelessWidget {
           "Have an account?",
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w500,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
             color: Colors.grey[500],
           ),
         ),
@@ -313,8 +310,8 @@ class _Line extends StatelessWidget {
             "Sign In",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
-              fontSize: 16,
-              height: 1.5,
+              fontSize: Responsive.responsiveFontSize(context, 16),
+              height: Responsive.responsiveSpacing(context, 1.5),
               color: kPrimaryColor,
             ),
           ),
@@ -323,7 +320,6 @@ class _Line extends StatelessWidget {
     );
   }
 }
-
 
 class _SignUpFooter extends StatelessWidget {
   @override
@@ -336,8 +332,8 @@ class _SignUpFooter extends StatelessWidget {
             "By clicking Register, you agree to our ",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
-              fontSize: 16,
-              height: 1.5,
+              fontSize: Responsive.responsiveFontSize(context, 16),
+              height: Responsive.responsiveSpacing(context, 1.5),
               color: Colors.grey[500],
             ),
           ),
@@ -352,8 +348,8 @@ class _SignUpFooter extends StatelessWidget {
               "Terms, Data Policy.",
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
-                fontSize: 16,
-                height: 1.5,
+                fontSize: Responsive.responsiveFontSize(context, 16),
+                height: Responsive.responsiveSpacing(context, 1.5),
                 color: kPrimaryColor,
               ),
             ),
@@ -363,4 +359,3 @@ class _SignUpFooter extends StatelessWidget {
     );
   }
 }
-

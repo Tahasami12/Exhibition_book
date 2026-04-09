@@ -1,4 +1,5 @@
 import 'package:exhibition_book/core/utils/assets.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding_2.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/signUp.dart';
@@ -14,19 +15,21 @@ class OnBoarding extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [        
-          SizedBox(height: 60,),
-          SkipButton(),
-          SizedBox(height: 13,),
-          Images(),
-          SizedBox(height: 14,),
-          Text1(),
-          SizedBox(height: 38,),
-          TwoButtons(),
-          
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [        
+            SizedBox(height: Responsive.responsiveSpacing(context, 24)),
+            SkipButton(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 13)),
+            Images(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 14)),
+            Text1(),
+            SizedBox(height: Responsive.responsiveSpacing(context, 35)),
+            TwoButtons(),
+            
+          ],
+        ),
       ),
     );
   }
@@ -41,8 +44,10 @@ class SkipButton extends StatelessWidget {
       padding: EdgeInsets.only(left: 24),
       child: TextButton(onPressed: (){},
        child: Text("Skip",style: GoogleFonts.roboto(
-                fontWeight: FontWeight.w500,fontSize: 18,
-                height: 1.4,color: kPrimaryColor
+                fontWeight: FontWeight.w500,
+                fontSize: Responsive.responsiveFontSize(context, 18),
+                height: Responsive.responsiveSpacing(context, 1.4)
+                ,color: kPrimaryColor
                ),),)
     );
   }
@@ -73,29 +78,29 @@ class Text1 extends StatelessWidget {
                "Now reading books\n will be easier",
               style: GoogleFonts.openSans(
                 fontWeight: FontWeight.w700,
-                fontSize: 26,
+                fontSize: Responsive.responsiveFontSize(context, 26),
                 letterSpacing: -1.2,
                 color: Colors.grey[900],
-                height: 1.35,
+                height: Responsive.responsiveSpacing(context, 1.35),
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 15),
+          SizedBox(height: Responsive.responsiveSpacing(context, 15)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: Text(
 " Discover new worlds, join a vibrant\n reading community. Start your reading\n adventure effortlessly with us.",              style: GoogleFonts.roboto(
-                fontSize: 18,
+                fontSize: Responsive.responsiveFontSize(context, 18),
                 fontWeight: FontWeight.w400,
                 letterSpacing: 0,
                 color: Colors.grey[500],
-                height: 1.6,
+                height: Responsive.responsiveSpacing(context, 1.6),
               ),
               textAlign: TextAlign.center,
             ),
           ),
-          SizedBox(height: 45),
+          SizedBox(height: Responsive.responsiveSpacing(context, 28)),
           Image.asset(AssetData.first),
     ],);
   }
@@ -126,8 +131,8 @@ class TwoButtons extends StatelessWidget {
                 child: Text("Continue", style: GoogleFonts.openSans(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  height: 1.5,
+                  fontSize: Responsive.responsiveFontSize(context, 18),
+                  height: Responsive.responsiveSpacing(context, 1.5),
                   letterSpacing: .3)),
               ),
             ),
@@ -150,8 +155,8 @@ class TwoButtons extends StatelessWidget {
               child: Text("Sign in", style:  GoogleFonts.openSans(
                   color: kPrimaryColor,
                   fontWeight: FontWeight.w700,
-                  fontSize: 18,
-                  height: 1.5,
+                  fontSize: Responsive.responsiveFontSize(context, 18),
+                  height: Responsive.responsiveSpacing(context, 1.5),
                   letterSpacing: .3)),
             ),),
     ],);

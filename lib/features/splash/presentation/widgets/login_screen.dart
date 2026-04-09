@@ -1,4 +1,5 @@
 import 'package:exhibition_book/core/utils/assets.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(65),
+        preferredSize: Size.fromHeight(
+          Responsive.responsiveSpacing(context, 60),
+        ),
         child: Container(
           padding: EdgeInsets.only(top: 30),
           child: AppBar(
@@ -24,7 +27,10 @@ class _LoginScreenState extends State<LoginScreen> {
             elevation: 0,
             leading: IconButton(
               onPressed: () {},
-              icon: Icon(Icons.arrow_back, size: 30),
+              icon: Icon(
+                Icons.arrow_back,
+                size: Responsive.responsiveIconSize(context, 30),
+              ),
             ),
           ),
         ),
@@ -37,12 +43,12 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _loginHeader(),
-              SizedBox(height: 20),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
               _TextForm(),
-              SizedBox(height: 3),
+              SizedBox(height: Responsive.responsiveSpacing(context, 3)),
               _TextForm2(),
-              SizedBox(height: 10),
-                    
+              SizedBox(height: Responsive.responsiveSpacing(context, 10)),
+
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton(
@@ -51,23 +57,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     "Forgot Password?",
                     style: GoogleFonts.roboto(
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                      height: 1.4,
+                      fontSize: Responsive.responsiveFontSize(context, 14),
+                      height: Responsive.responsiveSpacing(context, 1.4),
                       color: kPrimaryColor,
                     ),
                   ),
                 ),
               ),
-                    
-              SizedBox(height: 20),
+
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
               Login(),
-              SizedBox(height: 20),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
               Line(),
-              SizedBox(height: 20),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
               Line2(),
-              SizedBox(height: 15),
+              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
               Final(),
-              SizedBox(height: 4,),
+              SizedBox(height: Responsive.responsiveSpacing(context, 4)),
               Final2(),
             ],
           ),
@@ -83,7 +89,7 @@ class _loginHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 30),
+        SizedBox(height: Responsive.responsiveSpacing(context, 30)),
         Text(
           "Welcome Back 👋",
           style: GoogleFonts.openSans(
@@ -98,8 +104,8 @@ class _loginHeader extends StatelessWidget {
           "Sign to your account",
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
             color: Colors.grey[500],
           ),
         ),
@@ -113,25 +119,23 @@ class _TextForm extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label("Email"), _input1()],
+      children: [_label(context, "Email"), _input1(context)],
     );
   }
 
-  Widget _label(String text) => Padding(
+  Widget _label(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(bottom: 10, left: 4),
-
     child: Text(
       text,
       style: GoogleFonts.roboto(
-        fontSize: 20,
+        fontSize: Responsive.responsiveFontSize(context, 16),
         fontWeight: FontWeight.w500,
         color: kGrey900,
-        height: 1.4,
+        height: Responsive.responsiveSpacing(context, 1.4),
       ),
     ),
   );
-
-  Widget _input1() {
+  Widget _input1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -151,8 +155,8 @@ class _TextForm extends StatelessWidget {
           hintText: "Your email",
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
             color: Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
@@ -168,25 +172,24 @@ class _TextForm2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_labe2("Password"), _input2()],
+      children: [_labe2(context,"Password"), _input2(context)],
     );
   }
 
-  Widget _labe2(String text) => Padding(
+  Widget _labe2(BuildContext context, String text) => Padding(
     padding: const EdgeInsets.only(bottom: 10, left: 4),
-
     child: Text(
       text,
       style: GoogleFonts.roboto(
-        fontSize: 20,
+        fontSize: Responsive.responsiveFontSize(context, 20),
         fontWeight: FontWeight.w500,
         color: kGrey900,
-        height: 1.4,
+        height: 1.4, 
       ),
     ),
   );
 
-  Widget _input2() {
+  Widget _input2(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -211,8 +214,8 @@ class _TextForm2 extends StatelessWidget {
           ),
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: 1.5, 
             color: Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
@@ -238,7 +241,7 @@ class Login extends StatelessWidget {
         style: TextStyle(
           color: Colors.white,
           fontWeight: FontWeight.w700,
-          fontSize: 16,
+          fontSize: Responsive.responsiveFontSize(context, 16),
         ),
       ),
     );
@@ -255,8 +258,8 @@ class Line extends StatelessWidget {
           "Don’t have an account?",
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w500,
-            fontSize: 16,
-            height: 1.5,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
             color: Colors.grey[500],
           ),
         ),
@@ -271,8 +274,8 @@ class Line extends StatelessWidget {
             " Sign Up",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
-              fontSize: 16,
-              height: 1.5,
+              fontSize: Responsive.responsiveFontSize(context, 16),
+              height: Responsive.responsiveSpacing(context, 1.5),
               color: kPrimaryColor,
             ),
           ),
@@ -294,8 +297,8 @@ class Line2 extends StatelessWidget {
             "Or with",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w400,
-              height: 1.4,
-              fontSize: 14,
+              height: Responsive.responsiveSpacing(context, 1.4),
+              fontSize: Responsive.responsiveFontSize(context, 14),
               color: Colors.grey[500],
             ),
           ),
@@ -311,7 +314,7 @@ class Final extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: Responsive.responsiveSpacing(context, 50),
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
@@ -325,14 +328,14 @@ class Final extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-           Image.asset(AssetData.google ,width: 15,),
-            SizedBox(width: 10),
+            Image.asset(AssetData.google, width: 15),
+            SizedBox(width: Responsive.responsiveSpacing(context, 10)),
             Text(
               "Sign in with Google",
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w400,
-                fontSize: 14,
-                height: 1.5,
+                fontSize: Responsive.responsiveFontSize(context, 14),
+                height: Responsive.responsiveSpacing(context, 1.5),
                 color: Colors.grey.shade900,
               ),
             ),
@@ -350,7 +353,7 @@ class Final2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: Responsive.responsiveSpacing(context, 50),
       child: ElevatedButton(
         onPressed: () {},
         style: ElevatedButton.styleFrom(
@@ -364,14 +367,18 @@ class Final2 extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.apple, size: 30, color: Colors.black),
+            Icon(
+              Icons.apple,
+              size: Responsive.responsiveIconSize(context, 30),
+              color: Colors.black,
+            ),
             SizedBox(width: 10),
             Text(
               "Sign in with Apple",
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w400,
-                fontSize: 14,
-                height: 1.5,
+                fontSize: Responsive.responsiveFontSize(context, 14),
+                height: Responsive.responsiveSpacing(context, 1.5),
                 color: Colors.grey.shade900,
               ),
             ),
