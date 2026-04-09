@@ -9,6 +9,7 @@ class HelpCenter extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+	backgroundColor: AppColors.primary,
         appBar: makeAppBar(
           title: "Order History",
           titleColor: AppColors.background,
