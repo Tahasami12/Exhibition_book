@@ -16,7 +16,7 @@ class SearchViewBody extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 24),
-        vertical: Responsive.responsiveSpacing(context, 68),
+        vertical: Responsive.responsiveSpacing(context, 34),
       ),
       child: Column(
         children: [

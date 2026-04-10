@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive.dart';
+import '../../home/presentation/ widgets/custom_bottom_nav.dart';
 import '../Widget/books_grid_view.dart';
 import '../Widget/categories_bar.dart';
 import '../Widget/category_icon.dart';
@@ -32,6 +33,7 @@ class CategoryScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }
 }

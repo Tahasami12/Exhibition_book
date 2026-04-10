@@ -9,12 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../home/presentation/ widgets/custom_bottom_nav.dart';
+
 class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
         backgroundColor: AppColors.background,
         appBar: makeAppBar(
@@ -209,7 +212,10 @@ class Profile extends StatelessWidget {
             ),
           ],
         ),
+        bottomNavigationBar: const CustomBottomNav(currentIndex: 3),
       ),
+
     );
+
   }
 }

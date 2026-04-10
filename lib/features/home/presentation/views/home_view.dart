@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../ widgets/authors_list.dart';
 import '../ widgets/banner_section.dart';
 import '../ widgets/books_list.dart';
+import '../ widgets/custom_bottom_nav.dart';
 import '../ widgets/home_app_bar.dart';
 import '../ widgets/section_header.dart';
 import '../ widgets/vendors_list.dart';
@@ -18,50 +19,58 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const HomeAppBar(),
-              const BannerSection(),
 
-              SectionHeader(title: 'Top of Week'),
-              const BooksList(),
+        child: Column(
+          children: [
+            const HomeAppBar(),
 
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const BannerSection(),
 
-              SectionHeader(
-                title: 'Best Vendors',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
+                    SectionHeader(title: 'Top of Week'),
+                    const BooksList(),
 
-                      builder: (_) => const VendorsView(),
+                    SectionHeader(
+                      title: 'Best Vendors',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const VendorsView(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-              const VendorsList(),
+                    const VendorsList(),
+                    SizedBox(height: 32),
 
-
-              SectionHeader(
-                title: 'Authors',
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-
-                      builder: (_) => const AuthorsView(),
+                    SectionHeader(
+                      title: 'Authors',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const AuthorsView(),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                    const AuthorsList(),
+                  ],
+                ),
               ),
-              const AuthorsList(),
-            ],
-          ),
+            ),
+
+          ],
         ),
+
       ),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 0),
     );
   }
 }

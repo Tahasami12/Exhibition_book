@@ -67,13 +67,13 @@ class AuthorsView extends StatelessWidget {
               child: Text(
                 "Check the authors",
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16,
                   color: Color(0xFFA6A6A6),
                 ),
               ),
             ),
 
-            const SizedBox(height: 2),
+            const SizedBox(height: 4),
 
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),

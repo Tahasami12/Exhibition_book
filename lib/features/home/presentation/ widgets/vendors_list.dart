@@ -27,16 +27,17 @@ class VendorsList extends StatelessWidget {
               );
             },
             child: Container(
-              width: Responsive.responsiveSpacing(context, 70),
+              width: Responsive.responsiveSpacing(context, 90),
               margin: EdgeInsets.only(
-                right: Responsive.responsiveSpacing(context, 12),
+                right: Responsive.responsiveSpacing(context, 3),
+
               ),
               child: Column(
                 children: [
 
                   Container(
-                    height: Responsive.responsiveSpacing(context, 60),
-                    width: Responsive.responsiveSpacing(context, 60),
+                    height: Responsive.responsiveSpacing(context, 80),
+                    width: Responsive.responsiveSpacing(context, 80),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(
                         Responsive.responsiveSpacing(context, 12),

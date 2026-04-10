@@ -14,7 +14,7 @@ class CategoryIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        top: Responsive.responsiveSpacing(context, 68),
+        top: Responsive.responsiveSpacing(context, 34),
         left: Responsive.responsiveSpacing(context, 24),
         right: Responsive.responsiveSpacing(context, 24),
         bottom: Responsive.responsiveSpacing(context, 16),

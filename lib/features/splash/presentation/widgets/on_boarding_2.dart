@@ -4,6 +4,7 @@ import 'package:exhibition_book/costants.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding_3.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/signUp.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
@@ -126,7 +127,7 @@ class TwoButtons extends StatelessWidget {
           padding: const EdgeInsets.only(left: 24, right: 24),
           child: ElevatedButton(
             onPressed: () {
-              Get.to(OnBoarding3());
+              context.go('/onboarding3');
             },
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15),
@@ -155,7 +156,7 @@ class TwoButtons extends StatelessWidget {
           padding: const EdgeInsets.only(left: 24, right: 24),
           child: ElevatedButton(
             onPressed: () {
-              Get.to(Signup());
+              context.go('/signup');
             },
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.symmetric(vertical: 15),

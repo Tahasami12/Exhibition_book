@@ -6,7 +6,7 @@ class VendorsTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30,
+      height: 36,
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -38,7 +38,7 @@ class _TabItem extends StatelessWidget {
           Text(
             text,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: 18,
               color: active ? Colors.black : Colors.grey,
               fontWeight: active ? FontWeight.w600 : FontWeight.normal,
             ),

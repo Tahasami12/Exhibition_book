@@ -20,27 +20,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const HomeView(),
+    return MaterialApp.router(
+        routerConfig: AppRouter.router,
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light().copyWith(
+
+          scaffoldBackgroundColor: AppColors.background,
+
+
+          appBarTheme: const AppBarTheme(
+            backgroundColor: AppColors.background,
+            elevation: 0,),)
+
     );
-    // return  return MaterialApp(
-    //       debugShowCheckedModeBanner: false,
-    //       home: const HomeView(),
-    //     );MaterialApp.router(
-    //     routerConfig: AppRouter.router,
-    //     title: 'Flutter Demo',
-    //     debugShowCheckedModeBanner: false,
-    //     theme: ThemeData.light().copyWith(
-    //
-    //       scaffoldBackgroundColor: AppColors.background,
-    //
-    //
-    //       appBarTheme: const AppBarTheme(
-    //         backgroundColor: AppColors.background,
-    //         elevation: 0,),)
-    //    //home: Category(),
-    // );
 
   }
 }

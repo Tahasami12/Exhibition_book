@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../notification_feature/presentation/views/notification.dart';
 
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
@@ -38,14 +41,22 @@ class HomeAppBar extends StatelessWidget {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              Icon(
-                Icons.notifications_none,
-                size: Responsive.responsiveIconSize(context, 24),
-                color: Colors.black,
-              ),
-
-
-            ],
+          IconButton(
+          icon: Icon(
+          Icons.notifications,
+            size: Responsive.responsiveSpacing(context, 24),
+            color: Colors.black,
+          ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const NotificationScreen(),
+          ),
+        );
+      },
+    ),
+    ]
           ),
         ],
       ),

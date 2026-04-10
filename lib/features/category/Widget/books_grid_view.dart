@@ -10,7 +10,7 @@ class BooksGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
+
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 20),
         vertical: Responsive.responsiveSpacing(context, 38),

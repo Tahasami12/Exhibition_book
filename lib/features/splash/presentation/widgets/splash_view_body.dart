@@ -2,6 +2,7 @@ import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 
 class SplasViewBody extends StatefulWidget {
@@ -44,7 +45,7 @@ class _SplasViewBodyState extends State<SplasViewBody>
         position: slidingAnimation,
         
         child: InkWell(
-          onTap: () => Get.off(OnBoarding()),
+          onTap: () => context.go('/onboarding'),
           child: Image.asset(AssetData.logo)))],
     );
   }

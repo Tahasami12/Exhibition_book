@@ -11,7 +11,7 @@ class AuthorsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Responsive.responsiveSpacing(context, 120),
+      height: Responsive.responsiveSpacing(context, 220),
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: EdgeInsets.symmetric(
@@ -29,7 +29,7 @@ class AuthorsList extends StatelessWidget {
               );
             },
             child: Container(
-              width: Responsive.responsiveSpacing(context, 80),
+              width: Responsive.responsiveSpacing(context, 120),
               margin: EdgeInsets.only(
                 right: Responsive.responsiveSpacing(context, 14),
               ),
@@ -38,14 +38,14 @@ class AuthorsList extends StatelessWidget {
 
 
                   CircleAvatar(
-                    radius: Responsive.responsiveSpacing(context, 32),
+                    radius: Responsive.responsiveSpacing(context, 50),
                     backgroundImage: const AssetImage(
                       'assets/images/author.png',
                     ),
                   ),
 
                   SizedBox(
-                    height: Responsive.responsiveSpacing(context, 6),
+                    height: Responsive.responsiveSpacing(context,8 ),
                   ),
 
 
@@ -56,14 +56,14 @@ class AuthorsList extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize:
-                      Responsive.responsiveFontSize(context, 11),
+                      Responsive.responsiveFontSize(context, 16),
                       fontWeight: FontWeight.w600,
                       color: const Color(0xFF121212),
                     ),
                   ),
 
                   SizedBox(
-                    height: Responsive.responsiveSpacing(context, 2),
+                    height: Responsive.responsiveSpacing(context, 4),
                   ),
 
 
@@ -71,8 +71,8 @@ class AuthorsList extends StatelessWidget {
                     "Writer",
                     style: TextStyle(
                       fontSize:
-                      Responsive.responsiveFontSize(context, 10),
-                      color: const Color(0xFFA6A6A6), // من Figma
+                      Responsive.responsiveFontSize(context, 14),
+                      color: const Color(0xFFA6A6A6),
                     ),
                   ),
                 ],

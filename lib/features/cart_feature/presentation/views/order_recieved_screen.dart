@@ -227,7 +227,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                       child: ElevatedButton(
                         onPressed: () {
                           // Navigate to home and clear all previous routes
-                          Get.offAll(() => const HomeScreen());
+                          Get.offAll(() => const HomeView());
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6C47FF),

@@ -1,7 +1,10 @@
 import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../core/utils/app_router.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -266,7 +269,9 @@ class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        context.go(AppRouter.kHome);
+      },
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xff54408C),
         minimumSize: Size(double.infinity, 50),
