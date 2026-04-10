@@ -1,7 +1,5 @@
 import 'package:exhibition_book/core/utils/assets.dart';
-import 'package:exhibition_book/features/splash/presentation/widgets/on_boarding.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 
 
@@ -29,24 +27,34 @@ class _SplasViewBodyState extends State<SplasViewBody>
     ).animate(animationController);
 
     animationController.forward();
-    slidingAnimation.addListener((){
-      setState(() {
-        
-      });
-    });
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [SlideTransition(
-        position: slidingAnimation,
-        
-        child: InkWell(
-          onTap: () => context.go('/onboarding'),
-          child: Image.asset(AssetData.logo)))],
+    return SizedBox.expand(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SlideTransition(
+            position: slidingAnimation,
+            child: GestureDetector(
+              onTap: () => context.go('/onboarding'),
+              child: Image.asset(
+                AssetData.logo,
+                width: MediaQuery.of(context).size.width * 0.6,
+                fit: BoxFit.contain,
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

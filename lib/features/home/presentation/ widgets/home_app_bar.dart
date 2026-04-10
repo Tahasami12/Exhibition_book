@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:iconsax/iconsax.dart';
 
 import '../../../../core/utils/responsive.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../notification_feature/presentation/views/notification.dart';
 
+/// Top app bar widget for the Home screen.
+/// Contains a search icon, centered title, and notification bell.
 class HomeAppBar extends StatelessWidget {
   const HomeAppBar({super.key});
 
@@ -15,19 +15,19 @@ class HomeAppBar extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 16),
-        vertical: Responsive.responsiveSpacing(context, 26),
+        vertical: Responsive.responsiveSpacing(context, 16),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-
+          // ── Search Icon ──
           Icon(
             Icons.search,
             size: Responsive.responsiveIconSize(context, 24),
             color: Colors.black,
           ),
 
-
+          // ── Title ──
           Text(
             "Home",
             style: TextStyle(
@@ -37,26 +37,21 @@ class HomeAppBar extends StatelessWidget {
             ),
           ),
 
-
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
+          // ── Notification Button ──
           IconButton(
-          icon: Icon(
-          Icons.notifications,
-            size: Responsive.responsiveSpacing(context, 24),
-            color: Colors.black,
-          ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => const NotificationScreen(),
-          ),
-        );
-      },
-    ),
-    ]
+            icon: Icon(
+              Icons.notifications_outlined,
+              size: Responsive.responsiveIconSize(context, 24),
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const NotificationScreen(),
+                ),
+              );
+            },
           ),
         ],
       ),

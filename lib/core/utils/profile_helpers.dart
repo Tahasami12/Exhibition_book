@@ -2,7 +2,6 @@ import 'package:exhibition_book/features/profile/models/offer_model.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 
 // either to contact using email or phone number.
 Widget makeHelpMethod({
@@ -55,15 +54,16 @@ AppBar makeAppBar({
   required Color titleColor,
   required bool enableLeading,
   required Color barBackgroundColor,
+  BuildContext? context,
 }) {
   return AppBar(
     backgroundColor: barBackgroundColor,
     leading:
-        enableLeading
+        enableLeading && context != null
             ? GestureDetector(
               child: Icon(Icons.arrow_back, color: titleColor),
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             )
             : null,

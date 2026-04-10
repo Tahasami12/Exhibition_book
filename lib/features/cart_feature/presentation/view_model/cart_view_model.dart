@@ -1,119 +1,98 @@
-
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter/foundation.dart';
 import '../../../../core/base/view_state.dart';
 import '../../data/cart_item.dart';
-import 'cart_state.dart';
 
-class CartViewModel extends Cubit<CartState> {
-  CartViewModel()
-      : super(
-          CartState(
-            status: ViewStatus.success,
-            items: const [],
-          ),
-        );
+class CartViewModel extends ChangeNotifier {
+  List<CartItem> _items = [];
+  ViewStatus _status = ViewStatus.idle;
+  String? _message;
+  bool _shouldNavigateToConfirm = false;
+
+  List<CartItem> get items => _items;
+  ViewStatus get status => _status;
+  String? get message => _message;
+  bool get shouldNavigateToConfirm => _shouldNavigateToConfirm;
+
+  double get total => _items.fold<double>(0, (sum, item) => sum + item.total);
+  bool get isEmpty => _items.isEmpty;
 
   void addItem(CartItem item) {
-    final items = [...state.items];
-    final existingIndex = items.indexWhere((value) => value.id == item.id);
+    print("DEBUG: addToCart triggered for item: ${item.title}");
+    final existingIndex = _items.indexWhere((value) => value.id == item.id);
     if (existingIndex != -1) {
-      final existing = items[existingIndex];
-      items[existingIndex] = existing.copyWith(
+      final existing = _items[existingIndex];
+      _items[existingIndex] = existing.copyWith(
         quantity: existing.quantity + item.quantity,
       );
     } else {
-      items.add(item);
+      _items.add(item);
     }
 
-    emit(
-      state.copyWith(
-        items: items,
-        status: ViewStatus.success,
-        shouldNavigateToConfirm: false,
-      ),
-    );
+    _status = ViewStatus.success;
+    _shouldNavigateToConfirm = false;
+    _message = null;
+    notifyListeners();
   }
 
   void increaseQuantity(String id) {
-    final updated = state.items.map((item) {
-      if (item.id == id) {
-        return item.copyWith(quantity: item.quantity + 1);
+    for (int i = 0; i < _items.length; i++) {
+      if (_items[i].id == id) {
+        _items[i] = _items[i].copyWith(quantity: _items[i].quantity + 1);
+        break;
       }
-      return item;
-    }).toList();
-
-    emit(
-      state.copyWith(
-        items: updated,
-        status: ViewStatus.success,
-        resetMessage: true,
-        shouldNavigateToConfirm: false,
-      ),
-    );
+    }
+    _status = ViewStatus.success;
+    _shouldNavigateToConfirm = false;
+    _message = null;
+    notifyListeners();
   }
 
   void decreaseQuantity(String id) {
-    final List<CartItem> updated = [];
-    for (final item in state.items) {
-      if (item.id == id) {
-        final newQty = item.quantity - 1;
+    for (int i = 0; i < _items.length; i++) {
+      if (_items[i].id == id) {
+        final newQty = _items[i].quantity - 1;
         if (newQty > 0) {
-          updated.add(item.copyWith(quantity: newQty));
+          _items[i] = _items[i].copyWith(quantity: newQty);
+        } else {
+          _items.removeAt(i);
+          _message = 'removed';
         }
-      } else {
-        updated.add(item);
+        break;
       }
     }
-    emit(
-      state.copyWith(
-        items: updated,
-        status: ViewStatus.success,
-        message: updated.length < state.items.length
-            ? 'removed'
-            : null,
-        shouldNavigateToConfirm: false,
-      ),
-    );
+    _status = ViewStatus.success;
+    _shouldNavigateToConfirm = false;
+    notifyListeners();
   }
 
   void removeItem(String id) {
-    final updated = state.items.where((item) => item.id != id).toList();
-    emit(
-      state.copyWith(
-        items: updated,
-        status: ViewStatus.success,
-        message: 'removed',
-        shouldNavigateToConfirm: false,
-      ),
-    );
+    _items.removeWhere((item) => item.id == id);
+    _status = ViewStatus.success;
+    _message = 'removed';
+    _shouldNavigateToConfirm = false;
+    notifyListeners();
   }
 
   void checkout() {
-    if (state.items.isEmpty) {
-      emit(
-        state.copyWith(
-          status: ViewStatus.failure,
-          message: 'empty',
-          shouldNavigateToConfirm: false,
-        ),
-      );
+    if (_items.isEmpty) {
+      _status = ViewStatus.failure;
+      _message = 'empty';
+      _shouldNavigateToConfirm = false;
+      notifyListeners();
       return;
     }
-    emit(
-      state.copyWith(
-        status: ViewStatus.success,
-        shouldNavigateToConfirm: true,
-        resetMessage: true,
-      ),
-    );
+    _status = ViewStatus.success;
+    _shouldNavigateToConfirm = true;
+    _message = null;
+    notifyListeners();
   }
 
   void acknowledgeNavigation() {
-    emit(
-      state.copyWith(
-        shouldNavigateToConfirm: false,
-      ),
-    );
+    _shouldNavigateToConfirm = false;
+    // Don't notify listeners here unless necessary to prevent rebuild loops
+  }
+
+  void clearMessage() {
+    _message = null;
   }
 }

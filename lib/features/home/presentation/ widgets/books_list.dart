@@ -3,7 +3,30 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/responsive.dart';
 import '../views/book_details_view.dart';
 
+/// Book data model for the home screen list.
+/// Keeps title, price, and image consistent across list → details flow.
+class _BookData {
+  final String title;
+  final String price;
+  final String image;
 
+  const _BookData({
+    required this.title,
+    required this.price,
+    required this.image,
+  });
+}
+
+/// Sample book catalog — replace with API/repository data in production.
+const List<_BookData> _sampleBooks = [
+  _BookData(title: "The Trials of Apollo", price: "\$15.99", image: "assets/images/book.png"),
+  _BookData(title: "The Alchemist", price: "\$12.49", image: "assets/images/Frame.png"),
+  _BookData(title: "Atomic Habits", price: "\$18.99", image: "assets/images/Frame.png"),
+  _BookData(title: "Deep Work", price: "\$14.99", image: "assets/images/Frame.png"),
+  _BookData(title: "Educated", price: "\$16.49", image: "assets/images/Frame.png"),
+];
+
+/// Horizontal scrolling list of books displayed on the Home screen.
 class BooksList extends StatelessWidget {
   const BooksList({super.key});
 
@@ -16,8 +39,9 @@ class BooksList extends StatelessWidget {
         padding: EdgeInsets.symmetric(
           horizontal: Responsive.responsiveSpacing(context, 16),
         ),
-        itemCount: 5,
+        itemCount: _sampleBooks.length,
         itemBuilder: (_, i) {
+          final book = _sampleBooks[i];
           return GestureDetector(
             onTap: () {
               Navigator.push(
@@ -35,12 +59,11 @@ class BooksList extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-
+                  // ── Book Cover ──
                   Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(
-                        Responsive.responsiveSpacing(context, 16),
+                        Responsive.responsiveSpacing(context, 12),
                       ),
                       boxShadow: [
                         BoxShadow(
@@ -55,41 +78,41 @@ class BooksList extends StatelessWidget {
                         Responsive.responsiveSpacing(context, 12),
                       ),
                       child: Image.asset(
-                        'assets/images/Frame.png',
+                        book.image,
                         width: double.infinity,
                         height: Responsive.responsiveSpacing(context, 155),
                         fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) => Container(
+                          width: double.infinity,
+                          height: Responsive.responsiveSpacing(context, 155),
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.book, size: 40, color: Colors.grey),
+                        ),
                       ),
                     ),
                   ),
 
-                  SizedBox(
-                    height: Responsive.responsiveSpacing(context, 8),
-                  ),
+                  SizedBox(height: Responsive.responsiveSpacing(context, 8)),
 
-
+                  // ── Title ──
                   Text(
-                    "The Kite Runner",
+                    book.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      fontSize:
-                      Responsive.responsiveFontSize(context, 14),
+                      fontSize: Responsive.responsiveFontSize(context, 14),
                       fontWeight: FontWeight.w500,
                       color: const Color(0xFF121212),
                     ),
                   ),
 
-                  SizedBox(
-                    height: Responsive.responsiveSpacing(context, 2),
-                  ),
+                  SizedBox(height: Responsive.responsiveSpacing(context, 2)),
 
-
+                  // ── Price ──
                   Text(
-                    "\$19.99",
+                    book.price,
                     style: TextStyle(
-                      fontSize:
-                      Responsive.responsiveFontSize(context, 14),
+                      fontSize: Responsive.responsiveFontSize(context, 14),
                       color: const Color(0xFF54408C),
                       fontWeight: FontWeight.w700,
                     ),

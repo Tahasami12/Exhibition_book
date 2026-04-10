@@ -12,11 +12,7 @@ class DeliveryAddress {
   String get displayTitle => '$name - $city';
   String get fullAddress => '$name, $city, $governorate';
 
-  DeliveryAddress copyWith({
-    String? name,
-    String? governorate,
-    String? city,
-  }) {
+  DeliveryAddress copyWith({String? name, String? governorate, String? city}) {
     return DeliveryAddress(
       name: name ?? this.name,
       governorate: governorate ?? this.governorate,

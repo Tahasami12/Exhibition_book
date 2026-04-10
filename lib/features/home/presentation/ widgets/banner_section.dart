@@ -77,7 +77,7 @@ class _BannerCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: const Color(0xFFFAF9FD),
         borderRadius: BorderRadius.circular(
-          Responsive.responsiveSpacing(context, 0),
+          Responsive.responsiveSpacing(context, 16),
         ),
 
 

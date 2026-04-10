@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../category/view/category_screen.dart';
 import '../../../profile/screens/profile.dart';
+import 'package:exhibition_book/features/cart_feature/presentation/views/cart_screen.dart';
 import '../views/home_view.dart';
 
 class CustomBottomNav extends StatelessWidget {
@@ -44,10 +45,7 @@ class CustomBottomNav extends StatelessWidget {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (_) => Scaffold(
-                  appBar: AppBar(title: const Text("Cart")),
-                  body: const Center(child: Text("Cart Screen")),
-                ),
+                builder: (_) => const CartScreen(),
               ),
             );
             break;

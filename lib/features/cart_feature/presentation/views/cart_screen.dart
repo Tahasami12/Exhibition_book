@@ -1,111 +1,82 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/utils/responsive.dart';
 import '../../data/cart_item.dart';
-import '../view_model/cart_state.dart';
 import '../view_model/cart_view_model.dart';
 import 'confirm_order_screen.dart';
 
+/// Cart screen that displays all items added via CartViewModel.
+/// Uses Consumer<CartViewModel> to reactively rebuild when items change.
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const _CartView();
-  }
-}
-
-class _CartView extends StatelessWidget {
-  const _CartView();
-
-  void _handleMessages(BuildContext context, CartState state) {
-    if (state.message == 'removed') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Item removed')),
-      );
-    } else if (state.message == 'empty') {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cart is empty')),
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<CartViewModel, CartState>(
-      listener: (context, state) {
-        _handleMessages(context, state);
-
-        if (state.shouldNavigateToConfirm) {
-          context.read<CartViewModel>().acknowledgeNavigation();
-          Get.to(() => const ConfirmOrderScreen());
-        }
-      },
-      builder: (context, state) {
-        final viewModel = context.read<CartViewModel>();
-
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'My Cart',
-              style: TextStyle(
-                fontSize: Responsive.responsiveFontSize(context, 20),
-              ),
-            ),
-            centerTitle: true,
-            elevation: 0,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'My Cart',
+          style: TextStyle(
+            fontSize: Responsive.responsiveFontSize(context, 20),
+            fontWeight: FontWeight.w600,
           ),
-          body: LayoutBuilder(
-            builder: (context, constraints) {
-              final maxWidth = Responsive.maxContentWidth(context);
+        ),
+        centerTitle: true,
+        elevation: 0,
+      ),
+      body: Consumer<CartViewModel>(
+        builder: (context, viewModel, child) {
+          // Debug: verify the Consumer is receiving updates
+          debugPrint('CartScreen rebuild: ${viewModel.items.length} items');
 
-              return Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: maxWidth ?? double.infinity,
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: state.isEmpty
-                            ? const _EmptyCart()
-                            : ListView.builder(
-                          padding: Responsive.responsivePadding(context),
-                          itemCount: state.items.length,
-                          itemBuilder: (context, index) {
-                            final item = state.items[index];
+          if (viewModel.isEmpty) {
+            return const _EmptyCart();
+          }
 
-                            return _CartItemCard(
-                              item: item,
-                              onIncrease: () =>
-                                  viewModel.increaseQuantity(item.id),
-                              onDecrease: () =>
-                                  viewModel.decreaseQuantity(item.id),
-                              onRemove: () =>
-                                  viewModel.removeItem(item.id),
-                            );
-                          },
-                        ),
-                      ),
-                      if (!state.isEmpty)
-                        _CheckoutBar(
-                          total: state.total,
-                          onCheckout: viewModel.checkout,
-                        ),
-                    ],
-                  ),
+          return Column(
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  padding: Responsive.responsivePadding(context),
+                  itemCount: viewModel.items.length,
+                  itemBuilder: (context, index) {
+                    final item = viewModel.items[index];
+                    return _CartItemCard(
+                      item: item,
+                      onIncrease: () => viewModel.increaseQuantity(item.id),
+                      onDecrease: () => viewModel.decreaseQuantity(item.id),
+                      onRemove: () => viewModel.removeItem(item.id),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
-        );
-      },
+              ),
+              _CheckoutBar(
+                total: viewModel.total,
+                onCheckout: () {
+                  if (viewModel.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Cart is empty')),
+                    );
+                    return;
+                  }
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const ConfirmOrderScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
 
+/// Shown when the cart has no items.
 class _EmptyCart extends StatelessWidget {
   const _EmptyCart();
 
@@ -128,12 +99,21 @@ class _EmptyCart extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
+          SizedBox(height: Responsive.responsiveSpacing(context, 8)),
+          Text(
+            'Add items from the Home tab',
+            style: TextStyle(
+              fontSize: Responsive.responsiveFontSize(context, 14),
+              color: Colors.grey[400],
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
+/// Individual cart item card showing cover, details, and quantity controls.
 class _CartItemCard extends StatelessWidget {
   const _CartItemCard({
     required this.item,
@@ -170,29 +150,29 @@ class _CartItemCard extends StatelessWidget {
   }
 
   Widget _buildCover(BuildContext context) {
-    return Container(
-      width: Responsive.responsiveImageSize(context, 80),
-      height: Responsive.responsiveImageSize(context, 100),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          Responsive.responsiveBorderRadius(context, 8),
-        ),
-        color: Colors.grey[200],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(
+        Responsive.responsiveBorderRadius(context, 8),
       ),
-      child: item.imageUrl.isNotEmpty
-          ? Image.asset(
-        item.imageUrl,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) => Icon(
-          Icons.book,
-          size: Responsive.responsiveIconSize(context, 40),
-          color: Colors.grey,
-        ),
-      )
-          : Icon(
-        Icons.book,
-        size: Responsive.responsiveIconSize(context, 40),
-        color: Colors.grey,
+      child: Container(
+        width: Responsive.responsiveImageSize(context, 80),
+        height: Responsive.responsiveImageSize(context, 100),
+        color: Colors.grey[200],
+        child: item.imageUrl.isNotEmpty
+            ? Image.asset(
+                item.imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Icon(
+                  Icons.book,
+                  size: Responsive.responsiveIconSize(context, 40),
+                  color: Colors.grey,
+                ),
+              )
+            : Icon(
+                Icons.book,
+                size: Responsive.responsiveIconSize(context, 40),
+                color: Colors.grey,
+              ),
       ),
     );
   }
@@ -223,7 +203,7 @@ class _CartItemCard extends StatelessWidget {
           '\$${item.price.toStringAsFixed(2)}',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: const Color(0xFF6C47FF),
+            color: const Color(0xFF54408C),
             fontSize: Responsive.responsiveFontSize(context, 16),
           ),
         ),
@@ -257,6 +237,7 @@ class _CartItemCard extends StatelessWidget {
           '${item.quantity}',
           style: TextStyle(
             fontSize: Responsive.responsiveFontSize(context, 16),
+            fontWeight: FontWeight.w600,
           ),
         ),
         IconButton(
@@ -271,6 +252,7 @@ class _CartItemCard extends StatelessWidget {
   }
 }
 
+/// Bottom bar showing the total price and checkout button.
 class _CheckoutBar extends StatelessWidget {
   const _CheckoutBar({
     required this.total,
@@ -288,7 +270,7 @@ class _CheckoutBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, -2),
@@ -296,6 +278,7 @@ class _CheckoutBar extends StatelessWidget {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -312,7 +295,7 @@ class _CheckoutBar extends StatelessWidget {
                 style: TextStyle(
                   fontSize: Responsive.responsiveFontSize(context, 20),
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF6C47FF),
+                  color: const Color(0xFF54408C),
                 ),
               ),
             ],
@@ -323,7 +306,7 @@ class _CheckoutBar extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onCheckout,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF6C47FF),
+                backgroundColor: const Color(0xFF54408C),
                 padding: EdgeInsets.symmetric(
                   vertical: Responsive.responsiveSpacing(context, 16),
                 ),

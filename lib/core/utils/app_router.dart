@@ -1,8 +1,8 @@
 import 'package:exhibition_book/features/category/view/category_screen.dart';
-import 'package:exhibition_book/features/search/%20view/search_home.dart';
+import 'package:exhibition_book/features/search/ view/search_home.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/home/presentation/views/home_view.dart';
+import '../../features/home/presentation/views/main_shell.dart';
 import '../../features/splash/presentation/widgets/login_screen.dart';
 import '../../features/splash/presentation/widgets/on_boarding.dart';
 import '../../features/splash/presentation/widgets/on_boarding_2.dart';
@@ -33,9 +33,10 @@ abstract class AppRouter {
         path: kCategory,
         builder: (context, state) => const  CategoryScreen(),
       ),
+      // /home now points to MainShell which manages all four tabs
       GoRoute(
         path: kHome,
-        builder: (context, state) => const HomeView(),
+        builder: (context, state) => const MainShell(),
       ),
       GoRoute(
         path: '/onboarding2',
