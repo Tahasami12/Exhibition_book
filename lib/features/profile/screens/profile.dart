@@ -106,15 +106,7 @@ class Profile extends StatelessWidget {
             );
           },
         ),
-        InkWell(
-          child: makeNavigationRecord(
-            label: "Address",
-            avatarName: "address.svg",
-          ),
-          onTap: () {
-            // TODO: Navigate to Address screen
-          },
-        ),
+
         InkWell(
           child: makeNavigationRecord(
             label: "Offers & Promos",

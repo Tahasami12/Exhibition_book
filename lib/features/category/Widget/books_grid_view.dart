@@ -4,12 +4,17 @@ import '../../../core/utils/responsive.dart';
 import 'book_card.dart';
 
 class BooksGridView extends StatelessWidget {
-  const BooksGridView({super.key});
+  final bool isScrollable;
+
+  const BooksGridView({super.key, this.isScrollable = true});
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      shrinkWrap: true,
+      shrinkWrap: !isScrollable,
+      physics: isScrollable
+          ? const BouncingScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
 
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 20),

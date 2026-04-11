@@ -13,7 +13,7 @@ class CustomSearchText extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 12),
-        vertical: Responsive.responsiveSpacing(context, 23),
+        vertical: Responsive.responsiveSpacing(context, 15),
       ),
       child: Container(
         height: Responsive.responsiveSpacing(context, 48),

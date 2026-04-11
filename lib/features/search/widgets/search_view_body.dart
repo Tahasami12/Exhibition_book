@@ -14,9 +14,11 @@ class SearchViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: Responsive.responsiveSpacing(context, 24),
-        vertical: Responsive.responsiveSpacing(context, 34),
+      padding: EdgeInsets.fromLTRB(
+        Responsive.responsiveSpacing(context, 16),
+        Responsive.responsiveSpacing(context, 26),
+        Responsive.responsiveSpacing(context, 16),
+        Responsive.responsiveSpacing(context, 15),
       ),
       child: Column(
         children: [
@@ -25,7 +27,7 @@ class SearchViewBody extends StatelessWidget {
               IconButton(
                 padding: EdgeInsets.zero,
                 onPressed: () {
-                  GoRouter.of(context).push(AppRouter.kCategory);
+                  context.pop();
                 },
                 icon: Icon(
                   Icons.arrow_back_outlined,

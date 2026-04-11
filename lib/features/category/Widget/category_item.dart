@@ -17,7 +17,7 @@ class CategoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-        right: Responsive.responsiveSpacing(context, 25),
+        right: Responsive.responsiveSpacing(context, 24),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +25,7 @@ class CategoryItem extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: Responsive.responsiveFontSize(context, 16),
+              fontSize: Responsive.responsiveFontSize(context, 18),
               fontWeight:
               isSelected ? FontWeight.bold : FontWeight.w500,
               color:

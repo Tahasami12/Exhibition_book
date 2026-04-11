@@ -37,8 +37,8 @@ class Offers extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return
+       Scaffold(
         backgroundColor: AppColors.background,
         appBar: makeAppBar(
           title: "Order History",
@@ -71,6 +71,7 @@ class Offers extends StatelessWidget {
                     crossAxisSpacing: 20,
                     mainAxisSpacing: 30,
                     crossAxisCount: 2,
+                    childAspectRatio: 0.8,
                   ),
                   itemCount: offers.length,
                   itemBuilder: (BuildContext context, int index) {
@@ -84,7 +85,7 @@ class Offers extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+
   }
 }

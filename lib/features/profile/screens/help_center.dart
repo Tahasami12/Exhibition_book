@@ -7,63 +7,89 @@ class HelpCenter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-	backgroundColor: AppColors.primary,
-        appBar: makeAppBar(
-          title: "Order History",
-          titleColor: AppColors.background,
-          enableLeading: true,
-          barBackgroundColor: AppColors.primary,
-        ),
-        body: Column(
-          children: [
-            Container(
-              color: AppColors.primary,
-              height: 100,
-              child: Center(
-                child: Column(
+    final size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      backgroundColor: AppColors.primary,
+      appBar: makeAppBar(
+        title: "Order History",
+        titleColor: AppColors.background,
+        enableLeading: true,
+        barBackgroundColor: AppColors.primary,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: size.width * 0.05),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(height: size.height * 0.03),
+
+                /// 🔹 Title
+                Text(
+                  "Help Center",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: size.width * 0.07,
+                    color: AppColors.background,
+                  ),
+                ),
+
+                SizedBox(height: size.height * 0.01),
+
+                /// 🔹 Subtitle
+                Text(
+                  "Tell us how we can help 👋",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: size.width * 0.045,
+                    color: AppColors.grey500,
+                  ),
+                ),
+
+                SizedBox(height: size.height * 0.005),
+
+                /// 🔹 Description
+                Text(
+                  "Chapters are standing by for services & support!",
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontSize: size.width * 0.04,
+                    color: AppColors.grey500,
+                  ),
+                ),
+
+                SizedBox(height: size.height * 0.04),
+
+                /// 🔹 Cards
+                Row(
                   children: [
-                    Text(
-                      "Help Center",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 24,
-                        color: AppColors.background,
+                    Expanded(
+                      child: makeHelpMethod(
+                        icon: AssetImage("assets/images/message.png"),
+                        label: "Email",
+                        description: "Send to your email",
                       ),
                     ),
-                    Text(
-                      "Tell us how we can help 👋",
-                      style: TextStyle(fontSize: 20, color: AppColors.grey500),
-                    ),
-                    Text(
-                      "Chapters are standing by for services & support!",
-                      style: TextStyle(fontSize: 20, color: AppColors.grey500),
+                    SizedBox(width: size.width * 0.04),
+                    Expanded(
+                      child: makeHelpMethod(
+                        icon: AssetImage("assets/images/phone.png"),
+                        label: "Phone Number",
+                        description: "Send to your phone",
+                      ),
                     ),
                   ],
                 ),
-              ),
+
+                SizedBox(height: size.height * 0.05),
+              ],
             ),
-            SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Row(
-                children: [
-                  makeHelpMethod(
-                    icon: AssetImage("assets/images/message.png"),
-                    label: "Email",
-                    description: "Send to your email",
-                  ),
-                  SizedBox(width: 16),
-                  makeHelpMethod(
-                    icon: AssetImage("assets/images/phone.png"),
-                    label: "Phone Number",
-                    description: "Send to your phone",
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

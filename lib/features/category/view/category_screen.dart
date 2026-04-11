@@ -18,7 +18,7 @@ class CategoryScreen extends StatelessWidget {
           const CategoryIcon(),
 
           SizedBox(
-            height: Responsive.responsiveSpacing(context, 10),
+            height: Responsive.responsiveSpacing(context, 12),
           ),
 
           const CategoriesBar(),

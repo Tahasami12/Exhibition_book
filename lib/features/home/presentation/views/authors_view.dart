@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../ widgets/authorslistvertical.dart';
 import '../ widgets/authorstabs.dart';
+import '../../../../core/utils/app_router.dart';
+import '../../../../core/utils/responsive.dart';
 
 class AuthorsView extends StatelessWidget {
   const AuthorsView({super.key});
@@ -49,11 +53,20 @@ class AuthorsView extends StatelessWidget {
                     ),
 
 
-                    const Positioned(
-                      top: 34,
-                      right: 0,
-                      child: Icon(Icons.search),
-                    ),
+                    Positioned(
+                      top: Responsive.responsiveSpacing(context, 34),
+                      right: Responsive.responsiveSpacing(context, 12),
+                      child: GestureDetector(
+                        onTap: () {
+                          context.push(AppRouter.kSearchHome);
+                        },
+                        child: SvgPicture.asset(
+                          'assets/images/Search.svg',
+                          width: Responsive.responsiveIconSize(context, 24),
+                          height: Responsive.responsiveIconSize(context, 24),
+                        ),
+                      ),
+                    )
                   ],
                 ),
               ),

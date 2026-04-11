@@ -27,7 +27,7 @@ class ProductsSection extends StatelessWidget {
 
             const SizedBox(height: 1),
 
-            const BooksGridView(),
+            const BooksGridView(isScrollable: false)
           ],
         )
       ],

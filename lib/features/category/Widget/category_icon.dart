@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 
@@ -6,6 +7,7 @@ import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/app_router.dart';
 import '../../../core/utils/styles.dart';
 import '../../../core/utils/responsive.dart';
+import '../../notification_feature/presentation/views/notification.dart';
 
 class CategoryIcon extends StatelessWidget {
   const CategoryIcon({super.key});
@@ -13,23 +15,24 @@ class CategoryIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        top: Responsive.responsiveSpacing(context, 34),
-        left: Responsive.responsiveSpacing(context, 24),
-        right: Responsive.responsiveSpacing(context, 24),
-        bottom: Responsive.responsiveSpacing(context, 16),
-      ),
+        padding: EdgeInsets.fromLTRB(
+          Responsive.responsiveSpacing(context, 16),
+          Responsive.responsiveSpacing(context, 26),
+          Responsive.responsiveSpacing(context, 16),
+          Responsive.responsiveSpacing(context, 16),
+        ),
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             onPressed: () {
-              GoRouter.of(context).push(AppRouter.kSearchHome);
+              context.push(AppRouter.kSearchHome);
             },
-            icon: Icon(
-              FontAwesomeIcons.magnifyingGlass,
-              size: Responsive.responsiveIconSize(context, 24),
-              color: Colors.black,
+            icon: SvgPicture.asset(
+              'assets/images/Search.svg',
+              width: Responsive.responsiveIconSize(context, 24),
+              height: Responsive.responsiveIconSize(context, 24),
             ),
           ),
           Text(
@@ -37,15 +40,21 @@ class CategoryIcon extends StatelessWidget {
             style: Styles.heading2.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.grey900,
-              // لو Styles.heading2 فيه fontSize ثابت تقدر تعمل كده:
+
               fontSize: Responsive.responsiveFontSize(context, 20),
             ),
           ),
           IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.notifications_none_sharp,
-              size: Responsive.responsiveIconSize(context, 20),
+            onPressed: () {Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const NotificationScreen(),
+              ),
+            );},
+            icon: SvgPicture.asset(
+              'assets/images/Notification.svg',
+              width: Responsive.responsiveIconSize(context, 24),
+              height: Responsive.responsiveIconSize(context, 24),
             ),
           ),
         ],

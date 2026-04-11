@@ -23,8 +23,8 @@ class _MyAccountScreenState extends State<MyAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return
+       Scaffold(
         backgroundColor: AppColors.background,
         appBar: makeAppBar(
           title: "My Account",
@@ -104,8 +104,8 @@ class _MyAccountScreenState extends State<MyAccount> {
             ),
           ),
         ),
-      ),
-    );
+      );
+
   }
 
   // a private method to build each text field.

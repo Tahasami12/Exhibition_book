@@ -11,7 +11,7 @@ class RecentSearches extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 12),
-        vertical: Responsive.responsiveSpacing(context, 2),
+        vertical: Responsive.responsiveSpacing(context,1 ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,

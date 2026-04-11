@@ -111,8 +111,7 @@ class OrderHistory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
+    return Scaffold(
         backgroundColor: Colors.white,
         appBar: makeAppBar(
           title: "Order History",
@@ -228,7 +227,7 @@ class OrderHistory extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
+
   }
 }

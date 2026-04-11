@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../ widgets/vendors_grid.dart';
 import '../ widgets/vendors_tabs.dart';
+import '../../../../core/utils/app_router.dart';
+import '../../../../core/utils/responsive.dart';
 
 
 class VendorsView extends StatelessWidget {
@@ -14,11 +18,21 @@ class VendorsView extends StatelessWidget {
         leading: const BackButton(),
         title: const Text("Vendors"),
         centerTitle: true,
-        actions: const [
+        actions:  [
           Padding(
             padding: EdgeInsets.only(right: 16),
-            child: Icon(Icons.search),
-          ),
+            child:  IconButton(
+              onPressed: () {
+                GoRouter.of(context).push(AppRouter.kSearchHome);
+              },
+              icon: SvgPicture.asset(
+                'assets/images/Search.svg',
+
+                width: Responsive.responsiveIconSize(context, 24),
+                height: Responsive.responsiveIconSize(context, 24),
+              ),
+            ),
+          )
         ],
       ),
 
