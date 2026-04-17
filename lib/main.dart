@@ -1,3 +1,5 @@
+import 'package:exhibition_book/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -5,7 +7,11 @@ import 'package:exhibition_book/features/cart_feature/presentation/view_model/ca
 import 'core/utils/app_colors.dart';
 import 'core/utils/app_router.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(
     MultiProvider(
       providers: [
@@ -30,7 +36,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: AppColors.background,
           elevation: 0,
         ),
-      ),
+      ),    
     );
   }
 }
