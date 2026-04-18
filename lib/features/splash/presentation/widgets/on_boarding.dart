@@ -122,7 +122,6 @@ class Text1 extends StatelessWidget {
 
 class TwoButtons extends StatelessWidget {
   const TwoButtons({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Column(

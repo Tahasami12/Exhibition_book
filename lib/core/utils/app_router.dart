@@ -56,6 +56,10 @@ abstract class AppRouter {
         path: '/login',
         builder: (context, state) => const LoginScreen(),
       ),
+       GoRoute(
+        path: '/signup',
+        builder: (context, state) => const Signup(),
+      ),
     ],
   );
 }
