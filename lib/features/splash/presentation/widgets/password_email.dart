@@ -3,6 +3,9 @@ import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'custom_text feild.dart';
+import 'email_validation.dart';
+
 class TextForm2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -63,6 +66,7 @@ class TextForm extends StatelessWidget {
     ),
   );
   Widget _input1(BuildContext context) {
+
     return CustomTextfield(
       hintText: "Your email",
       validator: (value) {
