@@ -1,14 +1,11 @@
 import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
-import 'package:exhibition_book/features/splash/presentation/widgets/password_email.dart';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/utils/app_router.dart';
-import 'custom_botton.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,8 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formkey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,9 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              onPressed: () {
-                context.go('/onboarding3');
-              },
+              onPressed: () {},
               icon: Icon(
                 Icons.arrow_back,
                 size: Responsive.responsiveIconSize(context, 30),
@@ -49,52 +42,50 @@ class _LoginScreenState extends State<LoginScreen> {
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           padding: EdgeInsets.symmetric(horizontal: 25),
-          child: Form(
-            key: _formkey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _loginHeader(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                TextForm(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-                TextForm2(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 10)),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _loginHeader(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
+              _TextForm(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 3)),
+              _TextForm2(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 10)),
 
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "Forgot Password?",
-                      style: GoogleFonts.roboto(
-                        fontWeight: FontWeight.w600,
-                        fontSize: Responsive.responsiveFontSize(context, 14),
-                        height: Responsive.responsiveSpacing(context, 1.4),
-                        color: kPrimaryColor,
-                      ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    "Forgot Password?",
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w600,
+                      fontSize: Responsive.responsiveFontSize(context, 14),
+                      height: Responsive.responsiveSpacing(context, 1.4),
+                      color: kPrimaryColor,
                     ),
                   ),
                 ),
+              ),
 
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                Login(formKey: _formkey),
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                Line(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                Line2(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-                Final(),
-                SizedBox(height: Responsive.responsiveSpacing(context, 4)),
-                Final2(),
-              ],
-            ),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
+              Login(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
+              Line(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
+              Line2(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
+              Final(),
+              SizedBox(height: Responsive.responsiveSpacing(context, 4)),
+              Final2(),
+            ],
           ),
         ),
       ),
     );
   }
 }
+
 class _loginHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -126,31 +117,138 @@ class _loginHeader extends StatelessWidget {
   }
 }
 
-
-
-
-class Login extends StatefulWidget {
-  final GlobalKey<FormState> formKey;
-
-  const Login({super.key, required this.formKey});
-
-  @override
-  State<Login> createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  bool _isLoading = false;
-
+class _TextForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return CustomBtn(
-      title: "Login",
-      isLoading: _isLoading,
-      onTap: () async {
-        if (widget.formKey.currentState!.validate()) {
-          context.go(AppRouter.kHome);
-        }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_label(context, "Email"), _input1(context)],
+    );
+  }
+
+  Widget _label(BuildContext context, String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 10, left: 4),
+    child: Text(
+      text,
+      style: GoogleFonts.roboto(
+        fontSize: Responsive.responsiveFontSize(context, 16),
+        fontWeight: FontWeight.w500,
+        color: kGrey900,
+        height: Responsive.responsiveSpacing(context, 1.4),
+      ),
+    ),
+  );
+  Widget _input1(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(9),
+        border: Border.all(color: Color(0xffFAFAFA), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 10,
+            color: Colors.grey.withValues(alpha: .03),
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: TextField(
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        decoration: InputDecoration(
+          hintText: "Your email",
+          hintStyle: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: Responsive.responsiveSpacing(context, 1.5),
+            color: Color(0xFFE0E0E0),
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        ),
+      ),
+    );
+  }
+}
+
+class _TextForm2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [_labe2(context,"Password"), _input2(context)],
+    );
+  }
+
+  Widget _labe2(BuildContext context, String text) => Padding(
+    padding: const EdgeInsets.only(bottom: 10, left: 4),
+    child: Text(
+      text,
+      style: GoogleFonts.roboto(
+        fontSize: Responsive.responsiveFontSize(context, 20),
+        fontWeight: FontWeight.w500,
+        color: kGrey900,
+        height: 1.4, 
+      ),
+    ),
+  );
+
+  Widget _input2(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(9),
+        border: Border.all(color: Color(0xffFAFAFA), width: 1.5),
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 10,
+            color: Colors.grey.withValues(alpha: .03),
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: TextField(
+        obscureText: true,
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        decoration: InputDecoration(
+          hintText: "Your password",
+          suffixIcon: IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.visibility_off),
+          ),
+          hintStyle: GoogleFonts.roboto(
+            fontWeight: FontWeight.w400,
+            fontSize: Responsive.responsiveFontSize(context, 16),
+            height: 1.5, 
+            color: Color(0xFFE0E0E0),
+          ),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+        ),
+      ),
+    );
+  }
+}
+
+class Login extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        context.go(AppRouter.kHome);
       },
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color(0xff54408C),
+        minimumSize: Size(double.infinity, 50),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+      ),
+      child: Text(
+        "Login",
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: Responsive.responsiveFontSize(context, 16),
+        ),
+      ),
     );
   }
 }
@@ -176,9 +274,7 @@ class Line extends StatelessWidget {
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          onPressed: () {
-            context.go('/signup');
-          },
+          onPressed: () {},
           child: Text(
             " Sign Up",
             style: GoogleFonts.roboto(
@@ -217,6 +313,7 @@ class Line2 extends StatelessWidget {
     );
   }
 }
+
 class Final extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

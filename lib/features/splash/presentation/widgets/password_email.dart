@@ -1,11 +1,7 @@
 import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/costants.dart';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'custom_text feild.dart';
-import 'email_validation.dart';
 
 class TextForm2 extends StatelessWidget {
   @override
