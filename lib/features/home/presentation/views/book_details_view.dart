@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:exhibition_book/core/utils/responsive.dart';
-import 'package:exhibition_book/features/cart_feature/presentation/view_model/cart_view_model.dart';
+import 'package:exhibition_book/features/cart_feature/presentation/cubit/cart_cubit.dart';
 import 'package:exhibition_book/features/cart_feature/data/cart_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:exhibition_book/features/home/data/models/book_model.dart';
 
 /// Product details screen for a single book.
 /// Displays cover image, title, author, description, rating,
 /// a quantity picker, and action buttons (Continue Shopping / Add to Cart).
 class BookDetailsPage extends StatefulWidget {
-  const BookDetailsPage({super.key});
+  final BookModel book;
+  const BookDetailsPage({super.key, required this.book});
 
   @override
   State<BookDetailsPage> createState() => _BookDetailsPageState();
@@ -78,8 +81,8 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                         offset: const Offset(0, 8),
                       ),
                     ],
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/book.png'),
+                    image: DecorationImage(
+                      image: NetworkImage(widget.book.imageUrl),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -95,7 +98,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                 children: [
                   Expanded(
                     child: Text(
-                      "The Trials of Apollo",
+                      widget.book.title,
                       style: TextStyle(
                         fontSize: Responsive.responsiveFontSize(context, 20),
                         fontWeight: FontWeight.w700,
@@ -111,7 +114,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
               // ── Author / Publisher ──
               Text(
-                "Rick Riordan",
+                widget.book.author,
                 style: TextStyle(
                   color: _accentOrange,
                   fontSize: Responsive.responsiveFontSize(context, 14),
@@ -123,7 +126,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
               // ── Description ──
               Text(
-                "Apollo has been cast down from Olympus in punishment. As the mortal Lester, he must restore five Oracles that have gone dark — a quest that will take him across the country.",
+                widget.book.description,
                 style: TextStyle(
                   color: Colors.grey[600],
                   fontSize: Responsive.responsiveFontSize(context, 14),
@@ -149,7 +152,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                   const Icon(Icons.star_half, color: _starColor, size: 20),
                   SizedBox(width: Responsive.responsiveSpacing(context, 8)),
                   Text(
-                    "(4.0)",
+                    "(${widget.book.rating.toStringAsFixed(1)})",
                     style: TextStyle(
                       fontSize: Responsive.responsiveFontSize(context, 14),
                       color: Colors.grey[600],
@@ -166,7 +169,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                 children: [
                   // Price label
                   Text(
-                    "\$15.99",
+                    "\$${widget.book.price.toStringAsFixed(2)}",
                     style: TextStyle(
                       fontSize: Responsive.responsiveFontSize(context, 22),
                       fontWeight: FontWeight.w700,
@@ -264,14 +267,14 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                         ),
                         onPressed: () {
                           final cartItem = CartItem(
-                            id: 'apollo_1',
-                            title: "The Trials of Apollo",
-                            author: "Rick Riordan",
-                            price: 15.99,
+                            id: widget.book.id,
+                            title: widget.book.title,
+                            author: widget.book.author,
+                            price: widget.book.price,
                             quantity: quantity,
-                            imageUrl: 'assets/images/book.png',
+                            imageUrl: widget.book.imageUrl,
                           );
-                          context.read<CartViewModel>().addItem(cartItem);
+                          context.read<CartCubit>().addItem(cartItem);
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -279,7 +282,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                                 children: [
                                   const Icon(Icons.check_circle, color: Colors.white, size: 20),
                                   const SizedBox(width: 8),
-                                  Text('$quantity × "The Trials of Apollo" added!'),
+                                  Text('$quantity × "${widget.book.title}" added!'),
                                 ],
                               ),
                               backgroundColor: const Color(0xFF2E7D32),

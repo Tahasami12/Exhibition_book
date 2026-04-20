@@ -5,8 +5,8 @@ import '../../../../core/base/view_state.dart';
 import '../../data/order_models.dart';
 import 'orders_state.dart';
 
-class OrdersViewModel extends Cubit<OrdersState> {
-  OrdersViewModel()
+class OrdersCubit extends Cubit<OrdersState> {
+  OrdersCubit()
       : super(
           OrdersState(
             status: ViewStatus.success,

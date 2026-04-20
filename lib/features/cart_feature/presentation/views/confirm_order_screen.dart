@@ -6,8 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../../../../core/utils/responsive.dart';
 import '../../data/delivery_address.dart';
-import '../view_model/confirm_order_state.dart';
-import '../view_model/confirm_order_view_model.dart';
+import '../cubit/confirm_order_state.dart';
+import '../cubit/confirm_order_cubit.dart';
 import 'order_recieved_screen.dart';
 
 class ConfirmOrderScreen extends StatelessWidget {
@@ -16,7 +16,7 @@ class ConfirmOrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ConfirmOrderViewModel(),
+      create: (_) => ConfirmOrderCubit(),
       child: const _ConfirmOrderView(),
     );
   }
@@ -26,7 +26,7 @@ class _ConfirmOrderView extends StatelessWidget {
   const _ConfirmOrderView();
 
   Future<void> _pickAddress(BuildContext context) async {
-    final viewModel = context.read<ConfirmOrderViewModel>();
+    final viewModel = context.read<ConfirmOrderCubit>();
     final DeliveryAddress? address = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -90,7 +90,7 @@ class _ConfirmOrderView extends StatelessWidget {
       selectedTime.minute,
     );
 
-    context.read<ConfirmOrderViewModel>().setDateTime(combined);
+    context.read<ConfirmOrderCubit>().setDateTime(combined);
   }
 
   String _formatDateTime(DateTime? dateTime, BuildContext context) {
@@ -115,11 +115,11 @@ class _ConfirmOrderView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ConfirmOrderViewModel, ConfirmOrderState>(
+    return BlocConsumer<ConfirmOrderCubit, ConfirmOrderState>(
       listener: (context, state) {
         _handleMessages(context, state);
         if (state.shouldNavigate) {
-          context.read<ConfirmOrderViewModel>().acknowledgeNavigation();
+          context.read<ConfirmOrderCubit>().acknowledgeNavigation();
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -185,7 +185,7 @@ class _ConfirmOrderView extends StatelessWidget {
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
-                            onPressed: context.read<ConfirmOrderViewModel>().proceed,
+                            onPressed: context.read<ConfirmOrderCubit>().proceed,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF6C47FF),
                               foregroundColor: Colors.white,

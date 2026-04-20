@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/responsive.dart';
 import '../../data/cart_item.dart';
-import '../view_model/cart_view_model.dart';
+import '../cubit/cart_cubit.dart';
 import 'confirm_order_screen.dart';
 
-/// Cart screen that displays all items added via CartViewModel.
-/// Uses Consumer<CartViewModel> to reactively rebuild when items change.
+/// Cart screen that displays all items added via CartCubit.
+/// Uses `BlocBuilder<CartCubit, CartState>` to reactively rebuild when items change.
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
 
@@ -25,12 +25,12 @@ class CartScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: Consumer<CartViewModel>(
-        builder: (context, viewModel, child) {
-          // Debug: verify the Consumer is receiving updates
-          debugPrint('CartScreen rebuild: ${viewModel.items.length} items');
+      body: BlocBuilder<CartCubit, CartState>(
+        builder: (context, state) {
+          // Debug: verify the BlocBuilder is receiving updates
+          debugPrint('CartScreen rebuild: ${state.items.length} items');
 
-          if (viewModel.isEmpty) {
+          if (state.isEmpty) {
             return const _EmptyCart();
           }
 
@@ -39,22 +39,22 @@ class CartScreen extends StatelessWidget {
               Expanded(
                 child: ListView.builder(
                   padding: Responsive.responsivePadding(context),
-                  itemCount: viewModel.items.length,
+                  itemCount: state.items.length,
                   itemBuilder: (context, index) {
-                    final item = viewModel.items[index];
+                    final item = state.items[index];
                     return _CartItemCard(
                       item: item,
-                      onIncrease: () => viewModel.increaseQuantity(item.id),
-                      onDecrease: () => viewModel.decreaseQuantity(item.id),
-                      onRemove: () => viewModel.removeItem(item.id),
+                      onIncrease: () => context.read<CartCubit>().increaseQuantity(item.id),
+                      onDecrease: () => context.read<CartCubit>().decreaseQuantity(item.id),
+                      onRemove: () => context.read<CartCubit>().removeItem(item.id),
                     );
                   },
                 ),
               ),
               _CheckoutBar(
-                total: viewModel.total,
+                total: state.total,
                 onCheckout: () {
-                  if (viewModel.isEmpty) {
+                  if (state.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text('Cart is empty')),
                     );
@@ -270,7 +270,7 @@ class _CheckoutBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, -2),

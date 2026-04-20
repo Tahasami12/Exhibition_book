@@ -1,6 +1,4 @@
-import 'package:exhibition_book/features/home/presentation/%20widgets/authorslistvertical.dart';
 import 'package:exhibition_book/features/home/presentation/%20widgets/product_item.dart';
-import 'package:exhibition_book/features/home/presentation/%20widgets/products_section.dart';
 import 'package:flutter/material.dart';
 
 class AuthorItem extends StatelessWidget {

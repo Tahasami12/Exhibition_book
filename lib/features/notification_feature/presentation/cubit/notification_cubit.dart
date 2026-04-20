@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'notification_state.dart';
 
-class NotificationViewModel extends Cubit<NotificationState> {
-  NotificationViewModel()
+class NotificationCubit extends Cubit<NotificationState> {
+  NotificationCubit()
       : super(
     NotificationState(
       deliveries: const [

@@ -5,7 +5,7 @@ import '../../../profile/screens/profile.dart';
 import '../views/home_view_body.dart';
 
 /// Main shell that holds all four tab screens in an IndexedStack.
-/// This ensures the CartViewModel state from Provider persists across
+/// This ensures the CartCubit state from BlocProvider persists across
 /// tab switches because all screens share the same widget tree.
 class MainShell extends StatefulWidget {
   const MainShell({super.key});

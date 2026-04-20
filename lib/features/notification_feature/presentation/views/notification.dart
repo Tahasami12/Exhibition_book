@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 
-import '../view_model/notification_state.dart';
-import '../view_model/notification_view_model.dart';
+import '../cubit/notification_state.dart';
+import '../cubit/notification_cubit.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -12,7 +12,7 @@ class NotificationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return BlocProvider(
-  create: (context) => NotificationViewModel(),
+  create: (context) => NotificationCubit(),
   child: DefaultTabController(
     length: 2,
     child: Scaffold(
@@ -25,7 +25,7 @@ class NotificationScreen extends StatelessWidget {
 }
 
 class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({super.key, required this.width});
+  const _AppBar({required this.width});
 
   final double width;
 
@@ -60,7 +60,7 @@ class _NotificationTabs extends StatelessWidget {
     final height = size.height;
     final isTablet = width > 600;
 
-    return BlocBuilder<NotificationViewModel, NotificationState>(
+    return BlocBuilder<NotificationCubit, NotificationState>(
       builder: (context, state) {
         return TabBarView(
           children: [

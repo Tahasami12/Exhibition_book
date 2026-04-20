@@ -14,6 +14,19 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
+  final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,25 +53,34 @@ class _SignupState extends State<Signup> {
 
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 25),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _SignUpHeader(),
-              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-              _TextForm1(),
-              SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-              _TextForm2(),
-              SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-              _TextForm3(),
-              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-              Register(),
-              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-              _Line(),
-              SizedBox(height: Responsive.responsiveSpacing(context, 140)),
-              _SignUpFooter(),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.symmetric(horizontal: 25),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SignUpHeader(),
+                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
+                _TextForm1(controller: _nameController),
+                SizedBox(height: Responsive.responsiveSpacing(context, 3)),
+                _TextForm2(controller: _emailController),
+                SizedBox(height: Responsive.responsiveSpacing(context, 3)),
+                _TextForm3(controller: _passwordController),
+                SizedBox(height: Responsive.responsiveSpacing(context, 15)),
+                Register(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      context.go(AppRouter.kHome);
+                    }
+                  },
+                ),
+                SizedBox(height: Responsive.responsiveSpacing(context, 15)),
+                _Line(),
+                SizedBox(height: Responsive.responsiveSpacing(context, 140)),
+                _SignUpFooter(),
             ],
+            ),
           ),
         ),
       ),
@@ -98,6 +120,9 @@ class _SignUpHeader extends StatelessWidget {
 }
 
 class _TextForm1 extends StatelessWidget {
+  final TextEditingController controller;
+  const _TextForm1({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -132,18 +157,26 @@ class _TextForm1 extends StatelessWidget {
           ),
         ],
       ),
-      child: TextField(
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+      child: TextFormField(
+        controller: controller,
+        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        validator: (value) {
+          if (value == null || value.trim().isEmpty) {
+            return 'Please enter your name';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           hintText: "Your name",
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: Responsive.responsiveFontSize(context, 16),
             height: 1.5,
-            color: Color(0xFFE0E0E0),
+            color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          errorStyle: const TextStyle(height: 0.8),
         ),
       ),
     );
@@ -151,6 +184,9 @@ class _TextForm1 extends StatelessWidget {
 }
 
 class _TextForm2 extends StatelessWidget {
+  final TextEditingController controller;
+  const _TextForm2({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -186,18 +222,29 @@ class _TextForm2 extends StatelessWidget {
           ),
         ],
       ),
-      child: TextField(
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+      child: TextFormField(
+        controller: controller,
+        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your email';
+          }
+          if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+            return 'Please enter a valid email';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           hintText: "Your email",
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: Responsive.responsiveFontSize(context, 16),
             height: Responsive.responsiveSpacing(context, 1.5),
-            color: Color(0xFFE0E0E0),
+            color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          errorStyle: const TextStyle(height: 0.8),
         ),
       ),
     );
@@ -205,6 +252,9 @@ class _TextForm2 extends StatelessWidget {
 }
 
 class _TextForm3 extends StatelessWidget {
+  final TextEditingController controller;
+  const _TextForm3({required this.controller});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -239,12 +289,22 @@ class _TextForm3 extends StatelessWidget {
           ),
         ],
       ),
-      child: TextField(
+      child: TextFormField(
+        controller: controller,
         obscureText: true,
         style: const TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.w400,
         ),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return 'Please enter your password';
+          }
+          if (value.length < 6) {
+            return 'Password must be at least 6 characters';
+          }
+          return null;
+        },
         decoration: InputDecoration(
           hintText: "Your password",
           suffixIcon: IconButton(
@@ -258,7 +318,8 @@ class _TextForm3 extends StatelessWidget {
             color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18),
+          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+          errorStyle: const TextStyle(height: 0.8),
         ),
       ),
     );
@@ -266,12 +327,13 @@ class _TextForm3 extends StatelessWidget {
 }
 
 class Register extends StatelessWidget {
+  final VoidCallback onPressed;
+  const Register({super.key, required this.onPressed});
+
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        context.go(AppRouter.kHome);
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xff54408C),
         minimumSize: Size(double.infinity, 50),

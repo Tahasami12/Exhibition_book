@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../../../core/utils/styles.dart';
+import '../../home/data/models/book_model.dart';
 
 class BookCard extends StatelessWidget {
-  const BookCard({super.key});
+  final BookModel book;
+
+  const BookCard({super.key, required this.book});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +21,9 @@ class BookCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(
                 Responsive.responsiveSpacing(context, 12),
               ),
-              image: const DecorationImage(
+              image: DecorationImage(
                 fit: BoxFit.cover,
-                image: AssetImage('assets/images/Frame.png'),
+                image: NetworkImage(book.imageUrl),
               ),
             ),
           ),
@@ -35,7 +38,7 @@ class BookCard extends StatelessWidget {
             horizontal: Responsive.responsiveSpacing(context, 3),
           ),
           child: Text(
-            "The Da vinci Code",
+            book.title,
             style: Styles.body.copyWith(
               fontWeight: FontWeight.w500,
               color: const Color(0xff121212),
@@ -55,7 +58,7 @@ class BookCard extends StatelessWidget {
             horizontal: Responsive.responsiveSpacing(context, 3),
           ),
           child: Text(
-            "\$19.99",
+            "\$${book.price}",
             style: Styles.small.copyWith(
               fontWeight: FontWeight.w700,
               color: const Color(0xff54408C),
@@ -66,4 +69,4 @@ class BookCard extends StatelessWidget {
       ],
     );
   }
-}
+}

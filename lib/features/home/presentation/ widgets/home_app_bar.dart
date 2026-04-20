@@ -5,7 +5,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/utils/responsive.dart';
-import '../../../../core/utils/app_colors.dart';
 import '../../../notification_feature/presentation/views/notification.dart';
 
 /// Top app bar widget for the Home screen.

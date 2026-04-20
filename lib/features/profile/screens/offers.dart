@@ -23,7 +23,7 @@ class Offers extends StatelessWidget {
   Offers({super.key});
 
   // load the offers from API.
-  List<OfferModel> offers = tmp.map((e) => OfferModel.fromJson(e)).toList();
+  final List<OfferModel> offers = tmp.map((e) => OfferModel.fromJson(e)).toList();
 
   // store the colors in an array to assign them dynamically.
   static final List<Color> offersColors = [

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "961937741224",
+    "project_id": "alma3rad",
+    "storage_bucket": "alma3rad.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961937741224:android:c550a4fa9389a8fb7d399d",
+        "android_client_info": {
+          "package_name": "com.example.bazar_book"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzL1UQ09v_D4VpkNuPEkjVT6CoEnwiXZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -140,6 +140,8 @@ class _MyAccountScreenState extends State<MyAccount> {
               color: AppColors.grey900,
             ),
             validator: (value) {
+              return null;
+            
               // return value == "" ? "Invalid name." : null;
             },
             decoration: InputDecoration(

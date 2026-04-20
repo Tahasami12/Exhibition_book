@@ -3,8 +3,8 @@ import '../../../../core/base/view_state.dart';
 import '../../data/delivery_address.dart';
 import 'confirm_order_state.dart';
 
-class ConfirmOrderViewModel extends Cubit<ConfirmOrderState> {
-  ConfirmOrderViewModel()
+class ConfirmOrderCubit extends Cubit<ConfirmOrderState> {
+  ConfirmOrderCubit()
       : super(
           ConfirmOrderState(
             status: ViewStatus.success,

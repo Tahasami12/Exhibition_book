@@ -7,7 +7,7 @@ import '../../features/splash/presentation/widgets/login_screen.dart';
 import '../../features/splash/presentation/widgets/on_boarding.dart';
 import '../../features/splash/presentation/widgets/on_boarding_2.dart';
 import '../../features/splash/presentation/widgets/on_boarding_3.dart';
-import '../../features/splash/presentation/widgets/signUp.dart';
+import '../../features/splash/presentation/widgets/sign_up.dart';
 import '../../features/splash/presentation/widgets/splash_view.dart';
 
 abstract class AppRouter {

@@ -1,4 +1,3 @@
-import 'package:exhibition_book/core/enums/order_status.dart';
 
 class OrderModel {
   int? booksCount;

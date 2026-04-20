@@ -1,15 +1,39 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:exhibition_book/core/api/book_repository.dart';
+import 'package:exhibition_book/features/home/presentation/cubit/books_cubit.dart';
+import 'package:exhibition_book/core/api/promotion_repository.dart';
+import 'package:exhibition_book/features/home/presentation/cubit/promotions_cubit.dart';
+import 'package:exhibition_book/core/api/vendor_repository.dart';
+import 'package:exhibition_book/features/home/presentation/cubit/vendors_cubit.dart';
+import 'package:exhibition_book/core/api/author_repository.dart';
+import 'package:exhibition_book/features/home/presentation/cubit/authors_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:exhibition_book/features/cart_feature/presentation/view_model/cart_view_model.dart';
+import 'package:exhibition_book/features/cart_feature/presentation/cubit/cart_cubit.dart';
 import 'core/utils/app_colors.dart';
 import 'core/utils/app_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(
-    MultiProvider(
+    MultiBlocProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => CartViewModel()),
+        BlocProvider(create: (_) => CartCubit()),
+        BlocProvider(create: (_) => BooksCubit(BookRepository())..fetchBooks()),
+        BlocProvider(
+          create:
+              (_) => PromotionsCubit(PromotionRepository())..fetchPromotions(),
+        ),
+        BlocProvider(
+          create: (_) => VendorsCubit(VendorRepository())..fetchVendors(),
+        ),
+        BlocProvider(
+          create: (_) => AuthorsCubit(AuthorRepository())..fetchAuthors(),
+        ),
       ],
       child: const MyApp(),
     ),

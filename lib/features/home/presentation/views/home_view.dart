@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'home_view_body.dart';
 import 'main_shell.dart';
 
 /// Legacy HomeView — now redirects to MainShell.

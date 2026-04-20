@@ -1,9 +1,10 @@
-import 'package:exhibition_book/features/home/presentation/%20widgets/product_item.dart';
-import 'package:exhibition_book/features/home/presentation/%20widgets/products_section.dart';
 import 'package:exhibition_book/features/home/presentation/views/authors_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/responsive.dart';
+import '../cubit/authors_cubit.dart';
+import '../cubit/authors_state.dart';
 
 class AuthorsList extends StatelessWidget {
   const AuthorsList({super.key});
@@ -12,73 +13,79 @@ class AuthorsList extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: Responsive.responsiveSpacing(context, 220),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(
-          horizontal: Responsive.responsiveSpacing(context, 16),
-        ),
-        itemCount: 4,
-        itemBuilder: (_, i) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => const AuthorsView(),
-                ),
-              );
-            },
-            child: Container(
-              width: Responsive.responsiveSpacing(context, 120),
-              margin: EdgeInsets.only(
-                right: Responsive.responsiveSpacing(context, 14),
+      child: BlocBuilder<AuthorsCubit, AuthorsState>(
+        builder: (context, state) {
+          if (state is AuthorsLoading || state is AuthorsInitial) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (state is AuthorsError) {
+            return Center(child: Text("Error: ${state.message}"));
+          } else if (state is AuthorsLoaded) {
+            if (state.authors.isEmpty) {
+              return const Center(child: Text("No authors found."));
+            }
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.responsiveSpacing(context, 16),
               ),
-              child: Column(
-                children: [
-
-
-                  CircleAvatar(
-                    radius: Responsive.responsiveSpacing(context, 50),
-                    backgroundImage: const AssetImage(
-                      'assets/images/author.png',
+              itemCount: state.authors.length,
+              itemBuilder: (_, i) {
+                final author = state.authors[i];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const AuthorsView(),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: Responsive.responsiveSpacing(context, 120),
+                    margin: EdgeInsets.only(
+                      right: Responsive.responsiveSpacing(context, 14),
+                    ),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: Responsive.responsiveSpacing(context, 50),
+                          backgroundImage: NetworkImage(author.imageUrl),
+                          onBackgroundImageError: (_, __) => const Icon(Icons.person),
+                        ),
+                        SizedBox(
+                          height: Responsive.responsiveSpacing(context, 8),
+                        ),
+                        Text(
+                          author.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize:
+                                Responsive.responsiveFontSize(context, 16),
+                            fontWeight: FontWeight.w600,
+                            color: const Color(0xFF121212),
+                          ),
+                        ),
+                        SizedBox(
+                          height: Responsive.responsiveSpacing(context, 4),
+                        ),
+                        Text(
+                          author.role,
+                          style: TextStyle(
+                            fontSize:
+                                Responsive.responsiveFontSize(context, 14),
+                            color: const Color(0xFFA6A6A6),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-
-                  SizedBox(
-                    height: Responsive.responsiveSpacing(context,8 ),
-                  ),
-
-
-                  Text(
-                    "John Freeman",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize:
-                      Responsive.responsiveFontSize(context, 16),
-                      fontWeight: FontWeight.w600,
-                      color: const Color(0xFF121212),
-                    ),
-                  ),
-
-                  SizedBox(
-                    height: Responsive.responsiveSpacing(context, 4),
-                  ),
-
-
-                  Text(
-                    "Writer",
-                    style: TextStyle(
-                      fontSize:
-                      Responsive.responsiveFontSize(context, 14),
-                      color: const Color(0xFFA6A6A6),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
+                );
+              },
+            );
+          }
+          return const SizedBox.shrink();
         },
       ),
     );
