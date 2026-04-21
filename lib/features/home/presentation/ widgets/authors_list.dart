@@ -1,10 +1,10 @@
-import 'package:exhibition_book/features/home/presentation/views/authors_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/responsive.dart';
 import '../cubit/authors_cubit.dart';
 import '../cubit/authors_state.dart';
+import '../views/author_details_view.dart';
 
 class AuthorsList extends StatelessWidget {
   const AuthorsList({super.key});
@@ -36,7 +36,10 @@ class AuthorsList extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => const AuthorsView(),
+                        builder: (_) => AuthorDetailsView(
+                          authorId: author.id,
+                          initialAuthor: author,
+                        ),
                       ),
                     );
                   },
@@ -49,8 +52,10 @@ class AuthorsList extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: Responsive.responsiveSpacing(context, 50),
-                          backgroundImage: NetworkImage(author.imageUrl),
-                          onBackgroundImageError: (_, __) => const Icon(Icons.person),
+                          backgroundImage: author.imageUrl.startsWith('http')
+                              ? NetworkImage(author.imageUrl)
+                              : AssetImage(author.imageUrl) as ImageProvider,
+                          onBackgroundImageError: (_, __) {},
                         ),
                         SizedBox(
                           height: Responsive.responsiveSpacing(context, 8),
@@ -71,7 +76,7 @@ class AuthorsList extends StatelessWidget {
                           height: Responsive.responsiveSpacing(context, 4),
                         ),
                         Text(
-                          author.role,
+                          '${author.booksCount} books',
                           style: TextStyle(
                             fontSize:
                                 Responsive.responsiveFontSize(context, 14),

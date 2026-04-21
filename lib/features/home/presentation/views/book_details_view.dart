@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:exhibition_book/core/utils/responsive.dart';
+import 'package:exhibition_book/core/utils/app_router.dart';
 import 'package:exhibition_book/features/cart_feature/presentation/cubit/cart_cubit.dart';
 import 'package:exhibition_book/features/cart_feature/data/cart_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:exhibition_book/features/home/data/models/book_model.dart';
+import 'package:exhibition_book/features/profile/cubit/favorites_cubit.dart';
+import 'package:exhibition_book/features/profile/cubit/favorites_state.dart';
+import 'package:exhibition_book/features/home/presentation/views/main_shell.dart';
 
 /// Product details screen for a single book.
 /// Displays cover image, title, author, description, rating,
@@ -106,7 +109,40 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                       ),
                     ),
                   ),
-                  const Icon(Icons.favorite, color: _primaryColor, size: 24),
+                  BlocBuilder<FavoritesCubit, FavoritesState>(
+                    builder: (context, state) {
+                      final isFavorite = context.read<FavoritesCubit>().isFavorite(
+                        widget.book.id,
+                      );
+
+                      return IconButton(
+                        onPressed: () {
+                          final favoritesCubit = context.read<FavoritesCubit>();
+                          final wasFavorite = favoritesCubit.isFavorite(
+                            widget.book.id,
+                          );
+
+                          favoritesCubit.toggleFavorite(widget.book);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                wasFavorite
+                                    ? '"${widget.book.title}" removed from favorites'
+                                    : '"${widget.book.title}" added to favorites',
+                              ),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: _primaryColor,
+                          size: 24,
+                        ),
+                      );
+                    },
+                  ),
                 ],
               ),
 
@@ -239,7 +275,18 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        onPressed: () => context.go('/home'),
+                        onPressed: () {
+                          MainShellController.showHome();
+
+                          if (Navigator.of(context).canPop()) {
+                            Navigator.of(
+                              context,
+                            ).popUntil((route) => route.isFirst);
+                            return;
+                          }
+
+                          context.go(AppRouter.kHome);
+                        },
                         child: Text(
                           "Continue Shopping",
                           style: TextStyle(

@@ -127,7 +127,7 @@ class Profile extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => Favorites()),
+              MaterialPageRoute(builder: (_) => const Favorites()),
             );
           },
         ),

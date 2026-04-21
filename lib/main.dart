@@ -8,9 +8,10 @@ import 'package:exhibition_book/core/api/vendor_repository.dart';
 import 'package:exhibition_book/features/home/presentation/cubit/vendors_cubit.dart';
 import 'package:exhibition_book/core/api/author_repository.dart';
 import 'package:exhibition_book/features/home/presentation/cubit/authors_cubit.dart';
+import 'package:exhibition_book/features/profile/cubit/favorites_cubit.dart';
+import 'package:exhibition_book/features/profile/data/favorites_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:exhibition_book/features/cart_feature/presentation/cubit/cart_cubit.dart';
 import 'core/utils/app_colors.dart';
 import 'core/utils/app_router.dart';
@@ -19,23 +20,41 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  final bookRepository = BookRepository();
+  final promotionRepository = PromotionRepository();
+  final vendorRepository = VendorRepository();
+  final authorRepository = AuthorRepository();
+  final favoritesRepository = FavoritesRepository();
+
   runApp(
-    MultiBlocProvider(
+    MultiRepositoryProvider(
       providers: [
-        BlocProvider(create: (_) => CartCubit()),
-        BlocProvider(create: (_) => BooksCubit(BookRepository())..fetchBooks()),
-        BlocProvider(
-          create:
-              (_) => PromotionsCubit(PromotionRepository())..fetchPromotions(),
-        ),
-        BlocProvider(
-          create: (_) => VendorsCubit(VendorRepository())..fetchVendors(),
-        ),
-        BlocProvider(
-          create: (_) => AuthorsCubit(AuthorRepository())..fetchAuthors(),
-        ),
+        RepositoryProvider.value(value: bookRepository),
+        RepositoryProvider.value(value: promotionRepository),
+        RepositoryProvider.value(value: vendorRepository),
+        RepositoryProvider.value(value: authorRepository),
+        RepositoryProvider.value(value: favoritesRepository),
       ],
-      child: const MyApp(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (_) => CartCubit()),
+          BlocProvider(create: (_) => BooksCubit(bookRepository)..fetchBooks()),
+          BlocProvider(
+            create:
+                (_) => PromotionsCubit(promotionRepository)..fetchPromotions(),
+          ),
+          BlocProvider(
+            create: (_) => VendorsCubit(vendorRepository)..fetchVendors(),
+          ),
+          BlocProvider(
+            create: (_) => AuthorsCubit(authorRepository)..fetchAuthors(),
+          ),
+          BlocProvider(
+            create: (_) => FavoritesCubit(favoritesRepository)..loadFavorites(),
+          ),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }

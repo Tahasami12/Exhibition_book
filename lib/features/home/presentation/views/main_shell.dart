@@ -4,6 +4,18 @@ import '../../../category/view/category_screen.dart';
 import '../../../profile/screens/profile.dart';
 import '../views/home_view_body.dart';
 
+class MainShellController {
+  static final ValueNotifier<int> currentTab = ValueNotifier<int>(0);
+
+  static void showHome() {
+    currentTab.value = 0;
+  }
+
+  static void showTab(int index) {
+    currentTab.value = index;
+  }
+}
+
 /// Main shell that holds all four tab screens in an IndexedStack.
 /// This ensures the CartCubit state from BlocProvider persists across
 /// tab switches because all screens share the same widget tree.
@@ -28,6 +40,28 @@ class _MainShellState extends State<MainShell> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    MainShellController.currentTab.addListener(_handleTabChange);
+  }
+
+  @override
+  void dispose() {
+    MainShellController.currentTab.removeListener(_handleTabChange);
+    super.dispose();
+  }
+
+  void _handleTabChange() {
+    if (!mounted) {
+      return;
+    }
+
+    if (_currentIndex != MainShellController.currentTab.value) {
+      setState(() => _currentIndex = MainShellController.currentTab.value);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
@@ -43,7 +77,7 @@ class _MainShellState extends State<MainShell> {
         unselectedItemColor: Colors.grey,
         onTap: (index) {
           if (index != _currentIndex) {
-            setState(() => _currentIndex = index);
+            MainShellController.showTab(index);
           }
         },
         items: const [
