@@ -3,6 +3,9 @@ import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 
 import '../../../../core/utils/app_router.dart';
 
@@ -41,7 +44,9 @@ class _SignupState extends State<Signup> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                context.pop();
+              },
               icon: Icon(
                 Icons.arrow_back,
                 size: Responsive.responsiveIconSize(context, 30),
@@ -52,11 +57,26 @@ class _SignupState extends State<Signup> {
       ),
 
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: Form(
-            key: _formKey,
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is AuthSuccess) {
+              if (state.role == 'admin') {
+                context.go('/admin');
+              } else {
+                context.go(AppRouter.kHome);
+              }
+            } else if (state is AuthFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage, style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+              );
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Form(
+                key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -69,9 +89,14 @@ class _SignupState extends State<Signup> {
                 _TextForm3(controller: _passwordController),
                 SizedBox(height: Responsive.responsiveSpacing(context, 15)),
                 Register(
+                  isLoading: state is AuthLoading,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      context.go(AppRouter.kHome);
+                      context.read<AuthCubit>().signUp(
+                        name: _nameController.text.trim(),
+                        email: _emailController.text.trim(),
+                        password: _passwordController.text.trim(),
+                      );
                     }
                   },
                 ),
@@ -82,7 +107,9 @@ class _SignupState extends State<Signup> {
             ],
             ),
           ),
-        ),
+        );
+      },
+    ),
       ),
     );
   }
@@ -328,25 +355,32 @@ class _TextForm3 extends StatelessWidget {
 
 class Register extends StatelessWidget {
   final VoidCallback onPressed;
-  const Register({super.key, required this.onPressed});
+  final bool isLoading;
+  const Register({super.key, required this.onPressed, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isLoading ? () {} : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xff54408C),
         minimumSize: Size(double.infinity, 50),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
-      child: Text(
-        "Register",
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontSize: Responsive.responsiveFontSize(context, 16),
-        ),
-      ),
+      child: isLoading
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+            )
+          : Text(
+              "Register",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: Responsive.responsiveFontSize(context, 16),
+              ),
+            ),
     );
   }
 }
@@ -368,11 +402,13 @@ class _Line extends StatelessWidget {
         ),
         TextButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.zero, // removes space
+            padding: EdgeInsets.zero,
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          onPressed: () {},
+          onPressed: () {
+            context.go('/login');
+          },
           child: Text(
             "Sign In",
             style: GoogleFonts.roboto(
@@ -410,7 +446,9 @@ class _SignUpFooter extends StatelessWidget {
               minimumSize: Size.zero,
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            onPressed: () {},
+            onPressed: () {
+              context.go('/login');
+            },
             child: Text(
               "Terms, Data Policy.",
               style: GoogleFonts.roboto(

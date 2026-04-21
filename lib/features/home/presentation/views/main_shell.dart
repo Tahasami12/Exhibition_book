@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:exhibition_book/features/cart_feature/presentation/views/cart_screen.dart';
+import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import '../../../category/view/category_screen.dart';
 import '../../../profile/screens/profile.dart';
 import '../views/home_view_body.dart';
@@ -34,72 +35,36 @@ class _MainShellState extends State<MainShell> {
         index: _currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        elevation: 10,
-        selectedItemColor: _primaryColor,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          if (index != _currentIndex) {
-            setState(() => _currentIndex = index);
+      bottomNavigationBar: MotionTabBar(
+        initialSelectedTab: "Home",
+        useSafeArea: true,
+        labels: const ["Home", "Category", "Cart", "Profile"],
+        icons: const [
+          Icons.home_outlined,
+          Icons.grid_view_outlined,
+          Icons.shopping_cart_outlined,
+          Icons.person_outline,
+        ],
+        tabSize: 50,
+        tabBarHeight: 55,
+        textStyle: const TextStyle(
+          fontSize: 12,
+          color: _primaryColor,
+          fontWeight: FontWeight.w500,
+        ),
+        tabIconColor: Colors.grey,
+        tabIconSize: 28.0,
+        tabIconSelectedSize: 26.0,
+        tabSelectedColor: _primaryColor,
+        tabIconSelectedColor: Colors.white,
+        tabBarColor: Colors.white,
+        onTabItemSelected: (int value) {
+          if (value != _currentIndex) {
+            setState(() {
+              _currentIndex = value;
+            });
           }
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/images/Home.png'),
-              size: 24,
-              color: Colors.grey,
-            ),
-            activeIcon: ImageIcon(
-              AssetImage('assets/images/Home.png'),
-              size: 24,
-              color: _primaryColor,
-            ),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/images/category.png'),
-              size: 24,
-              color: Colors.grey,
-            ),
-            activeIcon: ImageIcon(
-              AssetImage('assets/images/category.png'),
-              size: 24,
-              color: _primaryColor,
-            ),
-            label: "Category",
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/images/cart.png'),
-              size: 24,
-              color: Colors.grey,
-            ),
-            activeIcon: ImageIcon(
-              AssetImage('assets/images/cart.png'),
-              size: 24,
-              color: _primaryColor,
-            ),
-            label: "Cart",
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/images/Profile.png'),
-              size: 24,
-              color: Colors.grey,
-            ),
-            activeIcon: ImageIcon(
-              AssetImage('assets/images/Profile.png'),
-              size: 24,
-              color: _primaryColor,
-            ),
-            label: "Profile",
-          ),
-        ],
       ),
     );
   }

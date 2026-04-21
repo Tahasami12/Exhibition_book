@@ -6,6 +6,10 @@ import 'package:exhibition_book/features/profile/screens/order_history.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart';
 
 /// Profile tab content.
 /// Returns only body content — MainShell provides the Scaffold + BottomNav.
@@ -49,7 +53,7 @@ class Profile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "John Doe",
+                    FirebaseAuth.instance.currentUser?.displayName ?? "User Name",
                     style: TextStyle(
                       color: AppColors.grey900,
                       fontWeight: FontWeight.w700,
@@ -57,7 +61,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "(+1) 234 567 890",
+                    FirebaseAuth.instance.currentUser?.email ?? "email@example.com",
                     style: TextStyle(
                       color: AppColors.grey500,
                       fontSize: 14,
@@ -205,8 +209,12 @@ class Profile extends StatelessWidget {
                   labelColor: AppColors.background,
                   buttonColor: AppColors.primary,
                 ),
-                onTap: () {
-                  ///TODO: Implement logout logic
+                onTap: () async {
+                  await context.read<AuthCubit>().signOut();
+                  if (context.mounted) {
+                    Navigator.pop(context); // Close the bottom sheet
+                    context.go('/login'); // Navigate to login
+                  }
                 },
               ),
               const SizedBox(height: 15),

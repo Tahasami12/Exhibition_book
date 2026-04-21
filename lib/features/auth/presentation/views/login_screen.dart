@@ -4,6 +4,9 @@ import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
 
 import '../../../../core/utils/app_router.dart';
 
@@ -18,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _isEmailLoading = false;
+  bool _isGoogleLoading = false;
 
   @override
   void dispose() {
@@ -39,22 +44,37 @@ class _LoginScreenState extends State<LoginScreen> {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.arrow_back,
-                size: Responsive.responsiveIconSize(context, 30),
-              ),
-            ),
+            automaticallyImplyLeading: false,
           ),
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.symmetric(horizontal: 25),
-          child: Form(
-            key: _formKey,
+        child: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) {
+            if (state is! AuthLoading) {
+              setState(() {
+                _isEmailLoading = false;
+                _isGoogleLoading = false;
+              });
+            }
+            if (state is AuthSuccess) {
+              if (state.role == 'admin') {
+                context.go('/admin');
+              } else {
+                context.go(AppRouter.kHome);
+              }
+            } else if (state is AuthFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.errorMessage, style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+              );
+            }
+          },
+          builder: (context, state) {
+            return SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 25),
+              child: Form(
+                key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -83,9 +103,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
               SizedBox(height: Responsive.responsiveSpacing(context, 20)),
               Login(
+                isLoading: state is AuthLoading && _isEmailLoading,
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    context.go(AppRouter.kHome);
+                    setState(() => _isEmailLoading = true);
+                    context.read<AuthCubit>().signIn(
+                      email: _emailController.text.trim(),
+                      password: _passwordController.text.trim(),
+                    );
                   }
                 },
               ),
@@ -94,13 +119,21 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(height: Responsive.responsiveSpacing(context, 20)),
               Line2(),
               SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-              Final(),
+              Final(
+                isLoading: state is AuthLoading && _isGoogleLoading,
+                onPressed: () {
+                  setState(() => _isGoogleLoading = true);
+                  context.read<AuthCubit>().signInWithGoogle();
+                },
+              ),
               SizedBox(height: Responsive.responsiveSpacing(context, 4)),
               Final2(),
             ],
+            ),
           ),
-          ),
-        ),
+        );
+      },
+      ),
       ),
     );
   }
@@ -279,25 +312,32 @@ class _TextForm2 extends StatelessWidget {
 
 class Login extends StatelessWidget {
   final VoidCallback onPressed;
-  const Login({super.key, required this.onPressed});
+  final bool isLoading;
+  const Login({super.key, required this.onPressed, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isLoading ? () {} : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: Color(0xff54408C),
         minimumSize: Size(double.infinity, 50),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
       ),
-      child: Text(
-        "Login",
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontSize: Responsive.responsiveFontSize(context, 16),
-        ),
-      ),
+      child: isLoading
+          ? const SizedBox(
+              height: 24,
+              width: 24,
+              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+            )
+          : Text(
+              "Login",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: Responsive.responsiveFontSize(context, 16),
+              ),
+            ),
     );
   }
 }
@@ -325,7 +365,9 @@ class Line extends StatelessWidget {
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          onPressed: () {},
+          onPressed: () {
+            context.push('/signup');
+          },
           child: Text(
             " Sign Up",
             style: GoogleFonts.roboto(
@@ -368,7 +410,9 @@ class Line2 extends StatelessWidget {
 }
 
 class Final extends StatelessWidget {
-  const Final({super.key});
+  final VoidCallback onPressed;
+  final bool isLoading;
+  const Final({super.key, required this.onPressed, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -376,7 +420,7 @@ class Final extends StatelessWidget {
       width: double.infinity,
       height: Responsive.responsiveSpacing(context, 50),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: isLoading ? () {} : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           elevation: 0,
@@ -385,22 +429,28 @@ class Final extends StatelessWidget {
             side: BorderSide(color: Colors.grey.shade300),
           ),
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(AssetData.google, width: 15),
-            SizedBox(width: Responsive.responsiveSpacing(context, 10)),
-            Text(
-              "Sign in with Google",
-              style: GoogleFonts.roboto(
-                fontWeight: FontWeight.w400,
-                fontSize: Responsive.responsiveFontSize(context, 14),
-                height: Responsive.responsiveSpacing(context, 1.5),
-                color: Colors.grey.shade900,
+        child: isLoading
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child: CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(AssetData.google, width: 15),
+                  SizedBox(width: Responsive.responsiveSpacing(context, 10)),
+                  Text(
+                    "Sign in with Google",
+                    style: GoogleFonts.roboto(
+                      fontWeight: FontWeight.w400,
+                      fontSize: Responsive.responsiveFontSize(context, 14),
+                      height: Responsive.responsiveSpacing(context, 1.5),
+                      color: Colors.grey.shade900,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -12,17 +12,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:exhibition_book/features/cart_feature/presentation/cubit/cart_cubit.dart';
+import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:exhibition_book/features/auth/data/auth_repository.dart';
+import 'package:exhibition_book/core/utils/cache_helper.dart';
 import 'core/utils/app_colors.dart';
 import 'core/utils/app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await CacheHelper.init();
 
   runApp(
     MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => CartCubit()),
+        BlocProvider(create: (_) => AuthCubit(AuthRepository())),
         BlocProvider(create: (_) => BooksCubit(BookRepository())..fetchBooks()),
         BlocProvider(
           create:
