@@ -1,178 +1,237 @@
-import 'package:exhibition_book/features/profile/models/favorite_model.dart';
-import 'package:exhibition_book/core/utils/app_colors.dart';
-import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-///TODO: Delete it after getting the data from API.
-List<Map<String, dynamic>> favoriteBooks = [
-  {
-    "bookTitle": "The Great Gatsby",
-    "booksCount": 12,
-    "bookPrice": 10.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "To Kill a Mockingbird",
-    "bookPrice": 10.01,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "1984",
-    "bookPrice": 11.99,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "Pride and Prejudice",
-    "bookPrice": 35.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "The Hobbit",
-    "bookPrice": 20.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "The Great Gatsby",
-    "booksCount": 12,
-    "bookPrice": 10.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "To Kill a Mockingbird",
-    "bookPrice": 10.01,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "1984",
-    "bookPrice": 11.99,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "Pride and Prejudice",
-    "bookPrice": 35.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "The Hobbit",
-    "bookPrice": 20.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "The Great Gatsby",
-    "booksCount": 12,
-    "bookPrice": 10.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "To Kill a Mockingbird",
-    "bookPrice": 10.01,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "1984",
-    "bookPrice": 11.99,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "Pride and Prejudice",
-    "bookPrice": 35.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-  {
-    "bookTitle": "The Hobbit",
-    "bookPrice": 20.00,
-    "bookCoverURL": "assets/images/test-img.jpg",
-  },
-];
+import '../../../core/utils/app_colors.dart';
+import '../../../core/utils/profile_helpers.dart';
+import '../../home/presentation/views/book_details_view.dart';
+import '../cubit/favorites_cubit.dart';
+import '../cubit/favorites_state.dart';
+import '../models/favorite_model.dart';
 
 class Favorites extends StatelessWidget {
-  final favorites =
-      favoriteBooks.map((e) => FavoriteModel.fromJson(e)).toList();
-  Favorites({super.key});
+  const Favorites({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        backgroundColor: AppColors.background,
-        appBar: makeAppBar(
-          title: "Your Favorites",
-          titleColor: AppColors.textPrimary,
-          enableLeading: true,
-          barBackgroundColor: AppColors.background,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10.0),
-            child: Column(
-              children: [
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: ScrollPhysics(),
-                  separatorBuilder: (c, i) => Divider(),
-                  itemCount: favorites.length,
-                  itemBuilder:
-                      (c, i) => Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: Row(
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(15.0),
-                                child: Image.asset(
-                                  favorites[i].bookCoverURL ?? "",
-                                  width: 48,
-                                  height: 48,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                              SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${favorites[i].bookTitle}",
-                                    style: TextStyle(
-                                      color: AppColors.grey900,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  Text(
-                                    "\$${favorites[i].bookPrice!.toStringAsFixed(2)}",
-                                    style: TextStyle(
-                                      color: AppColors.primary,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Spacer(),
-                              Container(
-                                width: 25,
-                                height: 25,
-                                decoration: BoxDecoration(
-                                  color: AppColors.background,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: SvgPicture.asset(
-                                  "assets/images/favorite.svg",
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                ),
-                Divider(),
-              ],
-            ),
-          ),
-        ),
-      );
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: makeAppBar(
+        title: "Your Favorites",
+        titleColor: AppColors.textPrimary,
+        enableLeading: true,
+        barBackgroundColor: AppColors.background,
+      ),
+      body: BlocBuilder<FavoritesCubit, FavoritesState>(
+        builder: (context, state) {
+          if (state is FavoritesLoading || state is FavoritesInitial) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
+          if (state is FavoritesError) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.error_outline,
+                      color: AppColors.red,
+                      size: 44,
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        context.read<FavoritesCubit>().loadFavorites();
+                      },
+                      child: const Text('Try Again'),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
+
+          if (state is FavoritesLoaded) {
+            if (state.favorites.isEmpty) {
+              return const _EmptyFavoritesView();
+            }
+
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              itemCount: state.favorites.length,
+              separatorBuilder: (_, __) => const Divider(height: 1),
+              itemBuilder: (context, index) {
+                final favorite = state.favorites[index];
+                return _FavoriteBookTile(favorite: favorite);
+              },
+            );
+          }
+
+          return const SizedBox.shrink();
+        },
+      ),
+    );
+  }
+}
+
+class _FavoriteBookTile extends StatelessWidget {
+  const _FavoriteBookTile({required this.favorite});
+
+  final FavoriteModel favorite;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BookDetailsPage(book: favorite.toBook()),
+          ),
+        );
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: SizedBox(
+                width: 56,
+                height: 70,
+                child: _FavoriteBookImage(imageUrl: favorite.imageUrl),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    favorite.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.grey900,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    favorite.author,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppColors.grey500,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "\$${favorite.price.toStringAsFixed(2)}",
+                    style: const TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                context.read<FavoritesCubit>().removeFavorite(favorite.id);
+              },
+              icon: const Icon(
+                Icons.favorite,
+                color: AppColors.primary,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FavoriteBookImage extends StatelessWidget {
+  const _FavoriteBookImage({required this.imageUrl});
+
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    if (imageUrl.startsWith('http')) {
+      return Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _fallback(),
+      );
+    }
+
+    return Image.asset(
+      imageUrl,
+      fit: BoxFit.cover,
+      errorBuilder: (_, __, ___) => _fallback(),
+    );
+  }
+
+  Widget _fallback() {
+    return Container(
+      color: AppColors.grey100,
+      child: const Icon(
+        Icons.book,
+        color: AppColors.grey500,
+      ),
+    );
+  }
+}
+
+class _EmptyFavoritesView extends StatelessWidget {
+  const _EmptyFavoritesView();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(
+              Icons.favorite_border,
+              size: 60,
+              color: AppColors.grey500,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No favorite books yet.',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppColors.grey900,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Tap the heart icon on any book details page to add it here.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.grey500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

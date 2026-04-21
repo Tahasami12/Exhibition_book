@@ -5,6 +5,18 @@ import '../../../category/view/category_screen.dart';
 import '../../../profile/screens/profile.dart';
 import '../views/home_view_body.dart';
 
+class MainShellController {
+  static final ValueNotifier<int> currentTab = ValueNotifier<int>(0);
+
+  static void showHome() {
+    currentTab.value = 0;
+  }
+
+  static void showTab(int index) {
+    currentTab.value = index;
+  }
+}
+
 /// Main shell that holds all four tab screens in an IndexedStack.
 /// This ensures the CartCubit state from BlocProvider persists across
 /// tab switches because all screens share the same widget tree.
@@ -15,8 +27,9 @@ class MainShell extends StatefulWidget {
   State<MainShell> createState() => _MainShellState();
 }
 
-class _MainShellState extends State<MainShell> {
+class _MainShellState extends State<MainShell> with TickerProviderStateMixin {
   int _currentIndex = 0;
+  late MotionTabBarController _motionTabBarController;
 
   static const _primaryColor = Color(0xFF54408C);
 
@@ -29,6 +42,35 @@ class _MainShellState extends State<MainShell> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _motionTabBarController = MotionTabBarController(
+      initialIndex: 0,
+      length: 4,
+      vsync: this,
+    );
+    MainShellController.currentTab.addListener(_handleTabChange);
+  }
+
+  @override
+  void dispose() {
+    MainShellController.currentTab.removeListener(_handleTabChange);
+    _motionTabBarController.dispose();
+    super.dispose();
+  }
+
+  void _handleTabChange() {
+    if (!mounted) {
+      return;
+    }
+
+    if (_currentIndex != MainShellController.currentTab.value) {
+      setState(() => _currentIndex = MainShellController.currentTab.value);
+      _motionTabBarController.index = _currentIndex;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: IndexedStack(
@@ -36,6 +78,7 @@ class _MainShellState extends State<MainShell> {
         children: _screens,
       ),
       bottomNavigationBar: MotionTabBar(
+        controller: _motionTabBarController,
         initialSelectedTab: "Home",
         useSafeArea: true,
         labels: const ["Home", "Category", "Cart", "Profile"],
@@ -60,9 +103,7 @@ class _MainShellState extends State<MainShell> {
         tabBarColor: Colors.white,
         onTabItemSelected: (int value) {
           if (value != _currentIndex) {
-            setState(() {
-              _currentIndex = value;
-            });
+            MainShellController.showTab(value);
           }
         },
       ),

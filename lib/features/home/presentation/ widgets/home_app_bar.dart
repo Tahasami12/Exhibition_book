@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../core/utils/app_router.dart';
@@ -52,9 +51,7 @@ class HomeAppBar extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => const NotificationScreen(),
-                ),
+                MaterialPageRoute(builder: (_) => const NotificationScreen()),
               );
             },
           ),

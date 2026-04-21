@@ -1,22 +1,25 @@
 class AuthorModel {
   final String id;
   final String name;
-  final String role;
   final String imageUrl;
+  final String bio;
+  final int booksCount;
 
   AuthorModel({
     required this.id,
     required this.name,
-    required this.role,
     required this.imageUrl,
+    required this.bio,
+    required this.booksCount,
   });
 
   factory AuthorModel.fromFirestore(Map<String, dynamic> json, String id) {
     return AuthorModel(
       id: id,
       name: json['name'] ?? 'Unknown Author',
-      role: json['role'] ?? 'Writer',
-      imageUrl: json['imageUrl'] ?? 'assets/images/author.png',
+      imageUrl: json['image'] ?? json['imageUrl'] ?? 'assets/images/author.png',
+      bio: json['bio'] ?? '',
+      booksCount: json['booksCount'] is num ? (json['booksCount'] as num).toInt() : 0,
     );
   }
 }
