@@ -31,4 +31,28 @@ class AuthorRepository {
       throw Exception('Failed to load author details: $e');
     }
   }
+
+  Future<void> addAuthor(AuthorModel author) async {
+    try {
+      await _firestore.collection('authors').add(author.toJson());
+    } catch (e) {
+      throw Exception('Failed to add author: $e');
+    }
+  }
+
+  Future<void> updateAuthor(AuthorModel author) async {
+    try {
+      await _firestore.collection('authors').doc(author.id).update(author.toJson());
+    } catch (e) {
+      throw Exception('Failed to update author: $e');
+    }
+  }
+
+  Future<void> deleteAuthor(String id) async {
+    try {
+      await _firestore.collection('authors').doc(id).delete();
+    } catch (e) {
+      throw Exception('Failed to delete author: $e');
+    }
+  }
 }

@@ -159,15 +159,25 @@ class _CartItemCard extends StatelessWidget {
         height: Responsive.responsiveImageSize(context, 100),
         color: Colors.grey[200],
         child: item.imageUrl.isNotEmpty
-            ? Image.asset(
-                item.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => Icon(
-                  Icons.book,
-                  size: Responsive.responsiveIconSize(context, 40),
-                  color: Colors.grey,
-                ),
-              )
+            ? (item.imageUrl.startsWith('http')
+                ? Image.network(
+                    item.imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.book,
+                      size: Responsive.responsiveIconSize(context, 40),
+                      color: Colors.grey,
+                    ),
+                  )
+                : Image.asset(
+                    item.imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (_, __, ___) => Icon(
+                      Icons.book,
+                      size: Responsive.responsiveIconSize(context, 40),
+                      color: Colors.grey,
+                    ),
+                  ))
             : Icon(
                 Icons.book,
                 size: Responsive.responsiveIconSize(context, 40),

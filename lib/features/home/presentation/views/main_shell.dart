@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:exhibition_book/features/cart_feature/presentation/views/cart_screen.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
+import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
+import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
 import '../../../category/view/category_screen.dart';
 import '../../../profile/screens/profile.dart';
 import '../views/home_view_body.dart';
@@ -73,10 +75,7 @@ class _MainShellState extends State<MainShell> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: MotionTabBar(
         controller: _motionTabBarController,
         initialSelectedTab: "Home",

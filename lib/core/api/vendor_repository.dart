@@ -31,4 +31,28 @@ class VendorRepository {
       throw Exception('Failed to load vendor details: $e');
     }
   }
+
+  Future<void> addVendor(VendorModel vendor) async {
+    try {
+      await _firestore.collection('vendors').add(vendor.toJson());
+    } catch (e) {
+      throw Exception('Failed to add vendor: $e');
+    }
+  }
+
+  Future<void> updateVendor(VendorModel vendor) async {
+    try {
+      await _firestore.collection('vendors').doc(vendor.id).update(vendor.toJson());
+    } catch (e) {
+      throw Exception('Failed to update vendor: $e');
+    }
+  }
+
+  Future<void> deleteVendor(String id) async {
+    try {
+      await _firestore.collection('vendors').doc(id).delete();
+    } catch (e) {
+      throw Exception('Failed to delete vendor: $e');
+    }
+  }
 }

@@ -102,6 +102,14 @@ class CartCubit extends Cubit<CartState> {
     emit(state.copyWith(shouldNavigateToConfirm: false));
   }
 
+  void clearCart() {
+    emit(state.copyWith(
+      items: [],
+      status: ViewStatus.success,
+      message: 'cleared',
+    ));
+  }
+
   void clearMessage() {
     emit(state.copyWith(message: null, overrideMessage: true));
   }

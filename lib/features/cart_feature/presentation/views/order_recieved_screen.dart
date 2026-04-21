@@ -1,9 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/utils/responsive.dart';
-import '../../../home/presentation/views/home_view.dart';
 
 class OrderReceivedScreen extends StatefulWidget {
   const OrderReceivedScreen({super.key});
@@ -226,8 +225,8 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigate to home and clear all previous routes
-                          Get.offAll(() => const HomeView());
+                          // Navigate back home safely utilizing go_router
+                          context.go('/home');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF6C47FF),

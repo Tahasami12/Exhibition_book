@@ -22,4 +22,13 @@ class AuthorModel {
       booksCount: json['booksCount'] is num ? (json['booksCount'] as num).toInt() : 0,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'imageUrl': imageUrl,
+      'bio': bio,
+      'booksCount': booksCount,
+    };
+  }
 }

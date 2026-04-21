@@ -23,4 +23,13 @@ class VendorModel {
       isBestVendor: json['isBestVendor'] ?? false,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'logoUrl': logoUrl,
+      'rating': rating,
+      'isBestVendor': isBestVendor,
+    };
+  }
 }

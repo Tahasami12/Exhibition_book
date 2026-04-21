@@ -3,6 +3,7 @@ import 'package:exhibition_book/features/profile/screens/help_center.dart';
 import 'package:exhibition_book/features/profile/screens/my_account.dart';
 import 'package:exhibition_book/features/profile/screens/offers.dart';
 import 'package:exhibition_book/features/profile/screens/order_history.dart';
+import 'package:exhibition_book/features/chat/presentation/views/user_chat_view.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
@@ -156,6 +157,18 @@ class Profile extends StatelessWidget {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => HelpCenter()),
+            );
+          },
+        ),
+        InkWell(
+          child: makeNavigationRecord(
+            label: "Support Chat",
+            avatarName: "help.svg",
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const UserChatView()),
             );
           },
         ),
