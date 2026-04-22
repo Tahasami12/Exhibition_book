@@ -168,7 +168,7 @@ class OrderDetailsView extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              '\$${item.price.toStringAsFixed(2)}',
+                              'EGP ${item.price.toStringAsFixed(2)}',
                               style: TextStyle(fontWeight: FontWeight.w600, color: cs.primary),
                             ),
                           ],
@@ -216,7 +216,7 @@ class OrderDetailsView extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '\$${order.totalAmount.toStringAsFixed(2)}',
+                        'EGP ${order.totalAmount.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -269,7 +269,7 @@ class OrderDetailsView extends StatelessWidget {
       children: [
         Text(label, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6))),
         Text(
-          '${isDiscount ? '' : '\$'}${amount.toStringAsFixed(2)}',
+          '${isDiscount ? '' : 'EGP '}${amount.toStringAsFixed(2)}',
           style: TextStyle(
             fontWeight: FontWeight.w500,
             color: isDiscount ? Colors.green : cs.onSurface,

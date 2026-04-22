@@ -103,7 +103,7 @@ class BooksList extends StatelessWidget {
 
                         // ── Price ──
                         Text(
-                          "\$${book.price}",
+                          "EGP ${book.price}",
                           style: TextStyle(
                             fontSize: Responsive.responsiveFontSize(context, 14),
                             color: const Color(0xFF54408C),

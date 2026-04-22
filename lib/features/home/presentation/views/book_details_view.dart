@@ -205,7 +205,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                 children: [
                   // Price label
                   Text(
-                    "\$${widget.book.price.toStringAsFixed(2)}",
+                    "EGP ${widget.book.price.toStringAsFixed(2)}",
                     style: TextStyle(
                       fontSize: Responsive.responsiveFontSize(context, 22),
                       fontWeight: FontWeight.w700,

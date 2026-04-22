@@ -136,7 +136,7 @@ class OrderHistory extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                "\$${order.totalAmount.toStringAsFixed(2)}",
+                                "EGP ${order.totalAmount.toStringAsFixed(2)}",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,

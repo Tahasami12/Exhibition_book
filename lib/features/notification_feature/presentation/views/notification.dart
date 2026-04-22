@@ -1,328 +1,359 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 
-import '../cubit/notification_state.dart';
-import '../cubit/notification_cubit.dart';
+import '../../../../core/utils/app_strings.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    return BlocProvider(
-  create: (context) => NotificationCubit(),
-  child: DefaultTabController(
-    length: 2,
-    child: Scaffold(
-        appBar: _AppBar(width: width),
-        body: const _NotificationTabs(),
+    final t = AppStrings.of(context);
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          title: const Text(
+            'Notifications',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          bottom: TabBar(
+            indicatorColor: const Color(0xFF6C47FF),
+            labelColor: const Color(0xFF6C47FF),
+            unselectedLabelColor: Colors.grey,
+            tabs: [
+              Tab(text: t.orders),
+              Tab(text: t.promotions),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _OrderNotificationsTab(),
+            _PromotionsNotificationsTab(),
+          ],
+        ),
       ),
-  ),
-);
-  }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar({required this.width});
-
-  final double width;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      leading: InkWell(
-        onTap: () {
-          Get.back();
-        },
-        child: const Icon(Icons.arrow_back),
-      ),
-      title: const Text(
-        'Notification',
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
-      bottom: const TabBar(tabs: [Tab(text: 'Delivery'), Tab(text: 'News')]),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(104);
 }
 
-class _NotificationTabs extends StatelessWidget {
-  const _NotificationTabs();
+// ─── Orders tab: real data from Firestore ──────────────────────────────────────
 
+class _OrderNotificationsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    final width = size.width;
-    final height = size.height;
-    final isTablet = width > 600;
+    final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    if (userId.isEmpty) {
+      return const Center(child: Text('Please log in to see your orders.'));
+    }
 
-    return BlocBuilder<NotificationCubit, NotificationState>(
-      builder: (context, state) {
-        return TabBarView(
-          children: [
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.05,
-                  vertical: height * 0.02,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: height * 0.03),
-                    Text(
-                      'Current',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: isTablet ? 22 : 18,
-                      ),
-                    ),
-                    SizedBox(height: height * 0.02),
-                    ...state.deliveries.map(
-                      (delivery) => Padding(
-                        padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).size.height * 0.015,
-                        ),
-                        child: _DeliveryCard(
-                          data: delivery,
-                          isTablet: isTablet,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: height * 0.03),
-                    Text(
-                      'October 2021',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: isTablet ? 22 : 18,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('orders')
+          .where('userId', isEqualTo: userId)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
+
+        final docs = snapshot.data?.docs ?? [];
+        if (docs.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.notifications_none,
+                    size: 64, color: Colors.grey.shade300),
+                const SizedBox(height: 16),
+                Text('No order notifications yet.',
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
+              ],
             ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.05,
-                  vertical: height * 0.02,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: height * 0.03),
-                    Text(
-                      'October 2021',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: isTablet ? 22 : 18,
-                      ),
+          );
+        }
+
+        // Sort by createdAt descending locally
+        final sorted = docs.toList()
+          ..sort((a, b) {
+            final aT = (a.data() as Map)['createdAt'] as Timestamp?;
+            final bT = (b.data() as Map)['createdAt'] as Timestamp?;
+            if (aT == null && bT == null) return 0;
+            if (aT == null) return 1;
+            if (bT == null) return -1;
+            return bT.compareTo(aT);
+          });
+
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: sorted.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final data = sorted[index].data() as Map<String, dynamic>;
+            final orderId = sorted[index].id;
+            final status = data['status'] as String? ?? 'pending';
+            final total = (data['totalAmount'] as num?)?.toStringAsFixed(2) ?? '0.00';
+            final date = data['date'] as String? ?? '';
+            final itemCount = (data['items'] as List?)?.length ?? 0;
+
+            final Color statusColor;
+            final IconData statusIcon;
+            switch (status.toLowerCase()) {
+              case 'confirmed':
+                statusColor = Colors.blue;
+                statusIcon = Icons.check_circle_outline;
+                break;
+              case 'shipped':
+                statusColor = Colors.purple;
+                statusIcon = Icons.local_shipping_outlined;
+                break;
+              case 'delivered':
+                statusColor = Colors.green;
+                statusIcon = Icons.done_all;
+                break;
+              case 'cancelled':
+                statusColor = Colors.red;
+                statusIcon = Icons.cancel_outlined;
+                break;
+              default:
+                statusColor = Colors.orange;
+                statusIcon = Icons.hourglass_empty;
+            }
+
+            return Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: statusColor.withValues(alpha: 0.1),
+                      shape: BoxShape.circle,
                     ),
-                    SizedBox(height: height * 0.02),
-                    InkWell(
-                      onTap: () {
-                        //Get.to(const PromotionPage());
-                      },
-                      child: _NewsRow(
-                        item: state.news.first,
-                        isTablet: isTablet,
-                      ),
-                    ),
-                    SizedBox(height: height * 0.01),
-                    const Text(
-                      '50% discount',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: height * 0.02),
-                    Image.asset("assets/images/Line.png"),
-                    SizedBox(height: height * 0.02),
-                    ...state.news
-                        .skip(1)
-                        .map(
-                          (item) => Padding(
-                            padding: EdgeInsets.only(
-                              bottom:
-                                  MediaQuery.of(context).size.height * 0.015,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _NewsRow(item: item, isTablet: isTablet),
-                                SizedBox(height: height * 0.01),
-                                Text(
-                                  _newsDescription(item.description),
-                                  style: const TextStyle(fontSize: 14),
-                                ),
-                              ],
-                            ),
+                    child: Icon(statusIcon, color: statusColor, size: 24),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Order #${orderId.substring(0, 8).toUpperCase()}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
                           ),
                         ),
-                    SizedBox(height: height * 0.03),
-                  ],
-                ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '$itemCount items  •  EGP $total',
+                          style: TextStyle(
+                            color: Colors.grey.shade600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: statusColor.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                status.toUpperCase(),
+                                style: TextStyle(
+                                  color: statusColor,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            Text(
+                              date.length >= 10 ? date.substring(0, 10) : date,
+                              style: TextStyle(
+                                color: Colors.grey.shade400,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            );
+          },
         );
       },
     );
   }
-
-  String _newsDescription(String key) {
-    switch (key) {
-      case 'fifty_percent_discount':
-        return 'October 2021 50% discount on selected novels.';
-      case 'buy_2_get_1_free':
-        return 'Buy 2 Get 1 Free - valid for a limited time.';
-      case 'new_book_available':
-        return 'A new book is now available.';
-      default:
-        return key;
-    }
-  }
 }
 
-class _DeliveryCard extends StatelessWidget {
-  const _DeliveryCard({required this.data, required this.isTablet});
+// ─── Promotions tab: real data from Firestore ─────────────────────────────────
 
-  final NotificationTabData data;
-  final bool isTablet;
-
+class _PromotionsNotificationsTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance.collection('promotions').snapshots(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-    final Map<String, Color> statusColors = {
-      "on the way": const Color(0xFF3784FB),
-      "delivered": const Color(0XFF18A057),
-      "cancelled": const Color(0XFFEF5A56),
-    };
-    final statusColor = statusColors[data.status.toLowerCase()] ?? Colors.black;
-
-    return Container(
-      margin: EdgeInsets.only(bottom: height * 0.02),
-      padding: EdgeInsets.all(width * 0.03),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE1DEDE)),
-      ),
-      child: Row(
-        children: [
-          Image.asset(
-            data.poster,
-            width: isTablet ? width * 0.08 : width * 0.18,
-            fit: BoxFit.cover,
-          ),
-          SizedBox(width: width * 0.04),
-          Expanded(
+        final docs = snapshot.data?.docs ?? [];
+        if (docs.isEmpty) {
+          return Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  data.film,
-                  style: TextStyle(
-                    fontSize: isTablet ? 18 : 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: height * 0.005),
-                Row(
-                  children: [
-                    Text(
-                      data.status,
-                      style: TextStyle(
-                        fontSize: isTablet ? 16 : 14,
-                        color: statusColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: width * 0.015),
-                    Container(
-                      height: 5,
-                      width: 5,
-                      decoration: const BoxDecoration(
-                        color: Color(0XFFE8E8E8),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: width * 0.015),
-                    Text(
-                      data.quantity,
-                      style: TextStyle(
-                        fontSize: isTablet ? 16 : 14,
-                        color: const Color(0XFF7A7A7A),
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
+                Icon(Icons.local_offer_outlined,
+                    size: 64, color: Colors.grey.shade300),
+                const SizedBox(height: 16),
+                Text('No promotions available.',
+                    style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+          );
+        }
 
-class _NewsRow extends StatelessWidget {
-  const _NewsRow({required this.item, required this.isTablet});
+        return ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: docs.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (context, index) {
+            final data = docs[index].data() as Map<String, dynamic>;
+            final title = data['title'] as String? ?? 'Promotion';
+            final description = data['description'] as String? ?? '';
+            final discount = data['discount'] ?? data['discountPercent'] ?? '';
+            final code = data['code'] as String? ?? '';
 
-  final NewsItem item;
-  final bool isTablet;
-
-  @override
-  Widget build(BuildContext context) {
-    final Map<String, Color> textColors = {
-      "promotion": const Color(0XFF54408C),
-      "information": const Color(0XFF3784FB),
-    };
-    final textColor = textColors[item.type.toLowerCase()] ?? Colors.black;
-
-    return Row(
-      children: [
-        Text(
-          item.type,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: isTablet ? 16 : 14,
-            color: textColor,
-          ),
-        ),
-        const Spacer(),
-        Text(
-          item.date,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Color(0XFFA6A6A6),
-          ),
-        ),
-        const SizedBox(width: 6),
-        Container(
-          height: 5,
-          width: 5,
-          decoration: const BoxDecoration(
-            color: Color(0XFFA6A6A6),
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          item.time,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 12,
-            color: Color(0XFFA6A6A6),
-          ),
-        ),
-      ],
+            return Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF6C47FF), Color(0xFF9B73FF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF6C47FF).withValues(alpha: 0.25),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(Icons.local_offer,
+                        color: Colors.white, size: 24),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                        if (description.isNotEmpty) ...[
+                          const SizedBox(height: 3),
+                          Text(
+                            description,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.white.withValues(alpha: 0.85),
+                            ),
+                          ),
+                        ],
+                        if (code.isNotEmpty) ...[
+                          const SizedBox(height: 6),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 3),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.25),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              'Code: $code',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (discount != '') ...[
+                    Column(
+                      children: [
+                        Text(
+                          '$discount%',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
+                        ),
+                        const Text(
+                          'OFF',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

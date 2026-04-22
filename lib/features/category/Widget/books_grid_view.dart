@@ -8,8 +8,13 @@ import 'book_card.dart';
 
 class BooksGridView extends StatelessWidget {
   final bool isScrollable;
+  final String selectedCategory;
 
-  const BooksGridView({super.key, this.isScrollable = true});
+  const BooksGridView({
+    super.key, 
+    this.isScrollable = true,
+    this.selectedCategory = "All",
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +25,11 @@ class BooksGridView extends StatelessWidget {
         } else if (state is BooksError) {
           return Center(child: Text("Error: ${state.message}"));
         } else if (state is BooksLoaded) {
-          final books = state.books;
+          var books = state.books;
+          if (selectedCategory != "All") {
+            books = books.where((b) => b.category == selectedCategory).toList();
+          }
+          
           if (books.isEmpty) {
             return const Center(child: Text("No books found."));
           }

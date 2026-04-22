@@ -145,7 +145,7 @@ class _BookCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: AdminTheme.textPrimary)),
         subtitle: Text(
-          '\$${price.toStringAsFixed(2)}  •  Stock: $stock',
+          'EGP ${price.toStringAsFixed(2)}  •  Stock: $stock',
           style: const TextStyle(
               color: AdminTheme.textSub, fontSize: 13),
         ),

@@ -210,7 +210,7 @@ class _CartItemCard extends StatelessWidget {
         ),
         SizedBox(height: Responsive.responsiveSpacing(context, 8)),
         Text(
-          '\$${item.price.toStringAsFixed(2)}',
+          'EGP ${item.price.toStringAsFixed(2)}',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: const Color(0xFF54408C),
@@ -301,7 +301,7 @@ class _CheckoutBar extends StatelessWidget {
                 ),
               ),
               Text(
-                '\$${total.toStringAsFixed(2)}',
+                'EGP ${total.toStringAsFixed(2)}',
                 style: TextStyle(
                   fontSize: Responsive.responsiveFontSize(context, 20),
                   fontWeight: FontWeight.bold,

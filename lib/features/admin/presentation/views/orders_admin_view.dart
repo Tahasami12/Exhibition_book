@@ -263,7 +263,7 @@ class _OrderCard extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          Text('\$${item.subtotal.toStringAsFixed(2)}',
+                          Text('EGP ${item.subtotal.toStringAsFixed(2)}',
                               style: const TextStyle(
                                   fontSize: 13, color: Colors.grey)),
                         ],
@@ -283,7 +283,7 @@ class _OrderCard extends StatelessWidget {
                   const Text('Total',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   Text(
-                    '\$${order.totalAmount.toStringAsFixed(2)}',
+                    'EGP ${order.totalAmount.toStringAsFixed(2)}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -485,7 +485,7 @@ class _OrderDetailSheet extends StatelessWidget {
                           ),
                         ),
                         Text(
-                            '\$${item.subtotal.toStringAsFixed(2)}',
+                            'EGP ${item.subtotal.toStringAsFixed(2)}',
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold)),
                       ],
@@ -497,13 +497,13 @@ class _OrderDetailSheet extends StatelessWidget {
             // Payment section
             _sheetSection('ملخص الدفع', [
               _detailRow('الإجمالي الجزئي',
-                  '\$${order.subtotal.toStringAsFixed(2)}'),
+                  'EGP ${order.subtotal.toStringAsFixed(2)}'),
               _detailRow('الشحن',
-                  '\$${order.shipping.toStringAsFixed(2)}'),
+                  'EGP ${order.shipping.toStringAsFixed(2)}'),
               _detailRow(
-                  'الضريبة', '\$${order.tax.toStringAsFixed(2)}'),
+                  'الضريبة', 'EGP ${order.tax.toStringAsFixed(2)}'),
               _detailRow('الخصم',
-                  '-\$${order.discount.toStringAsFixed(2)}'),
+                  '-EGP ${order.discount.toStringAsFixed(2)}'),
               const Divider(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -511,7 +511,7 @@ class _OrderDetailSheet extends StatelessWidget {
                   const Text('الإجمالي',
                       style: TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 15)),
-                  Text('\$${order.totalAmount.toStringAsFixed(2)}',
+                  Text('EGP ${order.totalAmount.toStringAsFixed(2)}',
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 15,

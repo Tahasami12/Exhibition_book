@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../home/presentation/cubit/books_cubit.dart';
+import '../../home/presentation/cubit/books_state.dart';
 
 import '../../../core/utils/responsive.dart';
 import '../Widget/books_grid_view.dart';
@@ -7,30 +11,59 @@ import '../Widget/category_icon.dart';
 
 /// Category tab content.
 /// Returns only the body — MainShell provides the Scaffold + BottomNav.
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
+
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+  String selectedCategory = "All";
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        children: [
-          const CategoryIcon(),
+      child: BlocBuilder<BooksCubit, BooksState>(
+        builder: (context, state) {
+          List<String> categories = ["All"];
+          if (state is BooksLoaded) {
+            final uniqueCategories = state.books
+                .map((b) => b.category)
+                .where((c) => c.trim().isNotEmpty)
+                .toSet()
+                .toList();
+            categories.addAll(uniqueCategories);
+          }
 
-          SizedBox(
-            height: Responsive.responsiveSpacing(context, 12),
-          ),
+          return Column(
+            children: [
+              const CategoryIcon(),
 
-          const CategoriesBar(),
+              SizedBox(
+                height: Responsive.responsiveSpacing(context, 12),
+              ),
 
-          SizedBox(
-            height: Responsive.responsiveSpacing(context, 10),
-          ),
+              CategoriesBar(
+                categories: categories,
+                selectedCategory: selectedCategory,
+                onCategorySelected: (cat) {
+                  setState(() {
+                    selectedCategory = cat;
+                  });
+                },
+              ),
 
-          const Expanded(
-            child: BooksGridView(),
-          ),
-        ],
+              SizedBox(
+                height: Responsive.responsiveSpacing(context, 10),
+              ),
+
+              Expanded(
+                child: BooksGridView(selectedCategory: selectedCategory),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -136,7 +136,7 @@ class _FavoriteBookTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "\$${favorite.price.toStringAsFixed(2)}",
+                    "EGP ${favorite.price.toStringAsFixed(2)}",
                     style: const TextStyle(
                       color: AppColors.primary,
                       fontWeight: FontWeight.w700,
