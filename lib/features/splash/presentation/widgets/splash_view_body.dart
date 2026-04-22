@@ -76,10 +76,15 @@ class _SplasViewBodyState extends State<SplasViewBody>
         context.go(AppRouter.kHome);
       }
     } else {
-      // لا يوجد مستخدم مسجل — نمسح الكاش لو فيه بيانات قديمة
+      // No logged-in user — clear any stale cache
       await CacheHelper.clearData();
       if (!mounted) return;
-      context.go('/onboarding');
+      // If onboarding was already seen, go directly to login
+      if (CacheHelper.isOnboardingSeen()) {
+        context.go('/login');
+      } else {
+        context.go('/onboarding');
+      }
     }
   }
 

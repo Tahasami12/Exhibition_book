@@ -1,5 +1,6 @@
 import 'package:exhibition_book/core/utils/assets.dart';
 import 'package:exhibition_book/core/utils/responsive.dart';
+import 'package:exhibition_book/core/utils/cache_helper.dart';
 import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -12,10 +13,11 @@ class OnBoarding2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SizedBox(
-        width: double.infinity,
-        child: SingleChildScrollView(
-          child: Column(
+      body: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          child: SingleChildScrollView(
+            child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -32,6 +34,7 @@ class OnBoarding2 extends StatelessWidget {
           ),
         ),
       ),
+      ),
     );
   }
 }
@@ -46,8 +49,9 @@ class SkipButton extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(right: 24),
         child: TextButton(
-          onPressed: () {
-            context.go('/login');
+          onPressed: () async {
+            await CacheHelper.setOnboardingSeen();
+            if (context.mounted) context.go('/login');
           },
           child: Text(
             "Skip",

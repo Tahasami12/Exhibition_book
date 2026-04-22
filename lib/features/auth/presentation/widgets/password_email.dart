@@ -7,6 +7,8 @@ import 'custom_text_field.dart';
 import 'email_validation.dart';
 
 class TextForm2 extends StatelessWidget {
+  const TextForm2({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,15 +38,18 @@ class TextForm2 extends StatelessWidget {
         if (value == null || value.trim().isEmpty) {
           return "Password is required";
         }
-        if (value!.length < 8) {
+        if (value.length < 8) {
           return "Password should be more than 8 letters";
         }
+        return null; // fix missing return value warning
       },
     );
   }
 }
 
 class TextForm extends StatelessWidget {
+  const TextForm({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -83,6 +88,8 @@ class TextForm extends StatelessWidget {
 }
 
 class TextForm1 extends StatelessWidget {
+  const TextForm1({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(

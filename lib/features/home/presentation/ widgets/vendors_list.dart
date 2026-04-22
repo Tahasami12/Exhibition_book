@@ -107,7 +107,7 @@ class _VendorHomeCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: borderRadius,
                 color: Colors.grey[100],
-                border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
               ),
               child: ClipRRect(
                 borderRadius: borderRadius,

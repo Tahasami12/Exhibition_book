@@ -1,66 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:exhibition_book/features/admin/data/models/admin_order_model.dart';
-import 'package:exhibition_book/core/utils/app_colors.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
 
 class OrderDetailsView extends StatelessWidget {
   final AdminOrderModel order;
-
   const OrderDetailsView({super.key, required this.order});
 
-  static const _statusLabels = {
-    'pending': 'Pending',
-    'confirmed': 'Confirmed',
-    'shipped': 'Shipped',
-    'delivered': 'Delivered',
-    'cancelled': 'Cancelled',
-  };
-
   static const _statusColors = {
-    'pending': Colors.orange,
+    'pending':   Colors.orange,
     'confirmed': Colors.blue,
-    'shipped': Colors.purple,
+    'shipped':   Colors.purple,
     'delivered': Colors.green,
     'cancelled': Colors.red,
   };
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+
     final statusColor = _statusColors[order.status] ?? Colors.grey;
-    final statusText = _statusLabels[order.status] ?? order.status.toUpperCase();
+    final statusText  = t.statusLabel(order.status);
 
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Order Details', style: TextStyle(color: AppColors.textPrimary)),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        title: Text(t.orderDetails),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header: ID and Status
+            // ── Header: Order ID & Status ──────────────────────────────────
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.grey100,
+                color: theme.cardTheme.color ?? cs.surface,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: theme.dividerColor),
               ),
               child: Column(
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        'Order #${order.id.substring(0, 8).toUpperCase()}',
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      Expanded(
+                        child: Text(
+                          '${t.orderNo}${order.id.substring(0, 8).toUpperCase()}',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: cs.onSurface,
+                          ),
+                        ),
                       ),
+                      const SizedBox(width: 8),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: statusColor.withOpacity(0.1),
+                          color: statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: statusColor),
                         ),
@@ -79,9 +78,9 @@ class OrderDetailsView extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Date:', style: TextStyle(color: AppColors.textSecondary)),
+                      Text(t.dateLabel, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6))),
                       Text(
-                        order.date.isNotEmpty ? order.date.substring(0, 10) : 'Not specified',
+                        order.date.isNotEmpty ? order.date.substring(0, 10) : t.notSpecified,
                         style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
@@ -91,29 +90,31 @@ class OrderDetailsView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Shipping Details
-            const Text(
-              'Shipping Details',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            // ── Shipping Details ───────────────────────────────────────────
+            Text(
+              t.shippingDetails,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: cs.onSurface),
             ),
             const SizedBox(height: 12),
-            _infoRow(Icons.person_outline, 'Name', order.userName),
-            _infoRow(Icons.phone_outlined, 'Phone', order.phone.isEmpty ? 'Not provided' : order.phone),
-            _infoRow(Icons.location_on_outlined, 'Address', order.address.isEmpty ? 'Not provided' : order.address),
+            _infoRow(context, Icons.person_outline, t.nameLabel, order.userName),
+            _infoRow(context, Icons.phone_outlined, t.phoneLabel,
+                order.phone.isEmpty ? t.notProvided : order.phone),
+            _infoRow(context, Icons.location_on_outlined, t.addressLabel,
+                order.address.isEmpty ? t.notProvided : order.address),
             const SizedBox(height: 24),
 
-            // Items List
+            // ── Order Items ────────────────────────────────────────────────
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Order Items',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                Text(
+                  t.orderItemsLabel,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: cs.onSurface),
                 ),
                 Text(
-                  '${order.items.length} items',
-                  style: const TextStyle(color: AppColors.textSecondary),
-                )
+                  t.orderItems(order.items.length),
+                  style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6)),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -127,7 +128,8 @@ class OrderDetailsView extends StatelessWidget {
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.grey300),
+                    color: theme.cardTheme.color ?? cs.surface,
+                    border: Border.all(color: theme.dividerColor),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -140,9 +142,9 @@ class OrderDetailsView extends StatelessWidget {
                                 width: 60,
                                 height: 80,
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => _fallbackCover(),
+                                errorBuilder: (_, __, ___) => _fallbackCover(context),
                               )
-                            : _fallbackCover(),
+                            : _fallbackCover(context),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -151,19 +153,23 @@ class OrderDetailsView extends StatelessWidget {
                           children: [
                             Text(
                               item.title,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: cs.onSurface,
+                              ),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Qty: ${item.quantity}',
-                              style: const TextStyle(color: AppColors.textSecondary),
+                              '${t.qtyLabel} ${item.quantity}',
+                              style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6)),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               '\$${item.price.toStringAsFixed(2)}',
-                              style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
+                              style: TextStyle(fontWeight: FontWeight.w600, color: cs.primary),
                             ),
                           ],
                         ),
@@ -175,41 +181,46 @@ class OrderDetailsView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Payment Summary
-            const Text(
-              'Payment Summary',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            // ── Payment Summary ────────────────────────────────────────────
+            Text(
+              t.paymentSummary,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: cs.onSurface),
             ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: AppColors.grey300),
+                color: theme.cardTheme.color ?? cs.surface,
+                border: Border.all(color: theme.dividerColor),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
                 children: [
-                  _summaryRow('Subtotal', order.subtotal),
+                  _summaryRow(context, t.subtotal, order.subtotal),
                   const SizedBox(height: 8),
-                  _summaryRow('Shipping', order.shipping),
+                  _summaryRow(context, t.shipping, order.shipping),
                   const SizedBox(height: 8),
-                  _summaryRow('Tax', order.tax),
+                  _summaryRow(context, t.tax, order.tax),
                   const SizedBox(height: 8),
-                  _summaryRow('Discount', -order.discount, isDiscount: true),
+                  _summaryRow(context, t.discount, -order.discount, isDiscount: true),
                   const Divider(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
-                        'Total Payment',
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      Text(
+                        t.totalPayment,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: cs.onSurface,
+                        ),
                       ),
                       Text(
                         '\$${order.totalAmount.toStringAsFixed(2)}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: AppColors.primary,
+                          color: cs.primary,
                         ),
                       ),
                     ],
@@ -224,21 +235,24 @@ class OrderDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String label, String value) {
+  Widget _infoRow(BuildContext context, IconData icon, String label, String value) {
+    final cs = Theme.of(context).colorScheme;
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 20, color: AppColors.textSecondary),
+          Icon(icon, size: 20, color: cs.onSurface.withValues(alpha: 0.5)),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                Text(label,
+                    style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6), fontSize: 12)),
                 const SizedBox(height: 2),
-                Text(value, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14)),
+                Text(value,
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, color: cs.onSurface)),
               ],
             ),
           ),
@@ -247,27 +261,29 @@ class OrderDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _summaryRow(String label, double amount, {bool isDiscount = false}) {
+  Widget _summaryRow(BuildContext context, String label, double amount,
+      {bool isDiscount = false}) {
+    final cs = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: const TextStyle(color: AppColors.textSecondary)),
+        Text(label, style: TextStyle(color: cs.onSurface.withValues(alpha: 0.6))),
         Text(
           '${isDiscount ? '' : '\$'}${amount.toStringAsFixed(2)}',
           style: TextStyle(
             fontWeight: FontWeight.w500,
-            color: isDiscount ? AppColors.green : AppColors.textPrimary,
+            color: isDiscount ? Colors.green : cs.onSurface,
           ),
         ),
       ],
     );
   }
 
-  Widget _fallbackCover() {
+  Widget _fallbackCover(BuildContext context) {
     return Container(
       width: 60,
       height: 80,
-      color: AppColors.grey300,
+      color: Theme.of(context).dividerColor,
       child: const Icon(Icons.book, color: Colors.grey),
     );
   }

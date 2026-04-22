@@ -8,6 +8,8 @@ import '../ widgets/home_app_bar.dart';
 import '../ widgets/section_header.dart';
 import '../ widgets/vendors_list.dart';
 import 'authors_view.dart';
+import 'books_view.dart';
+import '../../../../core/utils/app_strings.dart';
 
 /// The scrollable content body for the Home tab.
 /// Returns only content — MainShell provides the Scaffold + BottomNav.
@@ -16,6 +18,8 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    
     return SafeArea(
       child: Column(
         children: [
@@ -28,11 +32,21 @@ class HomeViewBody extends StatelessWidget {
                 children: [
                   const BannerSection(),
 
-                  SectionHeader(title: 'Top of Week'),
+                  SectionHeader(
+                    title: t.topOfWeek,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const BooksView(),
+                        ),
+                      );
+                    },
+                  ),
                   const BooksList(),
 
                   SectionHeader(
-                    title: 'Best Vendors',
+                    title: t.bestVendors,
                     onTap: () {
                       Navigator.push(
                         context,
@@ -46,7 +60,7 @@ class HomeViewBody extends StatelessWidget {
                   const SizedBox(height: 32),
 
                   SectionHeader(
-                    title: 'Authors',
+                    title: t.authors,
                     onTap: () {
                       Navigator.push(
                         context,

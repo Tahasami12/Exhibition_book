@@ -8,6 +8,8 @@ import '../cubit/auth_cubit.dart';
 import '../cubit/auth_state.dart';
 
 import '../../../../core/utils/app_router.dart';
+import '../../../../core/utils/app_strings.dart';
+import '../../../../core/cubit/locale_cubit.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -52,6 +54,15 @@ class _SignupState extends State<Signup> {
                 size: Responsive.responsiveIconSize(context, 30),
               ),
             ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  context.read<LocaleCubit>().toggle();
+                },
+                icon: const Icon(Icons.language, color: kPrimaryColor),
+              ),
+              const SizedBox(width: 10),
+            ],
           ),
         ),
       ),
@@ -72,6 +83,7 @@ class _SignupState extends State<Signup> {
             }
           },
           builder: (context, state) {
+            final t = AppStrings.of(context);
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -80,15 +92,16 @@ class _SignupState extends State<Signup> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _SignUpHeader(),
+                _SignUpHeader(t: t),
                 SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                _TextForm1(controller: _nameController),
+                _TextForm1(controller: _nameController, t: t),
                 SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-                _TextForm2(controller: _emailController),
+                _TextForm2(controller: _emailController, t: t),
                 SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-                _TextForm3(controller: _passwordController),
+                _TextForm3(controller: _passwordController, t: t),
                 SizedBox(height: Responsive.responsiveSpacing(context, 15)),
                 Register(
+                  t: t,
                   isLoading: state is AuthLoading,
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -101,9 +114,9 @@ class _SignupState extends State<Signup> {
                   },
                 ),
                 SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-                _Line(),
+                _Line(t: t),
                 SizedBox(height: Responsive.responsiveSpacing(context, 140)),
-                _SignUpFooter(),
+                _SignUpFooter(t: t),
             ],
             ),
           ),
@@ -116,6 +129,9 @@ class _SignupState extends State<Signup> {
 }
 
 class _SignUpHeader extends StatelessWidget {
+  final AppStrings t;
+  const _SignUpHeader({required this.t});
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -123,7 +139,7 @@ class _SignUpHeader extends StatelessWidget {
       children: [
         SizedBox(height: Responsive.responsiveSpacing(context, 30)),
         Text(
-          "Sign Up",
+          t.signUp,
           style: GoogleFonts.openSans(
             fontWeight: FontWeight.w700,
             fontSize: Responsive.responsiveFontSize(context, 24),
@@ -133,7 +149,7 @@ class _SignUpHeader extends StatelessWidget {
         ),
         SizedBox(height: Responsive.responsiveSpacing(context, 10)),
         Text(
-          "Create account and choose favorite menu",
+          t.signUpSubtitle,
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: Responsive.responsiveFontSize(context, 16),
@@ -148,13 +164,14 @@ class _SignUpHeader extends StatelessWidget {
 
 class _TextForm1 extends StatelessWidget {
   final TextEditingController controller;
-  const _TextForm1({required this.controller});
+  final AppStrings t;
+  const _TextForm1({required this.controller, required this.t});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label(context, "Name"), _input1(context)],
+      children: [_label(context, t.name), _input1(context)],
     );
   }
 
@@ -189,12 +206,12 @@ class _TextForm1 extends StatelessWidget {
         style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
-            return 'Please enter your name';
+            return t.nameErrorEmpty;
           }
           return null;
         },
         decoration: InputDecoration(
-          hintText: "Your name",
+          hintText: t.nameHint,
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: Responsive.responsiveFontSize(context, 16),
@@ -212,13 +229,14 @@ class _TextForm1 extends StatelessWidget {
 
 class _TextForm2 extends StatelessWidget {
   final TextEditingController controller;
-  const _TextForm2({required this.controller});
+  final AppStrings t;
+  const _TextForm2({required this.controller, required this.t});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label(context,"Email"), _input1(context)],
+      children: [_label(context,t.email), _input1(context)],
     );
   }
 
@@ -254,15 +272,15 @@ class _TextForm2 extends StatelessWidget {
         style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter your email';
+            return t.emailErrorEmpty;
           }
           if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-            return 'Please enter a valid email';
+            return t.emailErrorValid;
           }
           return null;
         },
         decoration: InputDecoration(
-          hintText: "Your email",
+          hintText: t.emailHint,
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
             fontSize: Responsive.responsiveFontSize(context, 16),
@@ -278,19 +296,27 @@ class _TextForm2 extends StatelessWidget {
   }
 }
 
-class _TextForm3 extends StatelessWidget {
+class _TextForm3 extends StatefulWidget {
   final TextEditingController controller;
-  const _TextForm3({required this.controller});
+  final AppStrings t;
+  const _TextForm3({required this.controller, required this.t});
+
+  @override
+  State<_TextForm3> createState() => _TextForm3State();
+}
+
+class _TextForm3State extends State<_TextForm3> {
+  bool _isObscure = true;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_labe2(context,"Password"), _input2(context)],
+      children: [_labe2(context,widget.t.password), _input2(context)],
     );
   }
 
- Widget _labe2(BuildContext context, String text) => Padding(
+  Widget _labe2(BuildContext context, String text) => Padding(
   padding: const EdgeInsets.only(bottom: 10, left: 4),
   child: Text(
     text,
@@ -307,7 +333,7 @@ class _TextForm3 extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: Color(0xffFAFAFA), width: 1.5),
+        border: Border.all(color: const Color(0xffFAFAFA), width: 1.5),
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
@@ -317,26 +343,32 @@ class _TextForm3 extends StatelessWidget {
         ],
       ),
       child: TextFormField(
-        controller: controller,
-        obscureText: true,
+        controller: widget.controller,
+        obscureText: _isObscure,
         style: const TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.w400,
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'Please enter your password';
+            return widget.t.passErrorEmpty;
           }
           if (value.length < 6) {
-            return 'Password must be at least 6 characters';
+            return widget.t.passErrorLength;
           }
           return null;
         },
         decoration: InputDecoration(
-          hintText: "Your password",
+          hintText: widget.t.passwordHint,
           suffixIcon: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.visibility_off),
+            onPressed: () {
+              setState(() {
+                _isObscure = !_isObscure;
+              });
+            },
+            icon: Icon(
+              _isObscure ? Icons.visibility_off : Icons.visibility,
+            ),
           ),
           hintStyle: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
@@ -356,7 +388,8 @@ class _TextForm3 extends StatelessWidget {
 class Register extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
-  const Register({super.key, required this.onPressed, this.isLoading = false});
+  final AppStrings t;
+  const Register({super.key, required this.onPressed, required this.t, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -374,7 +407,7 @@ class Register extends StatelessWidget {
               child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
             )
           : Text(
-              "Register",
+              t.register,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -386,13 +419,16 @@ class Register extends StatelessWidget {
 }
 
 class _Line extends StatelessWidget {
+  final AppStrings t;
+  const _Line({required this.t});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Have an account?",
+          t.haveAccount,
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w500,
             fontSize: Responsive.responsiveFontSize(context, 16),
@@ -410,7 +446,7 @@ class _Line extends StatelessWidget {
             context.go('/login');
           },
           child: Text(
-            "Sign In",
+            " ${t.signIn}",
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
               fontSize: Responsive.responsiveFontSize(context, 16),
@@ -425,6 +461,9 @@ class _Line extends StatelessWidget {
 }
 
 class _SignUpFooter extends StatelessWidget {
+  final AppStrings t;
+  const _SignUpFooter({required this.t});
+
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -432,7 +471,7 @@ class _SignUpFooter extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "By clicking Register, you agree to our ",
+            t.termsPrefix,
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
               fontSize: Responsive.responsiveFontSize(context, 16),
@@ -450,7 +489,7 @@ class _SignUpFooter extends StatelessWidget {
               context.go('/login');
             },
             child: Text(
-              "Terms, Data Policy.",
+              t.termsSuffix,
               style: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 fontSize: Responsive.responsiveFontSize(context, 16),

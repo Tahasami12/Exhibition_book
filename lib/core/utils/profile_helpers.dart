@@ -128,9 +128,11 @@ Widget makeOffers({required Color color, required OfferModel offer}) {
 
 // the records to navigate to the offers, history, favorites, ...
 Widget makeNavigationRecord({
+  required BuildContext context,
   required String label,
   required String avatarName,
 }) {
+  final cs = Theme.of(context).colorScheme;
   return Padding(
     padding: const EdgeInsets.all(20.0),
     child: Row(
@@ -139,7 +141,7 @@ Widget makeNavigationRecord({
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: AppColors.grey100,
+            color: Theme.of(context).cardTheme.color ?? cs.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: SvgPicture.asset(
@@ -154,11 +156,11 @@ Widget makeNavigationRecord({
             fontWeight: FontWeight.w500,
             fontSize: 16,
             fontFamily: "Roboto",
-            color: AppColors.grey900
+            color: cs.onSurface
           ),
         ),
         Spacer(),
-        Icon(Icons.arrow_forward_ios, color: AppColors.grey500),
+        Icon(Icons.arrow_forward_ios, color: cs.onSurface.withValues(alpha: 0.5)),
       ],
     ),
   );

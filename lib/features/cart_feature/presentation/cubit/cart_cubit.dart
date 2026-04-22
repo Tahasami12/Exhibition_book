@@ -1,11 +1,25 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/base/view_state.dart';
 import '../../data/cart_item.dart';
+import '../../../../core/utils/cache_helper.dart';
 
 part 'cart_state.dart';
 
 class CartCubit extends Cubit<CartState> {
-  CartCubit() : super(const CartState());
+  CartCubit() : super(const CartState()) {
+    _loadCart();
+  }
+
+  void _loadCart() {
+    final items = CacheHelper.getCartItems();
+    if (items.isNotEmpty) {
+      emit(state.copyWith(items: items));
+    }
+  }
+
+  void _saveCart(List<CartItem> items) {
+    CacheHelper.saveCartItems(items);
+  }
 
   void addItem(CartItem item) {
     final currentItems = List<CartItem>.from(state.items);
@@ -19,6 +33,8 @@ class CartCubit extends Cubit<CartState> {
     } else {
       currentItems.add(item);
     }
+
+    _saveCart(currentItems);
 
     emit(state.copyWith(
       items: currentItems,
@@ -37,6 +53,8 @@ class CartCubit extends Cubit<CartState> {
       }
     }
     
+    _saveCart(currentItems);
+
     emit(state.copyWith(
       items: currentItems,
       status: ViewStatus.success,
@@ -62,6 +80,8 @@ class CartCubit extends Cubit<CartState> {
       }
     }
     
+    _saveCart(currentItems);
+
     emit(state.copyWith(
       items: currentItems,
       status: ViewStatus.success,
@@ -74,6 +94,8 @@ class CartCubit extends Cubit<CartState> {
     final currentItems = List<CartItem>.from(state.items);
     currentItems.removeWhere((item) => item.id == id);
     
+    _saveCart(currentItems);
+
     emit(state.copyWith(
       items: currentItems,
       status: ViewStatus.success,
@@ -103,6 +125,7 @@ class CartCubit extends Cubit<CartState> {
   }
 
   void clearCart() {
+    _saveCart([]);
     emit(state.copyWith(
       items: [],
       status: ViewStatus.success,

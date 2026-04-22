@@ -11,6 +11,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart';
+import 'package:exhibition_book/core/widgets/language_toggle_button.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 
 /// Profile tab content.
 /// Returns only body content — MainShell provides the Scaffold + BottomNav.
@@ -21,23 +24,28 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // ── App Bar area ──
-        AppBar(
-          title: const Text(
-            "Profile",
-            style: TextStyle(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
+    final t = AppStrings.of(context);
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          // ── App Bar area ──
+          AppBar(
+            title: Text(
+              t.profile,
+              style: TextStyle(
+                color: cs.onSurface,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
             ),
+            centerTitle: true,
+            backgroundColor: theme.scaffoldBackgroundColor,
+            elevation: 0,
+            automaticallyImplyLeading: false,
           ),
-          centerTitle: true,
-          backgroundColor: AppColors.background,
-          elevation: 0,
-          automaticallyImplyLeading: false,
-        ),
         const Divider(height: 1),
 
         // ── User info row ──
@@ -56,7 +64,7 @@ class Profile extends StatelessWidget {
                   Text(
                     FirebaseAuth.instance.currentUser?.displayName ?? "User Name",
                     style: TextStyle(
-                      color: AppColors.grey900,
+                      color: cs.onSurface,
                       fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
@@ -64,7 +72,7 @@ class Profile extends StatelessWidget {
                   Text(
                     FirebaseAuth.instance.currentUser?.email ?? "email@example.com",
                     style: TextStyle(
-                      color: AppColors.grey500,
+                      color: cs.onSurface.withValues(alpha: 0.6),
                       fontSize: 14,
                       fontWeight: FontWeight.w400,
                     ),
@@ -76,15 +84,15 @@ class Profile extends StatelessWidget {
               // Logout button
               GestureDetector(
                 onTap: () {
-                  _showLogoutSheet(context);
+                  _showLogoutSheet(context, t);
                 },
                 child: SizedBox(
                   width: 60,
                   height: 50,
                   child: Center(
                     child: Text(
-                      "Logout",
-                      style: TextStyle(
+                      t.logout,
+                      style: const TextStyle(
                         color: AppColors.red,
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
@@ -101,7 +109,8 @@ class Profile extends StatelessWidget {
         // ── Navigation menu items ──
         InkWell(
           child: makeNavigationRecord(
-            label: "My Account",
+            context: context,
+            label: t.myAccount,
             avatarName: "profile.svg",
           ),
           onTap: () {
@@ -114,7 +123,8 @@ class Profile extends StatelessWidget {
 
         InkWell(
           child: makeNavigationRecord(
-            label: "Offers & Promos",
+            context: context,
+            label: t.offersPromos,
             avatarName: "offer.svg",
           ),
           onTap: () {
@@ -126,7 +136,8 @@ class Profile extends StatelessWidget {
         ),
         InkWell(
           child: makeNavigationRecord(
-            label: "Your Favorites",
+            context: context,
+            label: t.yourFavorites,
             avatarName: "favorite.svg",
           ),
           onTap: () {
@@ -138,7 +149,8 @@ class Profile extends StatelessWidget {
         ),
         InkWell(
           child: makeNavigationRecord(
-            label: "Order History",
+            context: context,
+            label: t.orderHistory,
             avatarName: "history.svg",
           ),
           onTap: () {
@@ -150,7 +162,8 @@ class Profile extends StatelessWidget {
         ),
         InkWell(
           child: makeNavigationRecord(
-            label: "Help Center",
+            context: context,
+            label: t.helpCenter,
             avatarName: "help.svg",
           ),
           onTap: () {
@@ -162,7 +175,8 @@ class Profile extends StatelessWidget {
         ),
         InkWell(
           child: makeNavigationRecord(
-            label: "Support Chat",
+            context: context,
+            label: t.supportChat,
             avatarName: "help.svg",
           ),
           onTap: () {
@@ -172,12 +186,74 @@ class Profile extends StatelessWidget {
             );
           },
         ),
+
+        // ── Language Toggle ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: theme.cardTheme.color ?? cs.surface,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(Icons.language, color: cs.primary),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                t.language,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: cs.onSurface,
+                ),
+              ),
+              const Spacer(),
+              const LanguageToggleButton(),
+            ],
+          ),
+        ),
+
+        // ── Dark Mode Toggle ──
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Icon(
+                  Icons.dark_mode_outlined,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                t.darkMode,
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              const Spacer(),
+              _DarkModeSwitch(),
+            ],
+          ),
+        ),
       ],
-    );
-  }
+    ),
+  );
+}
 
   /// Shows the logout confirmation bottom sheet using standard Flutter API.
-  void _showLogoutSheet(BuildContext context) {
+  void _showLogoutSheet(BuildContext context, AppStrings t) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -197,8 +273,8 @@ class Profile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Logout",
-                style: TextStyle(
+                t.logout,
+                style: const TextStyle(
                   color: AppColors.grey900,
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -206,8 +282,8 @@ class Profile extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                "Are you sure you want to logout?",
-                style: TextStyle(
+                t.logoutConfirm,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
                   color: AppColors.grey900,
@@ -218,7 +294,7 @@ class Profile extends StatelessWidget {
               // Logout button
               GestureDetector(
                 child: makeBottomSheetButton(
-                  label: "Logout",
+                  label: t.logout,
                   labelColor: AppColors.background,
                   buttonColor: AppColors.primary,
                 ),
@@ -235,7 +311,7 @@ class Profile extends StatelessWidget {
               // Cancel button
               GestureDetector(
                 child: makeBottomSheetButton(
-                  label: "Cancel",
+                  label: t.cancel,
                   buttonColor: AppColors.grey300,
                   labelColor: AppColors.primary,
                 ),
@@ -247,6 +323,41 @@ class Profile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// A stateful Switch widget that reads the current AdaptiveTheme mode
+/// and lets the user toggle between light and dark.
+class _DarkModeSwitch extends StatefulWidget {
+  @override
+  State<_DarkModeSwitch> createState() => _DarkModeSwitchState();
+}
+
+class _DarkModeSwitchState extends State<_DarkModeSwitch> {
+  bool _isDark = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final mode = AdaptiveTheme.of(context).mode;
+    _isDark = mode == AdaptiveThemeMode.dark ||
+        (mode == AdaptiveThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Switch(
+      value: _isDark,
+      onChanged: (val) {
+        setState(() => _isDark = val);
+        if (val) {
+          AdaptiveTheme.of(context).setDark();
+        } else {
+          AdaptiveTheme.of(context).setLight();
+        }
+      },
     );
   }
 }

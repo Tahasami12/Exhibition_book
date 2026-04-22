@@ -17,7 +17,9 @@ import 'package:exhibition_book/features/cart_feature/presentation/cubit/cart_cu
 import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:exhibition_book/features/auth/data/auth_repository.dart';
 import 'package:exhibition_book/core/utils/cache_helper.dart';
-import 'core/utils/app_colors.dart';
+import 'package:exhibition_book/core/cubit/locale_cubit.dart';
+import 'package:exhibition_book/core/theme/app_theme.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'core/utils/app_router.dart';
 
 import 'package:exhibition_book/features/admin/data/repositories/admin_users_repository.dart';
@@ -75,9 +77,8 @@ void main() async {
           BlocProvider(
             create: (_) => AuthorsCubit(authorRepository)..fetchAuthors(),
           ),
-          BlocProvider(
-            create: (_) => FavoritesCubit(favoritesRepository)..loadFavorites(),
-          ),
+          BlocProvider(create: (_) => FavoritesCubit(favoritesRepository)..loadFavorites()),
+          BlocProvider(create: (_) => LocaleCubit()),
         ],
         child: const MyApp(),
       ),
@@ -90,15 +91,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: AppRouter.router,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: AppColors.background,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: AppColors.background,
-          elevation: 0,
-        ),
+    return AdaptiveTheme(
+      light: AppTheme.light,
+      dark: AppTheme.dark,
+      initial: AdaptiveThemeMode.system,
+      builder: (theme, darkTheme) => MaterialApp.router(
+        routerConfig: AppRouter.router,
+        debugShowCheckedModeBanner: false,
+        theme: theme,
+        darkTheme: darkTheme,
       ),
     );
   }

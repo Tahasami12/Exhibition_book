@@ -15,7 +15,7 @@ class BannerSection extends StatefulWidget {
 
 class _BannerSectionState extends State<BannerSection> {
   int currentIndex = 0;
-  final PageController controller = PageController();
+  final PageController controller = PageController(viewportFraction: 0.9, keepPage: true);
 
   @override
   void dispose() {

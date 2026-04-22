@@ -1,6 +1,7 @@
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:flutter/material.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
 
 class HelpCenter extends StatelessWidget {
   const HelpCenter({super.key});
@@ -8,11 +9,12 @@ class HelpCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final t = AppStrings.of(context);
 
     return Scaffold(
       backgroundColor: AppColors.primary,
       appBar: makeAppBar(
-        title: "Order History",
+        title: t.helpCenter,
         titleColor: AppColors.background,
         enableLeading: true,
         barBackgroundColor: AppColors.primary,
@@ -28,7 +30,7 @@ class HelpCenter extends StatelessWidget {
 
                 /// 🔹 Title
                 Text(
-                  "Help Center",
+                  t.helpCenter,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontWeight: FontWeight.w700,

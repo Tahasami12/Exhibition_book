@@ -33,5 +33,27 @@ class CartItem {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'author': author,
+      'price': price,
+      'quantity': quantity,
+      'imageUrl': imageUrl,
+    };
+  }
+
+  factory CartItem.fromJson(Map<dynamic, dynamic> json) {
+    return CartItem(
+      id: json['id'] as String,
+      title: json['title'] as String,
+      author: json['author'] as String,
+      price: (json['price'] as num).toDouble(),
+      quantity: json['quantity'] as int,
+      imageUrl: json['imageUrl'] as String,
+    );
+  }
+
   double get total => price * quantity;
 }
