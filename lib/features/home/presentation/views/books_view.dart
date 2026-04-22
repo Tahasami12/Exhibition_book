@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -11,10 +12,11 @@ class BooksView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text("Books"),
+        title: Text(t.books),
         centerTitle: true,
         actions:  [
           Padding(
@@ -34,27 +36,27 @@ class BooksView extends StatelessWidget {
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          SizedBox(height: 8),
+        children: [
+          const SizedBox(height: 8),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Our Collection",
-              style: TextStyle(
+              t.ourCollection,
+              style: const TextStyle(
                 fontSize: 12,
                 color: Color(0xFFA6A6A6),
               ),
             ),
           ),
 
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Top of Week",
-              style: TextStyle(
+              t.topOfWeek,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF54408C),
@@ -62,9 +64,9 @@ class BooksView extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-          Expanded(child: BooksGridView()),
+          const Expanded(child: BooksGridView()),
         ],
       ),
     );

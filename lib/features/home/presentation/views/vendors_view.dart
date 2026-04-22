@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -13,14 +14,15 @@ class VendorsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text("Vendors"),
+        title: Text(t.vendors),
         centerTitle: true,
         actions:  [
           Padding(
-            padding: EdgeInsets.only(right: 16),
+            padding: const EdgeInsets.only(right: 16),
             child:  IconButton(
               onPressed: () {
                 GoRouter.of(context).push(AppRouter.kSearchHome);
@@ -38,28 +40,28 @@ class VendorsView extends StatelessWidget {
 
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
+        children: [
 
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Our Vendors",
-              style: TextStyle(
+              t.ourVendors,
+              style: const TextStyle(
                 fontSize: 12,
                 color: Color(0xFFA6A6A6),
               ),
             ),
           ),
 
-          SizedBox(height: 2),
+          const SizedBox(height: 2),
 
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
-              "Vendors",
-              style: TextStyle(
+              t.vendors,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
                 color: Color(0xFF54408C),
@@ -67,13 +69,13 @@ class VendorsView extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
 
-          VendorsTabs(),
+          const VendorsTabs(),
 
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-          Expanded(child: VendorsGrid()),
+          const Expanded(child: VendorsGrid()),
         ],
       ),
     );

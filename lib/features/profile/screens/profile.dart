@@ -14,7 +14,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:exhibition_book/core/widgets/language_toggle_button.dart';
 import 'package:exhibition_book/core/utils/app_strings.dart';
-import 'package:adaptive_theme/adaptive_theme.dart';
 
 /// Profile tab content.
 /// Returns only body content — MainShell provides the Scaffold + BottomNav.
@@ -54,35 +53,47 @@ class Profile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
             child: Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage("assets/images/test-img.jpg"),
+                  backgroundColor: AppColors.grey200,
+                  backgroundImage:
+                      FirebaseAuth.instance.currentUser?.photoURL != null
+                          ? NetworkImage(
+                            FirebaseAuth.instance.currentUser!.photoURL!,
+                          )
+                          : const AssetImage("assets/images/test-img.jpg")
+                              as ImageProvider,
                 ),
                 const SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      FirebaseAuth.instance.currentUser?.displayName ??
-                          "User Name",
-                      style: TextStyle(
-                        color: cs.onSurface,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        FirebaseAuth.instance.currentUser?.displayName ??
+                            t.userNamePlaceholder,
+                        style: TextStyle(
+                          color: cs.onSurface,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 16,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                    Text(
-                      FirebaseAuth.instance.currentUser?.email ??
-                          "email@example.com",
-                      style: TextStyle(
-                        color: cs.onSurface.withValues(alpha: 0.6),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
+                      Text(
+                        FirebaseAuth.instance.currentUser?.email ??
+                            t.emailPlaceholder,
+                        style: TextStyle(
+                          color: cs.onSurface.withValues(alpha: 0.6),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-                const Spacer(),
 
                 // Logout button
                 GestureDetector(
@@ -98,7 +109,7 @@ class Profile extends StatelessWidget {
                         style: const TextStyle(
                           color: AppColors.red,
                           fontWeight: FontWeight.w700,
-                          fontSize: 14,
+                          fontSize: 16,
                         ),
                       ),
                     ),
@@ -218,38 +229,6 @@ class Profile extends StatelessWidget {
               ],
             ),
           ),
-
-          // ── Dark Mode Toggle ──
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 2),
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Icon(
-                    Icons.dark_mode_outlined,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  t.darkMode,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-                ),
-                const Spacer(),
-                _DarkModeSwitch(),
-              ],
-            ),
-          ),
           SizedBox(height: Responsive.responsiveSpacing(context, 16)),
         ],
       ),
@@ -333,42 +312,6 @@ class Profile extends StatelessWidget {
               ),
             ),
           ),
-    );
-  }
-}
-
-/// A stateful Switch widget that reads the current AdaptiveTheme mode
-/// and lets the user toggle between light and dark.
-class _DarkModeSwitch extends StatefulWidget {
-  @override
-  State<_DarkModeSwitch> createState() => _DarkModeSwitchState();
-}
-
-class _DarkModeSwitchState extends State<_DarkModeSwitch> {
-  bool _isDark = false;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final mode = AdaptiveTheme.of(context).mode;
-    _isDark =
-        mode == AdaptiveThemeMode.dark ||
-        (mode == AdaptiveThemeMode.system &&
-            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Switch(
-      value: _isDark,
-      onChanged: (val) {
-        setState(() => _isDark = val);
-        if (val) {
-          AdaptiveTheme.of(context).setDark();
-        } else {
-          AdaptiveTheme.of(context).setLight();
-        }
-      },
     );
   }
 }

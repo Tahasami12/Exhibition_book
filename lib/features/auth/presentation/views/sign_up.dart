@@ -45,15 +45,7 @@ class _SignupState extends State<Signup> {
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            leading: IconButton(
-              onPressed: () {
-                context.pop();
-              },
-              icon: Icon(
-                Icons.arrow_back,
-                size: Responsive.responsiveIconSize(context, 30),
-              ),
-            ),
+            automaticallyImplyLeading: false,
             actions: [
               IconButton(
                 onPressed: () {
@@ -115,7 +107,7 @@ class _SignupState extends State<Signup> {
                 ),
                 SizedBox(height: Responsive.responsiveSpacing(context, 15)),
                 _Line(t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 140)),
+                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
                 _SignUpFooter(t: t),
             ],
             ),
@@ -196,7 +188,7 @@ class _TextForm1 extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            color: Colors.grey.withValues(alpha: .03),
+            color: Colors.grey.withOpacity(0.03),
             offset: const Offset(0, 4),
           ),
         ],
@@ -262,7 +254,7 @@ class _TextForm2 extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            color: Colors.grey.withValues(alpha: .03),
+            color: Colors.grey.withOpacity(0.03),
             offset: const Offset(0, 4),
           ),
         ],
@@ -337,7 +329,7 @@ class _TextForm3State extends State<_TextForm3> {
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            color: Colors.grey.withValues(alpha: .03),
+            color: Colors.grey.withOpacity(0.03),
             offset: const Offset(0, 4),
           ),
         ],
@@ -478,25 +470,17 @@ class _SignUpFooter extends StatelessWidget {
               height: Responsive.responsiveSpacing(context, 1.5),
               color: Colors.grey[500],
             ),
+            textAlign: TextAlign.center,
           ),
-          TextButton(
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero, // removes space
-              minimumSize: Size.zero,
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          Text(
+            t.termsSuffix,
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w500,
+              fontSize: Responsive.responsiveFontSize(context, 16),
+              height: Responsive.responsiveSpacing(context, 1.5),
+              color: kPrimaryColor,
             ),
-            onPressed: () {
-              context.go('/login');
-            },
-            child: Text(
-              t.termsSuffix,
-              style: GoogleFonts.roboto(
-                fontWeight: FontWeight.w500,
-                fontSize: Responsive.responsiveFontSize(context, 16),
-                height: Responsive.responsiveSpacing(context, 1.5),
-                color: kPrimaryColor,
-              ),
-            ),
+            textAlign: TextAlign.center,
           ),
         ],
       ),

@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +33,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -56,7 +58,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                     Container(
                       padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 20)),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6C47FF).withValues(alpha: 0.08),
+                        color: const Color(0xFF6C47FF).withOpacity(0.08),
                         borderRadius: BorderRadius.circular(
                           Responsive.responsiveBorderRadius(context, 60),
                         ),
@@ -78,7 +80,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
 
                     // Order Confirmation Text
                     Text(
-                      'You Received The Order!',
+                      t.orderReceived,
                       style: TextStyle(
                         fontSize: Responsive.responsiveFontSize(context, 24),
                         fontWeight: FontWeight.bold,
@@ -91,7 +93,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
 
                     // 🔢 رقم الأوردر العشوائي
                     Text(
-                      'Order #$_orderNumber',
+                      '${t.orderNumberLabel}$_orderNumber',
                       style: TextStyle(
                         fontSize: Responsive.responsiveFontSize(context, 16),
                         color: Colors.grey,
@@ -105,12 +107,12 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                     Container(
                       padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 20)),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6C47FF).withValues(alpha: 0.05),
+                        color: const Color(0xFF6C47FF).withOpacity(0.05),
                         borderRadius: BorderRadius.circular(
                           Responsive.responsiveBorderRadius(context, 16),
                         ),
                         border: Border.all(
-                          color: const Color(0xFF6C47FF).withValues(alpha: 0.1),
+                          color: const Color(0xFF6C47FF).withOpacity(0.1),
                           width: 1,
                         ),
                       ),
@@ -118,7 +120,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Tell us your feedback ✨',
+                            t.tellUsFeedback,
                             style: TextStyle(
                               fontSize: Responsive.responsiveFontSize(context, 18),
                               fontWeight: FontWeight.bold,
@@ -148,7 +150,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                                       Icons.star,
                                       color: isSelected
                                           ? Colors.amber
-                                          : Colors.grey.withValues(alpha: 0.3),
+                                          : Colors.grey.withOpacity(0.3),
                                       size: Responsive.responsiveIconSize(context, 32),
                                     ),
                                   ),
@@ -158,7 +160,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                           ),
                           SizedBox(height: Responsive.responsiveSpacing(context, 8)),
                           Text(
-                            '$_rating out of 5 stars',
+                            '$_rating ${t.outOfFiveStars}',
                             style: TextStyle(
                               fontSize: Responsive.responsiveFontSize(context, 14),
                               color: Colors.grey[600],
@@ -176,7 +178,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                               fontSize: Responsive.responsiveFontSize(context, 14),
                             ),
                             decoration: InputDecoration(
-                              hintText: 'Write something for us!',
+                              hintText: t.feedbackHint,
                               hintStyle: TextStyle(
                                 color: Theme.of(context).brightness == Brightness.dark
                                     ? Colors.grey[500]!
@@ -242,7 +244,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          'Done',
+                          t.doneBtn,
                           style: TextStyle(
                             fontSize: Responsive.responsiveFontSize(context, 16),
                             fontWeight: FontWeight.bold,

@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,6 +15,7 @@ class CategoryIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Padding(
         padding: EdgeInsets.fromLTRB(
           Responsive.responsiveSpacing(context, 16),
@@ -36,7 +38,7 @@ class CategoryIcon extends StatelessWidget {
             ),
           ),
           Text(
-            "Category",
+            t.navCategory,
             style: Styles.heading2.copyWith(
               fontWeight: FontWeight.w700,
               color: AppColors.grey900,

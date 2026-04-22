@@ -220,7 +220,7 @@ class _TextForm extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            color: Colors.grey.withValues(alpha: .03),
+            color: Colors.grey.withOpacity(0.03),
             offset: const Offset(0, 4),
           ),
         ],
@@ -296,7 +296,7 @@ class _TextForm2State extends State<_TextForm2> {
         boxShadow: [
           BoxShadow(
             blurRadius: 10,
-            color: Colors.grey.withValues(alpha: .03),
+            color: Colors.grey.withOpacity(0.03),
             offset: const Offset(0, 4),
           ),
         ],
@@ -486,49 +486,6 @@ class Final extends StatelessWidget {
                   ),
                 ],
               ),
-      ),
-    );
-  }
-}
-
-class Final2 extends StatelessWidget {
-  const Final2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: Responsive.responsiveSpacing(context, 50),
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
-            side: BorderSide(color: Colors.grey.shade300),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.apple,
-              size: Responsive.responsiveIconSize(context, 30),
-              color: Colors.black,
-            ),
-            SizedBox(width: 10),
-            Text(
-              "Sign in with Apple",
-              style: GoogleFonts.roboto(
-                fontWeight: FontWeight.w400,
-                fontSize: Responsive.responsiveFontSize(context, 14),
-                height: Responsive.responsiveSpacing(context, 1.5),
-                color: Colors.grey.shade900,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

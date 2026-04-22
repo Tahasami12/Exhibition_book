@@ -1,4 +1,3 @@
-import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:exhibition_book/core/utils/profile_helpers.dart';
 import 'package:exhibition_book/features/cart_feature/data/order_repository.dart';
@@ -113,7 +112,7 @@ class OrderHistory extends StatelessWidget {
                                 ? order.date.substring(0, 10)
                                 : t.notSpecified,
                             style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
                               fontSize: 13,
                             ),
                           ),
@@ -124,12 +123,12 @@ class OrderHistory extends StatelessWidget {
                               Row(
                                 children: [
                                   Icon(Icons.menu_book, size: 16,
-                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
                                   const SizedBox(width: 6),
                                   Text(
                                     t.orderItems(order.items.length),
                                     style: TextStyle(
-                                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                       fontWeight: FontWeight.w500,
                                     ),
                                   ),
@@ -182,9 +181,9 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withValues(alpha: 0.5)),
+        border: Border.all(color: color.withOpacity(0.5)),
       ),
       child: Text(
         t.statusLabel(status),

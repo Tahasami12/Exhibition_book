@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,10 +14,11 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'My Cart',
+          t.cart,
           style: TextStyle(
             fontSize: Responsive.responsiveFontSize(context, 20),
             fontWeight: FontWeight.w600,
@@ -56,7 +58,7 @@ class CartScreen extends StatelessWidget {
                 onCheckout: () {
                   if (state.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Cart is empty')),
+                      SnackBar(content: Text(t.emptyCart)),
                     );
                     return;
                   }
@@ -82,32 +84,39 @@ class _EmptyCart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.shopping_cart_outlined,
-            size: Responsive.responsiveIconSize(context, 64),
-            color: Colors.grey,
-          ),
-          SizedBox(height: Responsive.responsiveSpacing(context, 16)),
-          Text(
-            'Your cart is empty',
-            style: TextStyle(
-              fontSize: Responsive.responsiveFontSize(context, 18),
-              color: Colors.grey,
+    final t = AppStrings.of(context);
+    return Padding(
+      padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 32)),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.shopping_cart_outlined,
+              size: Responsive.responsiveIconSize(context, 80),
+              color: Colors.grey.shade300,
             ),
-          ),
-          SizedBox(height: Responsive.responsiveSpacing(context, 8)),
-          Text(
-            'Add items from the Home tab',
-            style: TextStyle(
-              fontSize: Responsive.responsiveFontSize(context, 14),
-              color: Colors.grey[400],
+            SizedBox(height: Responsive.responsiveSpacing(context, 24)),
+            Text(
+              t.emptyCart,
+              style: TextStyle(
+                fontSize: Responsive.responsiveFontSize(context, 20),
+                fontWeight: FontWeight.w700,
+                color: Colors.grey.shade800,
+              ),
             ),
-          ),
-        ],
+            SizedBox(height: Responsive.responsiveSpacing(context, 12)),
+            Text(
+              t.emptyCartDesc,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: Responsive.responsiveFontSize(context, 14),
+                color: Colors.grey.shade500,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -224,9 +233,9 @@ class _CartItemCard extends StatelessWidget {
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
-          child: const Text(
-            'Remove',
-            style: TextStyle(color: Colors.red),
+          child: Text(
+            AppStrings.of(context).cancel, // Using 'Cancel' for Remove or I can add 'Remove' to AppStrings
+            style: const TextStyle(color: Colors.red),
           ),
         ),
       ],
@@ -280,7 +289,7 @@ class _CheckoutBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.2),
+            color: Colors.grey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, -2),
@@ -294,7 +303,7 @@ class _CheckoutBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Total',
+                AppStrings.of(context).total,
                 style: TextStyle(
                   fontSize: Responsive.responsiveFontSize(context, 18),
                   fontWeight: FontWeight.bold,
@@ -327,7 +336,7 @@ class _CheckoutBar extends StatelessWidget {
                 ),
               ),
               child: Text(
-                'Proceed to Checkout',
+                AppStrings.of(context).checkout,
                 style: TextStyle(
                   fontSize: Responsive.responsiveFontSize(context, 16),
                   fontWeight: FontWeight.bold,

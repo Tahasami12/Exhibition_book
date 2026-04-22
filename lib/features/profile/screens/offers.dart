@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -7,7 +8,7 @@ import 'package:exhibition_book/features/home/presentation/cubit/promotions_cubi
 import 'package:exhibition_book/features/home/presentation/cubit/promotions_state.dart';
 
 class Offers extends StatelessWidget {
-  Offers({super.key});
+  const Offers({super.key});
 
   // store the colors in an array to assign them dynamically.
   static final List<Color> offersColors = [
@@ -25,7 +26,7 @@ class Offers extends StatelessWidget {
        Scaffold(
         backgroundColor: AppColors.background,
         appBar: makeAppBar(
-          title: "Order History",
+          title: AppStrings.of(context).offersPromos,
           titleColor: AppColors.grey900,
           enableLeading: true,
           barBackgroundColor: AppColors.background,
@@ -47,7 +48,7 @@ class Offers extends StatelessWidget {
                       Icon(Icons.local_offer_outlined, size: 80, color: Colors.grey.shade300),
                       const SizedBox(height: 16),
                       Text(
-                        "No Offers Available",
+                        AppStrings.of(context).noOffers,
                         style: TextStyle(
                           color: Colors.grey.shade500,
                           fontSize: 18,
@@ -67,7 +68,7 @@ class Offers extends StatelessWidget {
                       SizedBox(height: 15),
 
                       Text(
-                        "You Have ${offers.length} Coupons to use",
+                        "${AppStrings.of(context).youHaveCoupons} ${offers.length} ${AppStrings.of(context).couponsToUse}",
                         style: TextStyle(
                           color: AppColors.grey900,
                           fontSize: 18,
@@ -148,7 +149,7 @@ class _PromoCardFromDb extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  "Copy",
+                  AppStrings.of(context).copyBtn,
                   style: TextStyle(
                     color: color,
                     fontWeight: FontWeight.w700,

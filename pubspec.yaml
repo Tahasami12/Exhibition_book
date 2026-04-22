@@ -30,8 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   google_fonts: ^6.1.0
-  intl: ^0.19.0 # access the month's names
+  intl: ^0.20.2 # access the month's names
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,14 +45,15 @@ dependencies:
   flutter_bloc: ^8.1.3
   provider: ^6.1.2
   iconsax: ^0.0.8
-  firebase_core: ^4.7.0
-  cloud_firestore: ^6.3.0
-  firebase_auth: ^6.4.0
-  google_sign_in: ^6.2.0
+  firebase_core: any
+  cloud_firestore: any
+  firebase_auth: any
+  google_sign_in: ^6.2.1
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   motion_tab_bar_v2: ^0.4.0
-  adaptive_theme: ^3.6.0
+  image_picker: ^1.1.2
+  firebase_storage: any
 
 
 dev_dependencies:

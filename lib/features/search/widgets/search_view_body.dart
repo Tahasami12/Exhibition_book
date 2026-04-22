@@ -101,7 +101,7 @@ class _SearchViewBodyState extends State<SearchViewBody> {
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
                 borderSide:
-                    BorderSide(color: Colors.grey.withValues(alpha: 0.15)),
+                    BorderSide(color: Colors.grey.withOpacity(0.15)),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(14),
@@ -135,7 +135,7 @@ class _EmptyPrompt extends StatelessWidget {
           Icon(Icons.search, size: 72, color: Colors.grey.shade200),
           const SizedBox(height: 12),
           Text(
-            'Type to search for books',
+            AppStrings.of(context).typeToSearch,
             style: TextStyle(color: Colors.grey.shade400, fontSize: 16),
           ),
         ],
@@ -176,7 +176,7 @@ class _SearchResults extends StatelessWidget {
                       size: 64, color: Colors.grey.shade300),
                   const SizedBox(height: 12),
                   Text(
-                    'No books found for "$query"',
+                    '${AppStrings.of(context).noBooksFoundFor} "$query"',
                     style: TextStyle(
                         color: Colors.grey.shade500, fontSize: 15),
                     textAlign: TextAlign.center,
@@ -249,7 +249,7 @@ class _SearchResults extends StatelessWidget {
                                       horizontal: 8, vertical: 2),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF6C47FF)
-                                        .withValues(alpha: 0.1),
+                                        .withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Text(

@@ -160,7 +160,7 @@ Widget makeNavigationRecord({
           ),
         ),
         Spacer(),
-        Icon(Icons.arrow_forward_ios, color: cs.onSurface.withValues(alpha: 0.5)),
+        Icon(Icons.arrow_forward_ios, color: cs.onSurface.withOpacity(0.5)),
       ],
     ),
   );

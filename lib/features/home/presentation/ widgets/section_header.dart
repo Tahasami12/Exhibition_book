@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/responsive.dart';
-
+import '../../../../core/utils/app_strings.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -34,7 +34,7 @@ class SectionHeader extends StatelessWidget {
           GestureDetector(
             onTap: onTap,
             child: Text(
-              "See all",
+              AppStrings.of(context).seeAll,
               style: TextStyle(
                 fontSize: Responsive.responsiveFontSize(context, 12),
                 color: AppColors.primary,

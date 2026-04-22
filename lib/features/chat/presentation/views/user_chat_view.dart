@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/features/chat/data/chat_repository.dart';
 import 'package:exhibition_book/features/chat/data/models/message_model.dart';
@@ -61,6 +62,7 @@ class _UserChatBodyState extends State<_UserChatBody> {
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+    final t = AppStrings.of(context);
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -70,17 +72,17 @@ class _UserChatBodyState extends State<_UserChatBody> {
         elevation: 0,
         title: Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 18,
               backgroundColor: Colors.white24,
-              child: const Icon(Icons.support_agent, color: Colors.white, size: 20),
+              child: Icon(Icons.support_agent, color: Colors.white, size: 20),
             ),
             const SizedBox(width: 10),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Support', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                Text('We usually reply instantly', style: TextStyle(fontSize: 11, color: Colors.white70)),
+                Text(t.supportTitle, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(t.replyInstantly, style: const TextStyle(fontSize: 11, color: Colors.white70)),
               ],
             ),
           ],
@@ -111,7 +113,7 @@ class _UserChatBodyState extends State<_UserChatBody> {
               children: [
                 Expanded(
                   child: state.messages.isEmpty
-                      ? _buildEmptyChat()
+                      ? _buildEmptyChat(context)
                       : ListView.builder(
                           controller: _scrollController,
                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
@@ -133,7 +135,8 @@ class _UserChatBodyState extends State<_UserChatBody> {
     );
   }
 
-  Widget _buildEmptyChat() {
+  Widget _buildEmptyChat(BuildContext context) {
+    final t = AppStrings.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -141,7 +144,7 @@ class _UserChatBodyState extends State<_UserChatBody> {
           Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey.shade300),
           const SizedBox(height: 16),
           Text(
-            'Start a conversation!\nWe\'re here to help.',
+            t.startConversation,
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey.shade500, fontSize: 16),
           ),
@@ -152,6 +155,7 @@ class _UserChatBodyState extends State<_UserChatBody> {
 
   Widget _buildInputBar(BuildContext context, String chatId) {
     final user = FirebaseAuth.instance.currentUser;
+    final t = AppStrings.of(context);
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(12, 8, 8, 16),
@@ -167,10 +171,10 @@ class _UserChatBodyState extends State<_UserChatBody> {
                 controller: _controller,
                 textCapitalization: TextCapitalization.sentences,
                 maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Type a message...',
+                decoration: InputDecoration(
+                  hintText: t.typeMessageHint,
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
               ),
             ),
@@ -191,7 +195,7 @@ class _UserChatBodyState extends State<_UserChatBody> {
             child: Container(
               width: 44,
               height: 44,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.primary,
                 shape: BoxShape.circle,
               ),

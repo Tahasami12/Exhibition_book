@@ -106,7 +106,7 @@ class _ConfirmOrderViewState extends State<_ConfirmOrderView> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF6C47FF).withValues(alpha: 0.12),
+                color: const Color(0xFF6C47FF).withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.check_circle_rounded,
@@ -375,7 +375,7 @@ class _SectionCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.08),
+            color: Colors.grey.withOpacity(0.08),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),

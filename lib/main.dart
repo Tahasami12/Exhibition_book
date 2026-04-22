@@ -19,8 +19,8 @@ import 'package:exhibition_book/features/auth/data/auth_repository.dart';
 import 'package:exhibition_book/core/utils/cache_helper.dart';
 import 'package:exhibition_book/core/cubit/locale_cubit.dart';
 import 'package:exhibition_book/core/theme/app_theme.dart';
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'core/utils/app_router.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:exhibition_book/features/admin/data/repositories/admin_users_repository.dart';
 import 'package:exhibition_book/features/admin/presentation/cubit/admin_users_cubit.dart';
@@ -91,16 +91,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AdaptiveTheme(
-      light: AppTheme.light,
-      dark: AppTheme.dark,
-      initial: AdaptiveThemeMode.system,
-      builder: (theme, darkTheme) => MaterialApp.router(
-        routerConfig: AppRouter.router,
-        debugShowCheckedModeBanner: false,
-        theme: theme,
-        darkTheme: darkTheme,
-      ),
+    return BlocBuilder<LocaleCubit, LocaleState>(
+      builder: (context, localeState) {
+        return MaterialApp.router(
+          routerConfig: AppRouter.router,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light,
+          locale: localeState.isArabic ? const Locale('ar') : const Locale('en'),
+          supportedLocales: const [
+            Locale('en'),
+            Locale('ar'),
+          ],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+        );
+      },
     );
   }
 }

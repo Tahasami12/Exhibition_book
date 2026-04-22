@@ -43,7 +43,7 @@ class HelpCenter extends StatelessWidget {
 
                 /// 🔹 Subtitle
                 Text(
-                  "Tell us how we can help 👋",
+                  t.helpCenterSubtitle,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: size.width * 0.045,
@@ -55,7 +55,7 @@ class HelpCenter extends StatelessWidget {
 
                 /// 🔹 Description
                 Text(
-                  "Chapters are standing by for services & support!",
+                  t.helpCenterDesc,
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -72,17 +72,17 @@ class HelpCenter extends StatelessWidget {
                   children: [
                     Expanded(
                       child: makeHelpMethod(
-                        icon: AssetImage("assets/images/message.png"),
-                        label: "Email",
-                        description: "Send to your email",
+                        icon: const AssetImage("assets/images/message.png"),
+                        label: t.email,
+                        description: t.sendEmail,
                       ),
                     ),
                     SizedBox(width: size.width * 0.04),
                     Expanded(
                       child: makeHelpMethod(
-                        icon: AssetImage("assets/images/phone.png"),
-                        label: "Phone Number",
-                        description: "Send to your phone",
+                        icon: const AssetImage("assets/images/phone.png"),
+                        label: t.phoneLabel,
+                        description: t.sendPhone,
                       ),
                     ),
                   ],

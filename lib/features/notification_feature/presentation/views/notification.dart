@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_strings.dart';
+import 'package:exhibition_book/features/admin/data/models/admin_order_model.dart';
+import 'package:exhibition_book/features/profile/screens/order_details_view.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -18,9 +20,9 @@ class NotificationScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
-            'Notifications',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          title: Text(
+            t.notifications,
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           bottom: TabBar(
             indicatorColor: const Color(0xFF6C47FF),
@@ -50,7 +52,7 @@ class _OrderNotificationsTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     if (userId.isEmpty) {
-      return const Center(child: Text('Please log in to see your orders.'));
+      return Center(child: Text(AppStrings.of(context).loginToSeeOrders));
     }
 
     return StreamBuilder<QuerySnapshot>(
@@ -75,7 +77,7 @@ class _OrderNotificationsTab extends StatelessWidget {
                 Icon(Icons.notifications_none,
                     size: 64, color: Colors.grey.shade300),
                 const SizedBox(height: 16),
-                Text('No order notifications yet.',
+                Text(AppStrings.of(context).noOrderNotifications,
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
               ],
             ),
@@ -129,83 +131,95 @@ class _OrderNotificationsTab extends StatelessWidget {
                 statusIcon = Icons.hourglass_empty;
             }
 
-            return Container(
-              padding: const EdgeInsets.all(14),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: statusColor.withValues(alpha: 0.3)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.04),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+            return InkWell(
+              onTap: () {
+                final order = AdminOrderModel.fromFirestore(data, orderId);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => OrderDetailsView(order: order),
                   ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.1),
-                      shape: BoxShape.circle,
+                );
+              },
+              borderRadius: BorderRadius.circular(14),
+              child: Container(
+                padding: const EdgeInsets.all(14),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: statusColor.withValues(alpha: 0.3)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.04),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
-                    child: Icon(statusIcon, color: statusColor, size: 24),
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Order #${orderId.substring(0, 8).toUpperCase()}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                  ],
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: statusColor.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(statusIcon, color: statusColor, size: 24),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Order #${orderId.substring(0, 8).toUpperCase()}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          '$itemCount items  •  EGP $total',
-                          style: TextStyle(
-                            color: Colors.grey.shade600,
-                            fontSize: 13,
+                          const SizedBox(height: 4),
+                          Text(
+                            '$itemCount items  •  EGP $total',
+                            style: TextStyle(
+                              color: Colors.grey.shade600,
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: statusColor.withValues(alpha: 0.1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                status.toUpperCase(),
-                                style: TextStyle(
-                                  color: statusColor,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: statusColor.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  status.toUpperCase(),
+                                  style: TextStyle(
+                                    color: statusColor,
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const Spacer(),
-                            Text(
-                              date.length >= 10 ? date.substring(0, 10) : date,
-                              style: TextStyle(
-                                color: Colors.grey.shade400,
-                                fontSize: 12,
+                              const Spacer(),
+                              Text(
+                                date.length >= 10 ? date.substring(0, 10) : date,
+                                style: TextStyle(
+                                  color: Colors.grey.shade400,
+                                  fontSize: 12,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
@@ -236,7 +250,7 @@ class _PromotionsNotificationsTab extends StatelessWidget {
                 Icon(Icons.local_offer_outlined,
                     size: 64, color: Colors.grey.shade300),
                 const SizedBox(height: 16),
-                Text('No promotions available.',
+                Text(AppStrings.of(context).noPromotions,
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 16)),
               ],
             ),
@@ -315,7 +329,7 @@ class _PromotionsNotificationsTab extends StatelessWidget {
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              'Code: $code',
+                              '${AppStrings.of(context).codeLabel} $code',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -338,9 +352,9 @@ class _PromotionsNotificationsTab extends StatelessWidget {
                             fontSize: 22,
                           ),
                         ),
-                        const Text(
-                          'OFF',
-                          style: TextStyle(
+                        Text(
+                          AppStrings.of(context).offLabel,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
                           ),

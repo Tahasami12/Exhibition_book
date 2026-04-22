@@ -10,8 +10,6 @@ import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/views/main_shell.dart';
 import '../../features/auth/presentation/views/login_screen.dart';
 import '../../features/splash/presentation/widgets/on_boarding.dart';
-import '../../features/splash/presentation/widgets/on_boarding_2.dart';
-import '../../features/splash/presentation/widgets/on_boarding_3.dart';
 import '../../features/auth/presentation/views/sign_up.dart';
 import '../../features/splash/presentation/widgets/splash_view.dart';
 import 'package:exhibition_book/features/admin/presentation/views/authors_admin_view.dart';
@@ -72,22 +70,6 @@ abstract class AppRouter {
           context: context,
           state: state,
           child: const OnBoarding(),
-        ),
-      ),
-      GoRoute(
-        path: '/onboarding2',
-        pageBuilder: (context, state) => _buildPage(
-          context: context,
-          state: state,
-          child: const OnBoarding2(),
-        ),
-      ),
-      GoRoute(
-        path: '/onboarding3',
-        pageBuilder: (context, state) => _buildPage(
-          context: context,
-          state: state,
-          child: const OnBoarding3(),
         ),
       ),
       GoRoute(
@@ -192,4 +174,4 @@ abstract class AppRouter {
       ),
     ],
   );
-}
+}

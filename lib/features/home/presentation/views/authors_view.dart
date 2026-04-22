@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,7 @@ class AuthorsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -37,14 +39,14 @@ class AuthorsView extends StatelessWidget {
                     ),
 
 
-                    const Positioned(
+                    Positioned(
                       top: 32,
                       left: 0,
                       right: 0,
                       child: Center(
                         child: Text(
-                          "Authors",
-                          style: TextStyle(
+                          t.authors,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),
@@ -75,11 +77,11 @@ class AuthorsView extends StatelessWidget {
             const SizedBox(height: 8),
 
 
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Check the authors",
-                style: TextStyle(
+                t.checkAuthors,
+                style: const TextStyle(
                   fontSize: 16,
                   color: Color(0xFFA6A6A6),
                 ),
@@ -88,11 +90,11 @@ class AuthorsView extends StatelessWidget {
 
             const SizedBox(height: 4),
 
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Authors",
-                style: TextStyle(
+                t.authors,
+                style: const TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 20,
                   height: 1.35,

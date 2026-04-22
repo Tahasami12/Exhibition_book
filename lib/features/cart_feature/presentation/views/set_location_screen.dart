@@ -1,4 +1,5 @@
 
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/responsive.dart';
@@ -17,12 +18,13 @@ class _SetLocationScreenState extends State<SetLocationScreen> {
   final TextEditingController _cityController = TextEditingController();
 
   void _confirmLocation() {
+    final t = AppStrings.read(context);
     if (_nameController.text.trim().isEmpty ||
         _governorateController.text.trim().isEmpty ||
         _cityController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please fill in all fields'),
+          content: Text(t.fillAllFields),
           backgroundColor: Colors.red,
         ),
       );
@@ -48,6 +50,7 @@ class _SetLocationScreenState extends State<SetLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -56,7 +59,7 @@ class _SetLocationScreenState extends State<SetLocationScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          'Location',
+          t.locationTitle,
           style: TextStyle(
             color: Theme.of(context).textTheme.bodyLarge?.color,
             fontWeight: FontWeight.bold,
@@ -81,19 +84,19 @@ class _SetLocationScreenState extends State<SetLocationScreen> {
                     SizedBox(height: Responsive.responsiveSpacing(context, 20)),
                     _buildTextField(
                       context: context,
-                      label: 'Name',
+                      label: t.name,
                       controller: _nameController,
                     ),
                     SizedBox(height: Responsive.responsiveSpacing(context, 16)),
                     _buildTextField(
                       context: context,
-                      label:'Governorate',
+                      label: t.governorate,
                       controller: _governorateController,
                     ),
                     SizedBox(height: Responsive.responsiveSpacing(context, 16)),
                     _buildTextField(
                       context: context,
-                      label: 'City',
+                      label: t.city,
                       controller: _cityController,
                     ),
                     SizedBox(height: Responsive.responsiveSpacing(context, 40)),
@@ -115,7 +118,7 @@ class _SetLocationScreenState extends State<SetLocationScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          'Confirmation',
+                          t.confirmationBtn,
                           style: TextStyle(
                             fontSize: Responsive.responsiveFontSize(context, 16),
                             fontWeight: FontWeight.bold,

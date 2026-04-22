@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -13,6 +14,7 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 24),
@@ -33,7 +35,7 @@ class HomeAppBar extends StatelessWidget {
           ),
           // ── Title ──
           Text(
-            "Home",
+            t.navHome,
             style: TextStyle(
               fontSize: Responsive.responsiveFontSize(context, 20),
               fontWeight: FontWeight.w700,

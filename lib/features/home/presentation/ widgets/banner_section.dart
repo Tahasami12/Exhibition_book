@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/responsive.dart';
+import '../../../../core/utils/app_strings.dart';
 import '../cubit/promotions_cubit.dart';
 import '../cubit/promotions_state.dart';
 
@@ -73,7 +74,7 @@ class _BannerSectionState extends State<BannerSection> {
                       color:
                           active
                               ? const Color(0xFF54408C)
-                              : const Color(0xFF54408C).withValues(alpha: 0.3),
+                              : const Color(0xFF54408C).withOpacity(0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                   );
@@ -94,6 +95,7 @@ class _BannerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: Responsive.responsiveSpacing(context, 16),
@@ -106,7 +108,7 @@ class _BannerCard extends StatelessWidget {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -149,7 +151,7 @@ class _BannerCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      "Order Now",
+                      t.orderNow,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: Responsive.responsiveFontSize(context, 14),

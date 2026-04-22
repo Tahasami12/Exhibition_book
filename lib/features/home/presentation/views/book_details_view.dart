@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:exhibition_book/core/utils/responsive.dart';
@@ -33,6 +34,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
+    final t = AppStrings.of(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
@@ -45,7 +47,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
           onPressed: () => Navigator.maybePop(context),
         ),
         title: Text(
-          'Book Details',
+          t.bookDetails,
           style: TextStyle(
             color: Colors.black87,
             fontWeight: FontWeight.w600,
@@ -79,7 +81,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                     borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.12),
+                        color: Colors.black.withOpacity(0.12),
                         blurRadius: 16,
                         offset: const Offset(0, 8),
                       ),
@@ -128,8 +130,8 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                             SnackBar(
                               content: Text(
                                 wasFavorite
-                                    ? '"${widget.book.title}" removed from favorites'
-                                    : '"${widget.book.title}" added to favorites',
+                                    ? '"${widget.book.title}" ${t.removedFromFav}'
+                                    : '"${widget.book.title}" ${t.addedToFav}',
                               ),
                               duration: const Duration(seconds: 2),
                             ),
@@ -174,7 +176,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
               // ── Review Section ──
               Text(
-                "Review",
+                t.review,
                 style: TextStyle(
                   fontSize: Responsive.responsiveFontSize(context, 16),
                   fontWeight: FontWeight.w600,
@@ -288,7 +290,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                           context.go(AppRouter.kHome);
                         },
                         child: Text(
-                          "Continue Shopping",
+                          t.continueShopping,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: Responsive.responsiveFontSize(context, 14),
@@ -329,7 +331,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                                 children: [
                                   const Icon(Icons.check_circle, color: Colors.white, size: 20),
                                   const SizedBox(width: 8),
-                                  Text('$quantity × "${widget.book.title}" added!'),
+                                  Text('$quantity × "${widget.book.title}" ${t.addedToCartMsg}'),
                                 ],
                               ),
                               backgroundColor: const Color(0xFF2E7D32),
@@ -340,7 +342,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                           );
                         },
                         child: Text(
-                          "Add to Cart",
+                          t.addToCart,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: Responsive.responsiveFontSize(context, 14),
