@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/utils/app_strings.dart';
 import '../../../core/utils/app_colors.dart';
 import '../../../core/utils/profile_helpers.dart';
 import '../../home/presentation/views/book_details_view.dart';
@@ -16,7 +17,7 @@ class Favorites extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: makeAppBar(
-        title: "Your Favorites",
+        title: AppStrings.of(context).yourFavorites,
         titleColor: AppColors.textPrimary,
         enableLeading: true,
         barBackgroundColor: AppColors.background,
@@ -49,7 +50,7 @@ class Favorites extends StatelessWidget {
                       onPressed: () {
                         context.read<FavoritesCubit>().loadFavorites();
                       },
-                      child: const Text('Try Again'),
+                      child: Text(AppStrings.of(context).retry),
                     ),
                   ],
                 ),
@@ -87,6 +88,7 @@ class _FavoriteBookTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAr = AppStrings.isArabic(context);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -114,7 +116,7 @@ class _FavoriteBookTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    favorite.title,
+                    favorite.title(isAr),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
@@ -125,7 +127,7 @@ class _FavoriteBookTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    favorite.author,
+                    favorite.author(isAr),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(

@@ -1,44 +1,62 @@
 class BookModel {
   final String id;
-  final String title;
-  final String author;
+  final String titleAr;
+  final String titleEn;
+  final String authorAr;
+  final String authorEn;
   final String? authorId;
   final String? vendorId;
-  final String description;
+  final String descriptionAr;
+  final String descriptionEn;
   final double price;
   final double rating;
   final String imageUrl;
-  final String category;
+  final String categoryAr;
+  final String categoryEn;
   final int stock;
   final dynamic createdAt;
 
   BookModel({
     required this.id,
-    required this.title,
-    required this.author,
+    required this.titleAr,
+    required this.titleEn,
+    required this.authorAr,
+    required this.authorEn,
     this.authorId,
     this.vendorId,
-    required this.description,
+    required this.descriptionAr,
+    required this.descriptionEn,
     required this.price,
     required this.rating,
     required this.imageUrl,
-    required this.category,
+    required this.categoryAr,
+    required this.categoryEn,
     this.stock = 0,
     this.createdAt,
   });
 
+  // ─── Localized Getters ───────────────────────────────────────────────────
+  String title(bool isAr) => isAr ? titleAr : titleEn;
+  String author(bool isAr) => isAr ? authorAr : authorEn;
+  String description(bool isAr) => isAr ? descriptionAr : descriptionEn;
+  String category(bool isAr) => isAr ? categoryAr : categoryEn;
+
   factory BookModel.fromJson(Map<String, dynamic> json, String id) {
     return BookModel(
       id: id,
-      title: json['title'] ?? '',
-      author: json['author'] ?? 'Unknown',
+      titleAr: json['titleAr'] ?? json['title'] ?? '',
+      titleEn: json['titleEn'] ?? json['title'] ?? '',
+      authorAr: json['authorAr'] ?? json['author'] ?? 'مؤلف غير معروف',
+      authorEn: json['authorEn'] ?? json['author'] ?? 'Unknown Author',
       authorId: json['authorId'],
       vendorId: json['vendorId'],
-      description: json['description'] ?? '',
+      descriptionAr: json['descriptionAr'] ?? json['description'] ?? '',
+      descriptionEn: json['descriptionEn'] ?? json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       rating: (json['rating'] ?? 0).toDouble(),
       imageUrl: json['imageUrl'] ?? 'assets/images/book.png',
-      category: json['category'] ?? 'Uncategorized',
+      categoryAr: json['categoryAr'] ?? json['category'] ?? 'غير مصنف',
+      categoryEn: json['categoryEn'] ?? json['category'] ?? 'Uncategorized',
       stock: json['stock'] ?? 0,
       createdAt: json['createdAt'],
     );
@@ -46,15 +64,19 @@ class BookModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'title': title,
-      'author': author,
+      'titleAr': titleAr,
+      'titleEn': titleEn,
+      'authorAr': authorAr,
+      'authorEn': authorEn,
       'authorId': authorId,
       'vendorId': vendorId,
-      'description': description,
+      'descriptionAr': descriptionAr,
+      'descriptionEn': descriptionEn,
       'price': price,
       'rating': rating,
       'imageUrl': imageUrl,
-      'category': category,
+      'categoryAr': categoryAr,
+      'categoryEn': categoryEn,
       'stock': stock,
       'createdAt': createdAt,
     };

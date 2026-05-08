@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -13,7 +14,7 @@ class BooksList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Responsive.responsiveSpacing(context, 235),
+      height: Responsive.responsiveSpacing(context, 235, tabletSpacing: 280),
       child: BlocBuilder<BooksCubit, BooksState>(
         builder: (context, state) {
           if (state is BooksLoading || state is BooksInitial) {
@@ -45,7 +46,7 @@ class BooksList extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: Responsive.responsiveSpacing(context, 115),
+                    width: Responsive.responsiveSpacing(context, 115, tabletSpacing: 140),
                     margin: EdgeInsets.only(
                       right: Responsive.responsiveSpacing(context, 12),
                     ),
@@ -73,11 +74,11 @@ class BooksList extends StatelessWidget {
                             child: Image.network(
                               book.imageUrl,
                               width: double.infinity,
-                              height: Responsive.responsiveSpacing(context, 155),
+                              height: Responsive.responsiveSpacing(context, 155, tabletSpacing: 180),
                               fit: BoxFit.cover,
                               errorBuilder: (_, __, ___) => Container(
                                 width: double.infinity,
-                                height: Responsive.responsiveSpacing(context, 155),
+                                height: Responsive.responsiveSpacing(context, 155, tabletSpacing: 180),
                                 color: Colors.grey[200],
                                 child: const Icon(Icons.book, size: 40, color: Colors.grey),
                               ),
@@ -89,7 +90,7 @@ class BooksList extends StatelessWidget {
 
                         // ── Title ──
                         Text(
-                          book.title,
+                          book.title(AppStrings.isArabic(context)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(

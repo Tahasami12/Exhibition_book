@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -22,10 +23,13 @@ class _VendorsAdminViewState extends State<VendorsAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isArabic = AppStrings.isArabic(context);
+
     return Scaffold(
       backgroundColor: AdminTheme.bg,
       appBar: AdminTheme.adminAppBar(
-        title: 'Manage Vendors',
+        title: t.manageVendors,
         context: context,
         actions: [
           IconButton(
@@ -67,83 +71,92 @@ class _VendorsAdminViewState extends State<VendorsAdminView> {
           }
           if (state is AdminVendorsLoaded) {
             if (state.vendors.isEmpty) {
-              return AdminTheme.emptyState('No vendors found.',
+              return AdminTheme.emptyState(t.noVendorsFound,
                   icon: Icons.store_outlined);
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: state.vendors.length,
-              itemBuilder: (context, index) {
-                final vendor = state.vendors[index];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.circular(AdminTheme.radiusCard),
-                    boxShadow: AdminTheme.cardShadow,
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: vendor.logoUrl.isNotEmpty
-                          ? Image.network(vendor.logoUrl,
-                              width: 52,
-                              height: 52,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.store,
-                                  size: 52,
-                                  color: AdminTheme.primary))
-                          : const Icon(Icons.store,
-                              size: 52, color: AdminTheme.primary),
-                    ),
-                    title: Row(
-                      children: [
-                        Text(vendor.name,
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: state.vendors.length,
+                  itemBuilder: (context, index) {
+                    final vendor = state.vendors[index];
+                    final vendorName = vendor.name(isArabic);
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(AdminTheme.radiusCard),
+                        boxShadow: AdminTheme.cardShadow,
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: vendor.logoUrl.isNotEmpty
+                              ? Image.network(vendor.logoUrl,
+                                  width: 52,
+                                  height: 52,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const Icon(
+                                      Icons.store,
+                                      size: 52,
+                                      color: AdminTheme.primary))
+                              : const Icon(Icons.store,
+                                  size: 52, color: AdminTheme.primary),
+                        ),
+                        title: Row(
+                          children: [
+                            Text(vendorName,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: AdminTheme.textPrimary)),
+                            if (vendor.isBestVendor)
+                               Padding(
+                                padding: EdgeInsets.only(
+                                  left: isArabic ? 0 : 6,
+                                  right: isArabic ? 6 : 0,
+                                ),
+                                child: const Icon(Icons.star,
+                                    color: AppColors.yellow, size: 16),
+                              ),
+                          ],
+                        ),
+                        subtitle: Text('${t.rating}: ${vendor.rating}',
                             style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AdminTheme.textPrimary)),
-                        if (vendor.isBestVendor)
-                          const Padding(
-                            padding: EdgeInsets.only(left: 6),
-                            child: Icon(Icons.star,
-                                color: AppColors.yellow, size: 16),
-                          ),
-                      ],
-                    ),
-                    subtitle: Text('Rating: ${vendor.rating}',
-                        style: const TextStyle(
-                            color: AdminTheme.textSub, fontSize: 13)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit_outlined,
-                              color: AdminTheme.primary),
-                          onPressed: () =>
-                              context.push('/add_edit_vendor', extra: vendor),
+                                color: AdminTheme.textSub, fontSize: 13)),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined,
+                                  color: AdminTheme.primary),
+                              onPressed: () =>
+                                  context.push('/add_edit_vendor', extra: vendor),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline,
+                                  color: AdminTheme.danger),
+                              onPressed: () async {
+                                final confirmed = await AdminTheme.confirmDelete(
+                                    context, vendorName);
+                                if (confirmed && context.mounted) {
+                                  context
+                                      .read<AdminVendorsCubit>()
+                                      .deleteVendor(vendor.id);
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline,
-                              color: AdminTheme.danger),
-                          onPressed: () async {
-                            final confirmed = await AdminTheme.confirmDelete(
-                                context, vendor.name);
-                            if (confirmed && context.mounted) {
-                              context
-                                  .read<AdminVendorsCubit>()
-                                  .deleteVendor(vendor.id);
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+              ),
             );
           }
           return const SizedBox.shrink();

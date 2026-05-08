@@ -5,6 +5,7 @@ import 'package:exhibition_book/features/profile/cubit/user_order_history_cubit.
 import 'package:exhibition_book/features/profile/cubit/user_order_history_state.dart';
 import 'package:exhibition_book/features/profile/screens/order_details_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -56,105 +57,145 @@ class OrderHistory extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.receipt_long_outlined, size: 64, color: Colors.grey.shade400),
+                      Icon(Icons.receipt_long_outlined,
+                          size: 64, color: Colors.grey.shade400),
                       const SizedBox(height: 16),
                       Text(
                         t.youHaveNoOrders,
-                        style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                        style: TextStyle(
+                            color: Colors.grey.shade600, fontSize: 16),
                       ),
                     ],
                   ),
                 );
               }
 
-              return ListView.separated(
-                padding: const EdgeInsets.all(16.0),
-                itemCount: orders.length,
-                itemBuilder: (context, index) {
-                  final order = orders[index];
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => OrderDetailsView(order: order),
-                        ),
-                      );
-                    },
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).cardTheme.color,
-                        border: Border.all(color: Theme.of(context).dividerColor),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${t.orderNo}${order.id.substring(0, 8).toUpperCase()}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Theme.of(context).colorScheme.onSurface,
-                                ),
-                              ),
-                              _StatusBadge(status: order.status, t: t),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            order.date.isNotEmpty
-                                ? order.date.substring(0, 10)
-                                : t.notSpecified,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                              fontSize: 13,
-                            ),
-                          ),
-                          const Divider(height: 24),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.menu_book, size: 16,
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5)),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    t.orderItems(order.items.length),
-                                    style: TextStyle(
-                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                "EGP ${order.totalAmount.toStringAsFixed(2)}",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
-              );
+              final isMobile = Responsive.isMobile(context);
+
+              if (isMobile) {
+                return ListView.separated(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) =>
+                      _buildOrderCard(context, orders[index], t),
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 16),
+                );
+              } else {
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16.0),
+                  itemCount: orders.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: Responsive.responsiveGridCount(context) > 2
+                        ? 3
+                        : 2, // Max 3 for orders to keep detail readable
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                    childAspectRatio: 1.5,
+                  ),
+                  itemBuilder: (context, index) =>
+                      _buildOrderCard(context, orders[index], t),
+                );
+              }
             }
 
             return const SizedBox.shrink();
           },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOrderCard(BuildContext context, order, AppStrings t) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OrderDetailsView(order: order),
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardTheme.color,
+          border: Border.all(color: Theme.of(context).dividerColor),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    "${t.orderNo}${order.id.substring(0, 8).toUpperCase()}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                _StatusBadge(status: order.status, t: t),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              order.date.isNotEmpty
+                  ? order.date.substring(0, 10)
+                  : t.notSpecified,
+              style: TextStyle(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
+                fontSize: 12,
+              ),
+            ),
+            const Spacer(),
+            const Divider(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(Icons.menu_book,
+                        size: 14,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.5)),
+                    const SizedBox(width: 4),
+                    Text(
+                      t.orderItems(order.items.length),
+                      style: TextStyle(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                        fontWeight: FontWeight.w500,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(
+                  "EGP ${order.totalAmount.toStringAsFixed(2)}",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -181,9 +222,9 @@ class _StatusBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Text(
         t.statusLabel(status),

@@ -18,6 +18,14 @@ class VendorRepository {
     }
   }
 
+  Stream<List<VendorModel>> getVendorsStream() {
+    return _firestore.collection('vendors').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return VendorModel.fromFirestore(doc.data(), doc.id);
+      }).toList();
+    });
+  }
+
   Future<VendorModel> getVendorById(String vendorId) async {
     try {
       final snapshot = await _firestore.collection('vendors').doc(vendorId).get();

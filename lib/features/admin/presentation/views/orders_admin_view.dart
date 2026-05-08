@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:exhibition_book/features/admin/data/models/admin_order_model.dart';
 import 'package:exhibition_book/features/admin/presentation/admin_theme.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/features/admin/presentation/cubit/admin_orders_cubit.dart';
 import 'package:exhibition_book/features/admin/presentation/cubit/admin_orders_state.dart';
 
@@ -20,28 +22,15 @@ class _OrdersAdminViewState extends State<OrdersAdminView> {
     context.read<AdminOrdersCubit>().fetchOrders();
   }
 
-  static const _statusColors = {
-    'pending': Colors.orange,
-    'confirmed': Colors.blue,
-    'shipped': Colors.purple,
-    'delivered': Colors.green,
-    'cancelled': Colors.red,
-  };
 
-  static const _statusLabels = {
-    'pending': 'Pending',
-    'confirmed': 'Confirmed',
-    'shipped': 'Shipped',
-    'delivered': 'Delivered',
-    'cancelled': 'Cancelled',
-  };
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Scaffold(
       backgroundColor: AdminTheme.bg,
       appBar: AdminTheme.adminAppBar(
-        title: 'Manage Orders',
+        title: t.manageOrders,
         context: context,
         actions: [
           IconButton(
@@ -50,68 +39,75 @@ class _OrdersAdminViewState extends State<OrdersAdminView> {
           ),
         ],
       ),
-      body: BlocConsumer<AdminOrdersCubit, AdminOrdersState>(
-        listener: (context, state) {
-          if (state is AdminOrdersActionSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.green,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          } else if (state is AdminOrdersActionError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        buildWhen: (_, current) =>
-            current is AdminOrdersLoading ||
-            current is AdminOrdersLoaded ||
-            current is AdminOrdersError,
-        builder: (context, state) {
-          if (state is AdminOrdersLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (state is AdminOrdersError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error_outline,
-                      color: Colors.red, size: 48),
-                  const SizedBox(height: 12),
-                  Text('Error: ${state.message}',
-                      textAlign: TextAlign.center),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () =>
-                        context.read<AdminOrdersCubit>().fetchOrders(),
-                    child: const Text('Retry'),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.maxContentWidth(context) ?? double.infinity,
+          ),
+          child: BlocConsumer<AdminOrdersCubit, AdminOrdersState>(
+            listener: (context, state) {
+              if (state is AdminOrdersActionSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.green,
+                    behavior: SnackBarBehavior.floating,
                   ),
-                ],
-              ),
-            );
-          }
-          if (state is AdminOrdersLoaded) {
-            if (state.orders.isEmpty) {
-              return AdminTheme.emptyState('No orders yet.',
-                  icon: Icons.shopping_bag_outlined);
-            }
-            return ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: state.orders.length,
-              itemBuilder: (context, index) =>
-                  _OrderCard(order: state.orders[index]),
-            );
-          }
-          return const Center(child: Text('Loading...'));
-        },
+                );
+              } else if (state is AdminOrdersActionError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.red,
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+            buildWhen: (_, current) =>
+                current is AdminOrdersLoading ||
+                current is AdminOrdersLoaded ||
+                current is AdminOrdersError,
+            builder: (context, state) {
+              if (state is AdminOrdersLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (state is AdminOrdersError) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(Icons.error_outline,
+                          color: Colors.red, size: 48),
+                      const SizedBox(height: 12),
+                      Text('Error: ${state.message}',
+                          textAlign: TextAlign.center),
+                      const SizedBox(height: 16),
+                      ElevatedButton(
+                        onPressed: () =>
+                            context.read<AdminOrdersCubit>().fetchOrders(),
+                        child: Text(t.retry),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              if (state is AdminOrdersLoaded) {
+                if (state.orders.isEmpty) {
+                  return AdminTheme.emptyState(t.noOrders,
+                      icon: Icons.shopping_bag_outlined);
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: state.orders.length,
+                  itemBuilder: (context, index) =>
+                      _OrderCard(order: state.orders[index]),
+                );
+              }
+              return Center(child: Text(t.navHome)); // fallback
+            },
+          ),
+        ),
       ),
     );
   }
@@ -139,16 +135,9 @@ class _OrderCard extends StatelessWidget {
     'cancelled',
   ];
 
-  static const _statusLabels = {
-    'pending': 'Pending',
-    'confirmed': 'Confirmed',
-    'shipped': 'Shipped',
-    'delivered': 'Delivered',
-    'cancelled': 'Cancelled',
-  };
-
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     final statusColor =
         _statusColors[order.status] ?? Colors.grey;
 
@@ -171,7 +160,7 @@ class _OrderCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: statusColor.withOpacity(0.1),
+                      color: statusColor.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(Icons.receipt_long,
@@ -183,7 +172,7 @@ class _OrderCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Order #${order.id.substring(0, 8).toUpperCase()}',
+                          '${t.orderNoHash}${order.id.substring(0, 8).toUpperCase()}',
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14),
@@ -191,7 +180,7 @@ class _OrderCard extends StatelessWidget {
                         Text(
                           order.date.isNotEmpty
                               ? order.date.substring(0, 10)
-                              : 'Not specified',
+                              : t.notSpecified,
                           style: const TextStyle(
                               color: Colors.grey, fontSize: 12),
                         ),
@@ -211,7 +200,7 @@ class _OrderCard extends StatelessWidget {
                     itemBuilder: (_) => _allStatuses
                         .map((s) => PopupMenuItem(
                             value: s,
-                            child: Text(_statusLabels[s] ?? s)))
+                            child: Text(t.statusLabel(s))))
                         .toList(),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
@@ -221,8 +210,7 @@ class _OrderCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        _statusLabels[order.status] ??
-                            order.status.toUpperCase(),
+                        t.statusLabel(order.status),
                         style: const TextStyle(
                             color: Colors.white,
                             fontSize: 11,
@@ -234,16 +222,16 @@ class _OrderCard extends StatelessWidget {
               ),
               const Divider(height: 20),
               // Customer info
-              _infoRow(Icons.person, 'Customer', order.userName),
+              _infoRow(t, Icons.person, t.customer, order.userName),
               if (order.phone.isNotEmpty)
-                _infoRow(Icons.phone, 'Phone', order.phone),
+                _infoRow(t, Icons.phone, t.phoneLabel, order.phone),
               if (order.address.isNotEmpty)
-                _infoRow(Icons.location_on, 'Address', order.address),
+                _infoRow(t, Icons.location_on, t.addressLabel, order.address),
               const SizedBox(height: 8),
               // Items summary
               if (order.items.isNotEmpty) ...[
                 Text(
-                  'Books (${order.items.length})',
+                  t.booksLabelWithCount(order.items.length),
                   style: const TextStyle(
                       fontWeight: FontWeight.w600, fontSize: 13),
                 ),
@@ -271,7 +259,7 @@ class _OrderCard extends StatelessWidget {
                     )),
                 if (order.items.length > 2)
                   Text(
-                    '+ ${order.items.length - 2} more...',
+                    '+ ${order.items.length - 2} ${t.moreItems}',
                     style:
                         const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
@@ -280,8 +268,8 @@ class _OrderCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Total',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(t.total,
+                      style: const TextStyle(fontWeight: FontWeight.bold)),
                   Text(
                     'EGP ${order.totalAmount.toStringAsFixed(2)}',
                     style: const TextStyle(
@@ -298,7 +286,7 @@ class _OrderCard extends StatelessWidget {
     );
   }
 
-  Widget _infoRow(IconData icon, String label, String value) {
+  Widget _infoRow(AppStrings t, IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
@@ -356,16 +344,9 @@ class _OrderDetailSheet extends StatelessWidget {
     'cancelled',
   ];
 
-  static const _statusArabic = {
-    'pending': 'قيد الانتظار',
-    'confirmed': 'مؤكد',
-    'shipped': 'تم الشحن',
-    'delivered': 'تم التسليم',
-    'cancelled': 'ملغي',
-  };
-
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     final statusColor = _statusColors[order.status] ?? Colors.grey;
 
     return DraggableScrollableSheet(
@@ -373,154 +354,159 @@ class _OrderDetailSheet extends StatelessWidget {
       initialChildSize: 0.85,
       maxChildSize: 0.95,
       minChildSize: 0.5,
-      builder: (_, controller) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        child: ListView(
-          controller: controller,
-          children: [
-            // Handle
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(bottom: 16),
-                decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2)),
-              ),
-            ),
-            // Title
-            Text(
-              'طلب #${order.id.substring(0, 8).toUpperCase()}',
-              style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 4),
-            Text(order.date.isNotEmpty ? order.date.substring(0, 10) : '',
-                style: const TextStyle(color: Colors.grey, fontSize: 13)),
-            const SizedBox(height: 16),
-
-            // Status change
-            Row(
+      builder: (_, controller) => Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 700),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            child: ListView(
+              controller: controller,
               children: [
-                const Text('الحالة: ',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
-                PopupMenuButton<String>(
-                  initialValue: order.status,
-                  onSelected: (newStatus) {
-                    if (newStatus != order.status) {
-                      context
-                          .read<AdminOrdersCubit>()
-                          .updateOrderStatus(order.id, newStatus);
-                      Navigator.pop(context);
-                    }
-                  },
-                  itemBuilder: (_) => _allStatuses
-                      .map((s) => PopupMenuItem(
-                          value: s,
-                          child: Text(_statusArabic[s] ?? s)))
-                      .toList(),
+                // Handle
+                Center(
                   child: Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 6),
+                    width: 40,
+                    height: 4,
+                    margin: const EdgeInsets.only(bottom: 16),
                     decoration: BoxDecoration(
-                        color: statusColor,
-                        borderRadius: BorderRadius.circular(20)),
-                    child: Text(
-                      '${_statusArabic[order.status] ?? order.status}  ▼',
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ),
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(2)),
                   ),
                 ),
+                // Title
+                Text(
+                  '${t.orderNoHash}${order.id.substring(0, 8).toUpperCase()}',
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                Text(order.date.isNotEmpty ? order.date.substring(0, 10) : t.notSpecified,
+                    style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                const SizedBox(height: 16),
+    
+                // Status change
+                Row(
+                  children: [
+                    Text('${t.orderStatus}: ',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    PopupMenuButton<String>(
+                      initialValue: order.status,
+                      onSelected: (newStatus) {
+                        if (newStatus != order.status) {
+                          context
+                              .read<AdminOrdersCubit>()
+                              .updateOrderStatus(order.id, newStatus);
+                          Navigator.pop(context);
+                        }
+                      },
+                      itemBuilder: (_) => _allStatuses
+                          .map((s) => PopupMenuItem(
+                              value: s,
+                              child: Text(t.statusLabel(s))))
+                          .toList(),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 6),
+                        decoration: BoxDecoration(
+                            color: statusColor,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Text(
+                          '${t.statusLabel(order.status)}  ▼',
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+    
+                // Customer section
+                _sheetSection(t.customerInfo, [
+                  _detailRow(t.nameLabel, order.userName),
+                  _detailRow(t.phoneLabel,
+                      order.phone.isNotEmpty ? order.phone : t.notSpecified),
+                  _detailRow(t.email,
+                      order.email.isNotEmpty ? order.email : t.notSpecified),
+                  _detailRow(t.addressLabel,
+                      order.address.isNotEmpty ? order.address : t.notSpecified),
+                ]),
+                const SizedBox(height: 16),
+    
+                // Items section
+                _sheetSection(t.orderItemsLabel, [
+                  ...order.items.map((item) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(6),
+                              child: item.imageUrl.startsWith('http')
+                                  ? Image.network(item.imageUrl,
+                                      width: 44,
+                                      height: 56,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, __, ___) =>
+                                          const Icon(Icons.book, size: 44))
+                                  : const Icon(Icons.book, size: 44),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Text(item.title,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13)),
+                                  Text('${t.qtyLabel} ${item.quantity}',
+                                      style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12)),
+                                ],
+                              ),
+                            ),
+                            Text(
+                                'EGP ${item.subtotal.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      )),
+                ]),
+                const SizedBox(height: 16),
+    
+                // Payment section
+                _sheetSection(t.paymentSummary, [
+                  _detailRow(t.subtotal,
+                      'EGP ${order.subtotal.toStringAsFixed(2)}'),
+                  _detailRow(t.shipping,
+                      'EGP ${order.shipping.toStringAsFixed(2)}'),
+                  _detailRow(
+                      t.tax, 'EGP ${order.tax.toStringAsFixed(2)}'),
+                  _detailRow(t.discount,
+                      '-EGP ${order.discount.toStringAsFixed(2)}'),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(t.total,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text('EGP ${order.totalAmount.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Color(0xFF6C47FF))),
+                    ],
+                  ),
+                ]),
+                const SizedBox(height: 24),
               ],
             ),
-            const SizedBox(height: 20),
-
-            // Customer section
-            _sheetSection('معلومات العميل', [
-              _detailRow('الاسم', order.userName),
-              _detailRow('الهاتف',
-                  order.phone.isNotEmpty ? order.phone : 'غير محدد'),
-              _detailRow('البريد',
-                  order.email.isNotEmpty ? order.email : 'غير محدد'),
-              _detailRow('العنوان',
-                  order.address.isNotEmpty ? order.address : 'غير محدد'),
-            ]),
-            const SizedBox(height: 16),
-
-            // Items section
-            _sheetSection('الكتب المطلوبة', [
-              ...order.items.map((item) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(6),
-                          child: item.imageUrl.startsWith('http')
-                              ? Image.network(item.imageUrl,
-                                  width: 44,
-                                  height: 56,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (_, __, ___) =>
-                                      const Icon(Icons.book, size: 44))
-                              : const Icon(Icons.book, size: 44),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                            children: [
-                              Text(item.title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13)),
-                              Text('الكمية: ${item.quantity}',
-                                  style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12)),
-                            ],
-                          ),
-                        ),
-                        Text(
-                            'EGP ${item.subtotal.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  )),
-            ]),
-            const SizedBox(height: 16),
-
-            // Payment section
-            _sheetSection('ملخص الدفع', [
-              _detailRow('الإجمالي الجزئي',
-                  'EGP ${order.subtotal.toStringAsFixed(2)}'),
-              _detailRow('الشحن',
-                  'EGP ${order.shipping.toStringAsFixed(2)}'),
-              _detailRow(
-                  'الضريبة', 'EGP ${order.tax.toStringAsFixed(2)}'),
-              _detailRow('الخصم',
-                  '-EGP ${order.discount.toStringAsFixed(2)}'),
-              const Divider(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('الإجمالي',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 15)),
-                  Text('EGP ${order.totalAmount.toStringAsFixed(2)}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: Color(0xFF6C47FF))),
-                ],
-              ),
-            ]),
-            const SizedBox(height: 24),
-          ],
+          ),
         ),
       ),
     );

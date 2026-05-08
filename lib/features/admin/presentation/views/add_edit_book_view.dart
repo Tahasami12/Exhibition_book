@@ -9,6 +9,9 @@ import 'package:exhibition_book/features/home/presentation/cubit/vendors_cubit.d
 import 'package:exhibition_book/features/home/presentation/cubit/vendors_state.dart';
 import 'package:exhibition_book/features/home/data/models/author_model.dart';
 import 'package:exhibition_book/features/home/data/models/vendor_model.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
+import 'package:exhibition_book/features/admin/presentation/admin_theme.dart';
 
 class AddEditBookView extends StatefulWidget {
   final BookModel? book;
@@ -21,12 +24,15 @@ class AddEditBookView extends StatefulWidget {
 class _AddEditBookViewState extends State<AddEditBookView> {
   final _formKey = GlobalKey<FormState>();
   
-  late TextEditingController _titleController;
-  late TextEditingController _descriptionController;
+  late TextEditingController _titleArController;
+  late TextEditingController _titleEnController;
+  late TextEditingController _descriptionArController;
+  late TextEditingController _descriptionEnController;
   late TextEditingController _priceController;
   late TextEditingController _ratingController;
   late TextEditingController _imageUrlController;
-  late TextEditingController _categoryController;
+  late TextEditingController _categoryArController;
+  late TextEditingController _categoryEnController;
   late TextEditingController _stockController;
 
   String? _selectedAuthorId;
@@ -35,13 +41,26 @@ class _AddEditBookViewState extends State<AddEditBookView> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.book?.title ?? '');
-    _descriptionController = TextEditingController(text: widget.book?.description ?? '');
-    _priceController = TextEditingController(text: widget.book?.price.toString() ?? '0.0');
-    _ratingController = TextEditingController(text: widget.book?.rating.toString() ?? '5.0');
-    _imageUrlController = TextEditingController(text: widget.book?.imageUrl ?? '');
-    _categoryController = TextEditingController(text: widget.book?.category ?? 'Fantasy');
-    _stockController = TextEditingController(text: widget.book?.stock.toString() ?? '10');
+    _titleArController =
+        TextEditingController(text: widget.book?.titleAr ?? '');
+    _titleEnController =
+        TextEditingController(text: widget.book?.titleEn ?? '');
+    _descriptionArController =
+        TextEditingController(text: widget.book?.descriptionAr ?? '');
+    _descriptionEnController =
+        TextEditingController(text: widget.book?.descriptionEn ?? '');
+    _priceController =
+        TextEditingController(text: widget.book?.price.toString() ?? '0.0');
+    _ratingController =
+        TextEditingController(text: widget.book?.rating.toString() ?? '5.0');
+    _imageUrlController =
+        TextEditingController(text: widget.book?.imageUrl ?? '');
+    _categoryArController =
+        TextEditingController(text: widget.book?.categoryAr ?? '');
+    _categoryEnController =
+        TextEditingController(text: widget.book?.categoryEn ?? '');
+    _stockController =
+        TextEditingController(text: widget.book?.stock.toString() ?? '10');
 
     _selectedAuthorId = widget.book?.authorId;
     _selectedVendorId = widget.book?.vendorId;
@@ -49,56 +68,29 @@ class _AddEditBookViewState extends State<AddEditBookView> {
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+    _titleArController.dispose();
+    _titleEnController.dispose();
+    _descriptionArController.dispose();
+    _descriptionEnController.dispose();
     _priceController.dispose();
     _ratingController.dispose();
     _imageUrlController.dispose();
-    _categoryController.dispose();
+    _categoryArController.dispose();
+    _categoryEnController.dispose();
     _stockController.dispose();
     super.dispose();
   }
 
-  void _submit(List<AuthorModel> authors) {
-    if (_formKey.currentState!.validate()) {
-      if (_selectedAuthorId == null || _selectedVendorId == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select both an Author and a Vendor', style: TextStyle(color: Colors.white)), backgroundColor: Colors.red));
-        return;
-      }
-
-      final selectedAuthor = authors.firstWhere((a) => a.id == _selectedAuthorId, orElse: () => authors.first);
-
-      final newBook = BookModel(
-        id: widget.book?.id ?? '',
-        title: _titleController.text,
-        author: selectedAuthor.name, // Ensure backward compatibility with UI expecting Author name
-        authorId: _selectedAuthorId,
-        vendorId: _selectedVendorId,
-        description: _descriptionController.text,
-        price: double.tryParse(_priceController.text) ?? 0.0,
-        rating: double.tryParse(_ratingController.text) ?? 5.0,
-        imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : 'https://via.placeholder.com/150',
-        category: _categoryController.text,
-        stock: int.tryParse(_stockController.text) ?? 0,
-        createdAt: widget.book?.createdAt,
-      );
-
-      if (widget.book == null) {
-        context.read<AdminBooksCubit>().addBook(newBook);
-      } else {
-        context.read<AdminBooksCubit>().updateBook(newBook);
-      }
-      context.pop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isTablet = Responsive.isTablet(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.book == null ? 'Add Book' : 'Edit Book', style: const TextStyle(color: Colors.white)),
-        backgroundColor: Colors.indigo,
-        iconTheme: const IconThemeData(color: Colors.white),
+      backgroundColor: AdminTheme.bg,
+      appBar: AdminTheme.adminAppBar(
+        title: widget.book == null ? t.addBook : t.editBook,
+        context: context,
       ),
       body: Builder(
         builder: (context) {
@@ -109,11 +101,13 @@ class _AddEditBookViewState extends State<AddEditBookView> {
           bool hasError = authorState is AuthorsError || vendorState is VendorsError;
 
           if (isLoading) return const Center(child: CircularProgressIndicator());
-          if (hasError) return const Center(child: Text('Failed to load required data.'));
+          if (hasError) {
+            return Center(child: Text(t.failedToLoadData));
+          }
 
           List<AuthorModel> authors = [];
           if (authorState is AuthorsLoaded) authors = authorState.authors;
-          
+
           List<VendorModel> vendors = [];
           if (vendorState is VendorsLoaded) vendors = vendorState.vendors;
 
@@ -127,19 +121,18 @@ class _AddEditBookViewState extends State<AddEditBookView> {
                     const Icon(Icons.warning, color: Colors.orange, size: 64),
                     const SizedBox(height: 16),
                     Text(
-                      authors.isEmpty ? 'No Authors found!' : 'No Vendors found!',
+                      authors.isEmpty ? t.noAuthorsFound : t.noVendorsFound,
                       style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'You must add authors and vendors before you can create a book.',
+                    Text(
+                      t.mustAddAuthorVendorFirst,
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo),
                       onPressed: () => context.pop(),
-                      child: const Text('Go Back', style: TextStyle(color: Colors.white)),
+                      child: Text(t.goBack),
                     )
                   ],
                 ),
@@ -147,98 +140,196 @@ class _AddEditBookViewState extends State<AddEditBookView> {
             );
           }
 
-          if (_selectedAuthorId != null && !authors.any((a) => a.id == _selectedAuthorId)) {
-            _selectedAuthorId = null;
-          }
-          if (_selectedVendorId != null && !vendors.any((v) => v.id == _selectedVendorId)) {
-            _selectedVendorId = null;
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: _titleController,
-                    decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
-                    validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(labelText: 'Author', border: OutlineInputBorder()),
-                    value: _selectedAuthorId,
-                    items: authors.map((a) => DropdownMenuItem(value: a.id, child: Text(a.name))).toList(),
-                    onChanged: (val) => setState(() => _selectedAuthorId = val),
-                    validator: (v) => v == null ? 'Required' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  DropdownButtonFormField<String>(
-                    decoration: const InputDecoration(labelText: 'Vendor', border: OutlineInputBorder()),
-                    value: _selectedVendorId,
-                    items: vendors.map((v) => DropdownMenuItem(value: v.id, child: Text(v.name))).toList(),
-                    onChanged: (val) => setState(() => _selectedVendorId = val),
-                    validator: (v) => v == null ? 'Required' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _categoryController,
-                    decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder()),
-                    validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
+          return Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context) ?? 900),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: TextFormField(
-                          controller: _priceController,
-                          decoration: const InputDecoration(labelText: 'Price', border: OutlineInputBorder()),
-                          keyboardType: TextInputType.number,
-                          validator: (v) => v == null || v.isEmpty ? 'Required' : (double.tryParse(v) == null ? 'Invalid Number' : null),
+                      _buildSectionTitle(t.arabicInfo),
+                      const SizedBox(height: 12),
+                      if (isTablet)
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField(_titleArController, t.bookTitleAr, true, t)),
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField(_categoryArController, t.categoryArLabel, true, t)),
+                          ],
+                        )
+                      else ...[
+                        _buildTextField(_titleArController, t.bookTitleAr, true, t),
+                        const SizedBox(height: 12),
+                        _buildTextField(_categoryArController, t.categoryArLabel, true, t),
+                      ],
+                      const SizedBox(height: 12),
+                      _buildTextField(_descriptionArController, t.descriptionArLabel, false, t, maxLines: 2),
+                      const SizedBox(height: 20),
+                      
+                      _buildSectionTitle(t.englishInfo),
+                      const SizedBox(height: 12),
+                      if (isTablet)
+                        Row(
+                          children: [
+                            Expanded(child: _buildTextField(_titleEnController, t.bookTitleEn, true, t)),
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField(_categoryEnController, t.categoryEnLabel, true, t)),
+                          ],
+                        )
+                      else ...[
+                        _buildTextField(_titleEnController, t.bookTitleEn, true, t),
+                        const SizedBox(height: 12),
+                        _buildTextField(_categoryEnController, t.categoryEnLabel, true, t),
+                      ],
+                      const SizedBox(height: 12),
+                      _buildTextField(_descriptionEnController, t.descriptionEnLabel, false, t, maxLines: 2),
+                      const SizedBox(height: 20),
+                      
+                      _buildSectionTitle(t.generalInfo),
+                      const SizedBox(height: 12),
+                      if (isTablet)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildDropdown(
+                                t.author,
+                                _selectedAuthorId,
+                                authors.map((a) => DropdownMenuItem(value: a.id, child: Text('${a.nameAr} / ${a.nameEn}'))).toList(),
+                                (val) => setState(() => _selectedAuthorId = val),
+                                t,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: _buildDropdown(
+                                t.vendor,
+                                _selectedVendorId,
+                                vendors.map((v) => DropdownMenuItem(value: v.id, child: Text('${v.nameAr} / ${v.nameEn}'))).toList(),
+                                (val) => setState(() => _selectedVendorId = val),
+                                t,
+                              ),
+                            ),
+                          ],
+                        )
+                      else ...[
+                        _buildDropdown(
+                          t.author,
+                          _selectedAuthorId,
+                          authors.map((a) => DropdownMenuItem(value: a.id, child: Text('${a.nameAr} / ${a.nameEn}'))).toList(),
+                          (val) => setState(() => _selectedAuthorId = val),
+                          t,
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: TextFormField(
-                          controller: _stockController,
-                          decoration: const InputDecoration(labelText: 'Stock', border: OutlineInputBorder()),
-                          keyboardType: TextInputType.number,
-                          validator: (v) => v == null || v.isEmpty ? 'Required' : (int.tryParse(v) == null ? 'Invalid Int' : null),
+                        const SizedBox(height: 12),
+                        _buildDropdown(
+                          t.vendor,
+                          _selectedVendorId,
+                          vendors.map((v) => DropdownMenuItem(value: v.id, child: Text('${v.nameAr} / ${v.nameEn}'))).toList(),
+                          (val) => setState(() => _selectedVendorId = val),
+                          t,
                         ),
+                      ],
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(child: _buildTextField(_priceController, t.priceLabel, true, t, keyboardType: TextInputType.number)),
+                          const SizedBox(width: 16),
+                          Expanded(child: _buildTextField(_stockController, t.stock, true, t, keyboardType: TextInputType.number)),
+                          if (isTablet) ...[
+                            const SizedBox(width: 16),
+                            Expanded(child: _buildTextField(_ratingController, t.rating, true, t, keyboardType: TextInputType.number)),
+                          ],
+                        ],
                       ),
+                      if (!isTablet) ...[
+                        const SizedBox(height: 12),
+                        _buildTextField(_ratingController, t.rating, true, t, keyboardType: TextInputType.number),
+                      ],
+                      const SizedBox(height: 12),
+                      _buildTextField(_imageUrlController, t.imageUrlLabel, false, t),
+                      const SizedBox(height: 30),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          style: AdminTheme.primaryButtonStyle(context),
+                          onPressed: () => _submit(authors, t),
+                          child: Text(widget.book == null ? t.addBook : t.saveChanges),
+                        ),
+                      )
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _imageUrlController,
-                    decoration: const InputDecoration(labelText: 'Image URL', border: OutlineInputBorder()),
-                  ),
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _descriptionController,
-                    maxLines: 3,
-                    decoration: const InputDecoration(labelText: 'Description', border: OutlineInputBorder()),
-                  ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.indigo,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      onPressed: () => _submit(authors),
-                      child: Text(widget.book == null ? 'Add Book' : 'Save Changes', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                    ),
-                  )
-                ],
+                ),
               ),
             ),
           );
         },
       ),
     );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, bool required, AppStrings t, {int maxLines = 1, TextInputType keyboardType = TextInputType.text}) {
+    return TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      style: const TextStyle(fontSize: 14),
+      decoration: AdminTheme.inputDecoration(label),
+      validator: required ? (v) => v == null || v.isEmpty ? t.requiredField : null : null,
+    );
+  }
+
+  Widget _buildDropdown(String label, String? value, List<DropdownMenuItem<String>> items, ValueChanged<String?> onChanged, AppStrings t) {
+    return DropdownButtonFormField<String>(
+      decoration: AdminTheme.inputDecoration(label),
+      value: value,
+      items: items,
+      onChanged: onChanged,
+      validator: (v) => v == null ? t.requiredField : null,
+      style: const TextStyle(fontSize: 14, color: Colors.black),
+    );
+  }
+
+  void _submit(List<AuthorModel> authors, AppStrings t) {
+    if (_formKey.currentState!.validate()) {
+      if (_selectedAuthorId == null || _selectedVendorId == null) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(t.selectAuthorVendor)));
+        return;
+      }
+
+      final selectedAuthor = authors.firstWhere((a) => a.id == _selectedAuthorId);
+
+      final newBook = BookModel(
+        id: widget.book?.id ?? '',
+        titleAr: _titleArController.text,
+        titleEn: _titleEnController.text,
+        authorAr: selectedAuthor.nameAr,
+        authorEn: selectedAuthor.nameEn,
+        authorId: _selectedAuthorId,
+        vendorId: _selectedVendorId,
+        descriptionAr: _descriptionArController.text,
+        descriptionEn: _descriptionEnController.text,
+        price: double.tryParse(_priceController.text) ?? 0.0,
+        rating: double.tryParse(_ratingController.text) ?? 5.0,
+        imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : 'https://via.placeholder.com/150',
+        categoryAr: _categoryArController.text,
+        categoryEn: _categoryEnController.text,
+        stock: int.tryParse(_stockController.text) ?? 0,
+        createdAt: widget.book?.createdAt,
+      );
+
+      if (widget.book == null) {
+        context.read<AdminBooksCubit>().addBook(newBook);
+      } else {
+        context.read<AdminBooksCubit>().updateBook(newBook);
+      }
+      context.pop();
+    }
   }
 }

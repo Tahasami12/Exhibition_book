@@ -1,4 +1,5 @@
 import 'package:exhibition_book/core/utils/app_strings.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -93,7 +94,7 @@ class Offers extends StatelessWidget {
                           // Parsing "20% OFF" or just throwing the discount string 
                           // The `makeOffers` helper expects an OfferModel
                           return _PromoCardFromDb(
-                            discount: offerInfo.discount,
+                            discount: offerInfo.discount(AppStrings.isArabic(context)),
                             color: offersColors[index % offersColors.length],
                           );
                         },

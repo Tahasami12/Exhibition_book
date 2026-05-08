@@ -39,10 +39,10 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
-          Responsive.responsiveSpacing(context, 60),
+          Responsive.responsiveSpacing(context, 40),
         ),
         child: Container(
-          padding: EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 10),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -76,77 +76,123 @@ class _LoginScreenState extends State<LoginScreen> {
               }
             } else if (state is AuthFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage, style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+                SnackBar(
+                    content: Text(state.errorMessage,
+                        style: const TextStyle(color: Colors.white)),
+                    backgroundColor: Colors.red),
               );
             }
           },
           builder: (context, state) {
             final t = AppStrings.of(context);
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Form(
-                key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _LoginHeader(t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                _TextForm(controller: _emailController, t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-                _TextForm2(controller: _passwordController, t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 10)),
+            final isTablet = Responsive.isTablet(context) || Responsive.isDesktop(context);
 
-              Align(
-                alignment: Alignment.centerLeft,
-                child: TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    t.forgotPassword,
-                    style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w600,
-                      fontSize: Responsive.responsiveFontSize(context, 14),
-                      height: Responsive.responsiveSpacing(context, 1.4),
-                      color: kPrimaryColor,
-                    ),
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isTablet ? 700 : double.infinity,
+                ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _LoginHeader(t: t),
+                      SizedBox(height: Responsive.responsiveSpacing(context, 25)),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            if (isTablet)
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: _TextForm(
+                                        controller: _emailController, t: t),
+                                  ),
+                                  const SizedBox(width: 30),
+                                  Expanded(
+                                    child: _TextForm2(
+                                        controller: _passwordController, t: t),
+                                  ),
+                                ],
+                              )
+                            else
+                              Column(
+                                children: [
+                                  _TextForm(controller: _emailController, t: t),
+                                  SizedBox(
+                                      height: Responsive.responsiveSpacing(
+                                          context, 15)),
+                                  _TextForm2(
+                                      controller: _passwordController, t: t),
+                                ],
+                              ),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 10)),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: TextButton(
+                                onPressed: () {},
+                                child: Text(
+                                  t.forgotPassword,
+                                  style: GoogleFonts.roboto(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                    color: kPrimaryColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 25)),
+                            Login(
+                              t: t,
+                              isLoading: state is AuthLoading && _isEmailLoading,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  setState(() => _isEmailLoading = true);
+                                  context.read<AuthCubit>().signIn(
+                                        email: _emailController.text.trim(),
+                                        password:
+                                            _passwordController.text.trim(),
+                                      );
+                                }
+                              },
+                            ),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 25)),
+                            Line(t: t),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 15)),
+                            Line2(t: t),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 20)),
+                            Final(
+                              t: t,
+                              isLoading:
+                                  state is AuthLoading && _isGoogleLoading,
+                              onPressed: () {
+                                setState(() => _isGoogleLoading = true);
+                                context.read<AuthCubit>().signInWithGoogle();
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-
-              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-              Login(
-                t: t,
-                isLoading: state is AuthLoading && _isEmailLoading,
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    setState(() => _isEmailLoading = true);
-                    context.read<AuthCubit>().signIn(
-                      email: _emailController.text.trim(),
-                      password: _passwordController.text.trim(),
-                    );
-                  }
-                },
-              ),
-              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-              Line(t: t),
-              SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-              Line2(t: t),
-              SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-              Final(
-                t: t,
-                isLoading: state is AuthLoading && _isGoogleLoading,
-                onPressed: () {
-                  setState(() => _isGoogleLoading = true);
-                  context.read<AuthCubit>().signInWithGoogle();
-                },
-              ),
-              SizedBox(height: Responsive.responsiveSpacing(context, 4)),
-            ],
-            ),
-          ),
-        );
-      },
-      ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -155,29 +201,28 @@ class _LoginScreenState extends State<LoginScreen> {
 class _LoginHeader extends StatelessWidget {
   final AppStrings t;
   const _LoginHeader({required this.t});
-  
+
   @override
   Widget build(BuildContext context) {
+    final isTablet = Responsive.isTablet(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: Responsive.responsiveSpacing(context, 30)),
+        if (!isTablet) SizedBox(height: Responsive.responsiveSpacing(context, 20)),
         Text(
           t.welcomeBack,
           style: GoogleFonts.openSans(
             fontWeight: FontWeight.bold,
-            fontSize: 24,
-            height: 1.35,
+            fontSize: isTablet ? 30 : 26,
             color: Colors.grey[900],
           ),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 8),
         Text(
           t.loginSubtitle,
+          textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: isTablet ? 17 : 15,
             color: Colors.grey[500],
           ),
         ),
@@ -200,34 +245,26 @@ class _TextForm extends StatelessWidget {
   }
 
   Widget _label(BuildContext context, String text) => Padding(
-    padding: const EdgeInsets.only(bottom: 10, left: 4),
-    child: Text(
-      text,
-      style: GoogleFonts.roboto(
-        fontSize: Responsive.responsiveFontSize(context, 16),
-        fontWeight: FontWeight.w500,
-        color: kGrey900,
-        height: Responsive.responsiveSpacing(context, 1.4),
-      ),
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 10, left: 4),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: kGrey900,
+          ),
+        ),
+      );
   Widget _input1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: Color(0xffFAFAFA), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10,
-            color: Colors.grey.withOpacity(0.03),
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xffEEEEEE), width: 1.5),
       ),
       child: TextFormField(
         controller: controller,
-        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        style: const TextStyle(color: Colors.black, fontSize: 15),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return t.emailErrorEmpty;
@@ -240,14 +277,13 @@ class _TextForm extends StatelessWidget {
         decoration: InputDecoration(
           hintText: t.emailHint,
           hintStyle: GoogleFonts.roboto(
-            fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: 15,
             color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          errorStyle: const TextStyle(height: 0.8),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+          errorStyle: const TextStyle(height: 0.8, fontSize: 12),
         ),
       ),
     );
@@ -275,36 +311,28 @@ class _TextForm2State extends State<_TextForm2> {
   }
 
   Widget _label(BuildContext context, String text) => Padding(
-    padding: const EdgeInsets.only(bottom: 10, left: 4),
-    child: Text(
-      text,
-      style: GoogleFonts.roboto(
-        fontSize: Responsive.responsiveFontSize(context, 20),
-        fontWeight: FontWeight.w500,
-        color: kGrey900,
-        height: 1.4,
-      ),
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 10, left: 4),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: kGrey900,
+          ),
+        ),
+      );
 
   Widget _input(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: const Color(0xffFAFAFA), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10,
-            color: Colors.grey.withOpacity(0.03),
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xffEEEEEE), width: 1.5),
       ),
       child: TextFormField(
         controller: widget.controller,
         obscureText: _isObscure,
-        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        style: const TextStyle(color: Colors.black, fontSize: 15),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return widget.t.passErrorEmpty;
@@ -324,17 +352,17 @@ class _TextForm2State extends State<_TextForm2> {
             },
             icon: Icon(
               _isObscure ? Icons.visibility_off : Icons.visibility,
+              size: 22,
             ),
           ),
           hintStyle: GoogleFonts.roboto(
-            fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: 1.5,
+            fontSize: 15,
             color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          errorStyle: const TextStyle(height: 0.8),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+          errorStyle: const TextStyle(height: 0.8, fontSize: 12),
         ),
       ),
     );
@@ -345,29 +373,34 @@ class Login extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
   final AppStrings t;
-  const Login({super.key, required this.onPressed, required this.t, this.isLoading = false});
+  const Login(
+      {super.key,
+      required this.onPressed,
+      required this.t,
+      this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? () {} : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xff54408C),
-        minimumSize: Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        backgroundColor: const Color(0xff54408C),
+        minimumSize: const Size(double.infinity, 54),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
       ),
       child: isLoading
           ? const SizedBox(
               height: 24,
               width: 24,
-              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+              child:
+                  CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
             )
           : Text(
               t.login,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
-                fontSize: Responsive.responsiveFontSize(context, 16),
+                fontSize: 16,
               ),
             ),
     );
@@ -387,14 +420,13 @@ class Line extends StatelessWidget {
           t.dontHaveAccount,
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w500,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: 15,
             color: Colors.grey[500],
           ),
         ),
         TextButton(
           style: TextButton.styleFrom(
-            padding: EdgeInsets.zero, // removes space
+            padding: EdgeInsets.zero,
             minimumSize: Size.zero,
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
@@ -404,9 +436,8 @@ class Line extends StatelessWidget {
           child: Text(
             " ${t.signUp}",
             style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w500,
-              fontSize: Responsive.responsiveFontSize(context, 16),
-              height: Responsive.responsiveSpacing(context, 1.5),
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
               color: kPrimaryColor,
             ),
           ),
@@ -424,20 +455,19 @@ class Line2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Divider()),
+        const Expanded(child: Divider()),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: Text(
             t.orWith,
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w400,
-              height: Responsive.responsiveSpacing(context, 1.4),
-              fontSize: Responsive.responsiveFontSize(context, 14),
+              fontSize: 13,
               color: Colors.grey[500],
             ),
           ),
         ),
-        Expanded(child: Divider()),
+        const Expanded(child: Divider()),
       ],
     );
   }
@@ -447,20 +477,24 @@ class Final extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
   final AppStrings t;
-  const Final({super.key, required this.onPressed, required this.t, this.isLoading = false});
+  const Final(
+      {super.key,
+      required this.onPressed,
+      required this.t,
+      this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: Responsive.responsiveSpacing(context, 50),
+      height: 54,
       child: ElevatedButton(
         onPressed: isLoading ? () {} : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(27),
             side: BorderSide(color: Colors.grey.shade300),
           ),
         ),
@@ -468,19 +502,19 @@ class Final extends StatelessWidget {
             ? const SizedBox(
                 height: 24,
                 width: 24,
-                child: CircularProgressIndicator(color: Colors.black, strokeWidth: 3),
+                child: CircularProgressIndicator(
+                    color: Colors.black, strokeWidth: 2.5),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(AssetData.google, width: 15),
-                  SizedBox(width: Responsive.responsiveSpacing(context, 10)),
+                  Image.asset(AssetData.google, width: 18),
+                  const SizedBox(width: 12),
                   Text(
                     t.googleSignIn,
                     style: GoogleFonts.roboto(
-                      fontWeight: FontWeight.w400,
-                      fontSize: Responsive.responsiveFontSize(context, 14),
-                      height: Responsive.responsiveSpacing(context, 1.5),
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
                       color: Colors.grey.shade900,
                     ),
                   ),

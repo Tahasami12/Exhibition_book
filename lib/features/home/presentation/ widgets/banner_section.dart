@@ -30,12 +30,12 @@ class _BannerSectionState extends State<BannerSection> {
       builder: (context, state) {
         if (state is PromotionsLoading || state is PromotionsInitial) {
           return SizedBox(
-            height: Responsive.responsiveSpacing(context, 150),
+            height: Responsive.responsiveSpacing(context, 150, tabletSpacing: 180),
             child: const Center(child: CircularProgressIndicator()),
           );
         } else if (state is PromotionsError) {
           return SizedBox(
-            height: Responsive.responsiveSpacing(context, 150),
+            height: Responsive.responsiveSpacing(context, 150, tabletSpacing: 180),
             child: Center(child: Text("Error: ${state.message}")),
           );
         } else if (state is PromotionsLoaded) {
@@ -47,7 +47,7 @@ class _BannerSectionState extends State<BannerSection> {
           return Column(
             children: [
               SizedBox(
-                height: Responsive.responsiveSpacing(context, 150),
+                height: Responsive.responsiveSpacing(context, 150, tabletSpacing: 180),
                 child: PageView.builder(
                   controller: controller,
                   itemCount: promotions.length,
@@ -95,6 +95,7 @@ class _BannerCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAr = AppStrings.isArabic(context);
     final t = AppStrings.of(context);
     return Container(
       margin: EdgeInsets.symmetric(
@@ -122,16 +123,16 @@ class _BannerCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  promotion.title,
+                  promotion.title(isAr),
                   style: TextStyle(
-                    fontSize: Responsive.responsiveFontSize(context, 20),
+                    fontSize: Responsive.responsiveFontSize(context, 20, tabletSize: 22),
                     fontWeight: FontWeight.w700,
                     color: const Color(0xFF121212),
                   ),
                 ),
                 SizedBox(height: Responsive.responsiveSpacing(context, 4)),
                 Text(
-                  promotion.discount,
+                  promotion.discount(isAr),
                   style: TextStyle(
                     fontSize: Responsive.responsiveFontSize(context, 14),
                     color: Colors.grey,
@@ -165,8 +166,8 @@ class _BannerCard extends StatelessWidget {
           ),
           SizedBox(width: Responsive.responsiveSpacing(context, 10)),
           Container(
-            width: Responsive.responsiveSpacing(context, 120),
-            height: Responsive.responsiveSpacing(context, 120),
+            width: Responsive.responsiveSpacing(context, 120, tabletSpacing: 140),
+            height: Responsive.responsiveSpacing(context, 120, tabletSpacing: 140),
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(promotion.imageUrl),

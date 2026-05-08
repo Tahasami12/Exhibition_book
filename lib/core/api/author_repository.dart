@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart'; 
 import '../../features/home/data/models/author_model.dart';
 
 class AuthorRepository {
@@ -16,6 +16,14 @@ class AuthorRepository {
     } catch (e) {
       throw Exception('Failed to load authors: $e');
     }
+  }
+
+  Stream<List<AuthorModel>> getAuthorsStream() {
+    return _firestore.collection('authors').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return AuthorModel.fromFirestore(doc.data(), doc.id);
+      }).toList();
+    });
   }
 
   Future<AuthorModel> getAuthorById(String authorId) async {

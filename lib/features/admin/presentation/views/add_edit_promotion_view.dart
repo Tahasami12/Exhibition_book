@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:exhibition_book/features/admin/presentation/cubit/admin_promotions_cubit.dart';
 import 'package:exhibition_book/features/home/data/models/promotion_model.dart';
-// import 'package:exhibition_book/features/home/presentation/cubit/promotions_cubit.dart'; // Typically refresh this if active.
+import 'package:exhibition_book/core/utils/app_strings.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
+import 'package:exhibition_book/features/admin/presentation/admin_theme.dart';
 
 class AddEditPromotionView extends StatefulWidget {
   final PromotionModel? promotion;
@@ -16,35 +18,50 @@ class AddEditPromotionView extends StatefulWidget {
 class _AddEditPromotionViewState extends State<AddEditPromotionView> {
   final _formKey = GlobalKey<FormState>();
   
-  late TextEditingController _titleController;
-  late TextEditingController _discountController;
+  late TextEditingController _titleArController;
+  late TextEditingController _titleEnController;
+  late TextEditingController _discountArController;
+  late TextEditingController _discountEnController;
   late TextEditingController _imageUrlController;
   bool _isActive = true;
 
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.promotion?.title ?? '');
-    _discountController = TextEditingController(text: widget.promotion?.discount ?? '');
-    _imageUrlController = TextEditingController(text: widget.promotion?.imageUrl ?? '');
+    _titleArController =
+        TextEditingController(text: widget.promotion?.titleAr ?? '');
+    _titleEnController =
+        TextEditingController(text: widget.promotion?.titleEn ?? '');
+    _discountArController =
+        TextEditingController(text: widget.promotion?.discountAr ?? '');
+    _discountEnController =
+        TextEditingController(text: widget.promotion?.discountEn ?? '');
+    _imageUrlController =
+        TextEditingController(text: widget.promotion?.imageUrl ?? '');
     _isActive = widget.promotion?.isActive ?? true;
   }
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _discountController.dispose();
+    _titleArController.dispose();
+    _titleEnController.dispose();
+    _discountArController.dispose();
+    _discountEnController.dispose();
     _imageUrlController.dispose();
     super.dispose();
   }
 
-  void _submit() {
+  void _submit(AppStrings t) {
     if (_formKey.currentState!.validate()) {
       final newPromo = PromotionModel(
         id: widget.promotion?.id ?? '',
-        title: _titleController.text,
-        discount: _discountController.text,
-        imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : 'https://via.placeholder.com/150',
+        titleAr: _titleArController.text,
+        titleEn: _titleEnController.text,
+        discountAr: _discountArController.text,
+        discountEn: _discountEnController.text,
+        imageUrl: _imageUrlController.text.isNotEmpty
+            ? _imageUrlController.text
+            : 'https://via.placeholder.com/150',
         isActive: _isActive,
       );
 
@@ -53,69 +70,105 @@ class _AddEditPromotionViewState extends State<AddEditPromotionView> {
       } else {
         context.read<AdminPromotionsCubit>().updatePromotion(newPromo);
       }
-      
+
       context.pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isTablet = Responsive.isTablet(context);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.promotion == null ? 'Add Promotion' : 'Edit Promotion', style: const TextStyle(color: Colors.white)),
-        backgroundColor: Colors.indigo,
-        iconTheme: const IconThemeData(color: Colors.white),
+      backgroundColor: AdminTheme.bg,
+      appBar: AdminTheme.adminAppBar(
+        title: widget.promotion == null ? t.addPromotion : t.editPromotion,
+        context: context,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
-                validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _discountController,
-                decoration: const InputDecoration(labelText: 'Discount Text', border: OutlineInputBorder()),
-                validator: (v) => v == null || v.isEmpty ? 'Required' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _imageUrlController,
-                decoration: const InputDecoration(labelText: 'Banner Image URL', border: OutlineInputBorder()),
-              ),
-              const SizedBox(height: 16),
-              SwitchListTile(
-                title: const Text('Active Promotion?'),
-                subtitle: const Text('Toggle visibility on the home screen.'),
-                value: _isActive,
-                onChanged: (val) {
-                  setState(() {
-                    _isActive = val;
-                  });
-                },
-              ),
-              const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.indigo,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: Responsive.maxContentWidth(context) ?? 800),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildSectionTitle(t.arabicInfo),
+                  const SizedBox(height: 12),
+                  if (isTablet)
+                    Row(
+                      children: [
+                        Expanded(child: _buildTextField(_titleArController, t.bookTitleAr, t.requiredField)),
+                        const SizedBox(width: 16),
+                        Expanded(child: _buildTextField(_discountArController, t.discountArLabel, t.requiredField)),
+                      ],
+                    )
+                  else ...[
+                    _buildTextField(_titleArController, t.bookTitleAr, t.requiredField),
+                    const SizedBox(height: 12),
+                    _buildTextField(_discountArController, t.discountArLabel, t.requiredField),
+                  ],
+                  const SizedBox(height: 24),
+                  
+                  _buildSectionTitle(t.englishInfo),
+                  const SizedBox(height: 12),
+                  if (isTablet)
+                    Row(
+                      children: [
+                        Expanded(child: _buildTextField(_titleEnController, t.bookTitleEn, t.requiredField)),
+                        const SizedBox(width: 16),
+                        Expanded(child: _buildTextField(_discountEnController, t.discountEnLabel, t.requiredField)),
+                      ],
+                    )
+                  else ...[
+                    _buildTextField(_titleEnController, t.bookTitleEn, t.requiredField),
+                    const SizedBox(height: 12),
+                    _buildTextField(_discountEnController, t.discountEnLabel, t.requiredField),
+                  ],
+                  const SizedBox(height: 24),
+                  
+                  _buildSectionTitle(t.generalInfo),
+                  const SizedBox(height: 12),
+                  _buildTextField(_imageUrlController, t.imageUrlLabel, null),
+                  const SizedBox(height: 10),
+                  SwitchListTile(
+                    contentPadding: EdgeInsets.zero,
+                    title: Text(t.activePromotion, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                    subtitle: Text(t.promoVisibilityHint, style: const TextStyle(fontSize: 12)),
+                    value: _isActive,
+                    onChanged: (val) => setState(() => _isActive = val),
                   ),
-                  onPressed: _submit,
-                  child: Text(widget.promotion == null ? 'Add Promotion' : 'Save Changes', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                ),
-              )
-            ],
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 52,
+                    child: ElevatedButton(
+                      style: AdminTheme.primaryButtonStyle(context),
+                      onPressed: () => _submit(t),
+                      child: Text(widget.promotion == null ? t.addPromotion : t.saveChanges),
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold));
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, String? errorMsg) {
+    return TextFormField(
+      controller: controller,
+      decoration: AdminTheme.inputDecoration(label),
+      validator: errorMsg != null ? (v) => v == null || v.isEmpty ? errorMsg : null : null,
     );
   }
 }

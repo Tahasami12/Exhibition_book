@@ -27,52 +27,62 @@ class CartScreen extends StatelessWidget {
         centerTitle: true,
         elevation: 0,
       ),
-      body: BlocBuilder<CartCubit, CartState>(
-        builder: (context, state) {
-          // Debug: verify the BlocBuilder is receiving updates
-          debugPrint('CartScreen rebuild: ${state.items.length} items');
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.maxContentWidth(context) ?? double.infinity,
+          ),
+          child: BlocBuilder<CartCubit, CartState>(
+            builder: (context, state) {
+              // Debug: verify the BlocBuilder is receiving updates
+              debugPrint('CartScreen rebuild: ${state.items.length} items');
 
-          if (state.isEmpty) {
-            return const _EmptyCart();
-          }
+              if (state.isEmpty) {
+                return const _EmptyCart();
+              }
 
-          return Column(
-            children: [
-              Expanded(
-                child: ListView.builder(
-                  padding: Responsive.responsivePadding(context),
-                  itemCount: state.items.length,
-                  itemBuilder: (context, index) {
-                    final item = state.items[index];
-                    return _CartItemCard(
-                      item: item,
-                      onIncrease: () => context.read<CartCubit>().increaseQuantity(item.id),
-                      onDecrease: () => context.read<CartCubit>().decreaseQuantity(item.id),
-                      onRemove: () => context.read<CartCubit>().removeItem(item.id),
-                    );
-                  },
-                ),
-              ),
-              _CheckoutBar(
-                total: state.total,
-                onCheckout: () {
-                  if (state.isEmpty) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(t.emptyCart)),
-                    );
-                    return;
-                  }
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ConfirmOrderScreen(),
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      padding: Responsive.responsivePadding(context),
+                      itemCount: state.items.length,
+                      itemBuilder: (context, index) {
+                        final item = state.items[index];
+                        return _CartItemCard(
+                          item: item,
+                          onIncrease: () =>
+                              context.read<CartCubit>().increaseQuantity(item.id),
+                          onDecrease: () =>
+                              context.read<CartCubit>().decreaseQuantity(item.id),
+                          onRemove: () =>
+                              context.read<CartCubit>().removeItem(item.id),
+                        );
+                      },
                     ),
-                  );
-                },
-              ),
-            ],
-          );
-        },
+                  ),
+                  _CheckoutBar(
+                    total: state.total,
+                    onCheckout: () {
+                      if (state.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text(t.emptyCart)),
+                        );
+                        return;
+                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ConfirmOrderScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -197,11 +207,12 @@ class _CartItemCard extends StatelessWidget {
   }
 
   Widget _buildDetails(BuildContext context) {
+    final isAr = AppStrings.isArabic(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          item.title,
+          item.title(isAr),
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: Responsive.responsiveFontSize(context, 16),
@@ -211,7 +222,7 @@ class _CartItemCard extends StatelessWidget {
         ),
         SizedBox(height: Responsive.responsiveSpacing(context, 4)),
         Text(
-          item.author,
+          item.author(isAr),
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: Responsive.responsiveFontSize(context, 14),

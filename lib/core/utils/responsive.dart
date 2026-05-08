@@ -82,8 +82,8 @@ class Responsive {
     return responsiveValue<int>(
       context,
       mobile: 2,
-      tablet: 3,
-      desktop: 4,
+      tablet: 4,
+      desktop: 6,
     );
   }
 

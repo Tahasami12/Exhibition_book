@@ -38,10 +38,10 @@ class _SignupState extends State<Signup> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(
-          Responsive.responsiveSpacing(context, 60),
+          Responsive.responsiveSpacing(context, 40),
         ),
         child: Container(
-          padding: EdgeInsets.only(top: 30),
+          padding: const EdgeInsets.only(top: 10),
           child: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -58,7 +58,6 @@ class _SignupState extends State<Signup> {
           ),
         ),
       ),
-
       body: SafeArea(
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) {
@@ -70,51 +69,92 @@ class _SignupState extends State<Signup> {
               }
             } else if (state is AuthFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.errorMessage, style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+                SnackBar(
+                    content: Text(state.errorMessage,
+                        style: const TextStyle(color: Colors.white)),
+                    backgroundColor: Colors.red),
               );
             }
           },
           builder: (context, state) {
             final t = AppStrings.of(context);
-            return SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Form(
-                key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _SignUpHeader(t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                _TextForm1(controller: _nameController, t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-                _TextForm2(controller: _emailController, t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 3)),
-                _TextForm3(controller: _passwordController, t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-                Register(
-                  t: t,
-                  isLoading: state is AuthLoading,
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      context.read<AuthCubit>().signUp(
-                        name: _nameController.text.trim(),
-                        email: _emailController.text.trim(),
-                        password: _passwordController.text.trim(),
-                      );
-                    }
-                  },
+            final isTablet = Responsive.isTablet(context) || Responsive.isDesktop(context);
+
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isTablet ? 700 : double.infinity,
                 ),
-                SizedBox(height: Responsive.responsiveSpacing(context, 15)),
-                _Line(t: t),
-                SizedBox(height: Responsive.responsiveSpacing(context, 20)),
-                _SignUpFooter(t: t),
-            ],
-            ),
-          ),
-        );
-      },
-    ),
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _SignUpHeader(t: t),
+                      SizedBox(height: Responsive.responsiveSpacing(context, 25)),
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            if (isTablet) ...[
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: _TextForm1(
+                                        controller: _nameController, t: t),
+                                  ),
+                                  const SizedBox(width: 30),
+                                  Expanded(
+                                    child: _TextForm2(
+                                        controller: _emailController, t: t),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 15),
+                              _TextForm3(controller: _passwordController, t: t),
+                            ] else ...[
+                              _TextForm1(controller: _nameController, t: t),
+                              const SizedBox(height: 15),
+                              _TextForm2(controller: _emailController, t: t),
+                              const SizedBox(height: 15),
+                              _TextForm3(controller: _passwordController, t: t),
+                            ],
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 20)),
+                            Register(
+                              t: t,
+                              isLoading: state is AuthLoading,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context.read<AuthCubit>().signUp(
+                                        name: _nameController.text.trim(),
+                                        email: _emailController.text.trim(),
+                                        password:
+                                            _passwordController.text.trim(),
+                                      );
+                                }
+                              },
+                            ),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 20)),
+                            _Line(t: t),
+                            SizedBox(
+                                height:
+                                    Responsive.responsiveSpacing(context, 15)),
+                            _SignUpFooter(t: t),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -126,26 +166,25 @@ class _SignUpHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = Responsive.isTablet(context);
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: Responsive.responsiveSpacing(context, 30)),
+        if (!isTablet) SizedBox(height: Responsive.responsiveSpacing(context, 20)),
         Text(
           t.signUp,
           style: GoogleFonts.openSans(
             fontWeight: FontWeight.w700,
-            fontSize: Responsive.responsiveFontSize(context, 24),
-            height: Responsive.responsiveSpacing(context, 1.35),
+            fontSize: isTablet ? 30 : 26,
             color: Colors.grey[900],
           ),
         ),
-        SizedBox(height: Responsive.responsiveSpacing(context, 10)),
+        const SizedBox(height: 8),
         Text(
           t.signUpSubtitle,
+          textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: isTablet ? 17 : 15,
             color: Colors.grey[500],
           ),
         ),
@@ -168,34 +207,26 @@ class _TextForm1 extends StatelessWidget {
   }
 
   Widget _label(BuildContext context, String text) => Padding(
-    padding: const EdgeInsets.only(bottom: 10, left: 4),
-    child: Text(
-      text,
-      style: GoogleFonts.roboto(
-        fontSize: Responsive.responsiveFontSize(context, 20),
-        fontWeight: FontWeight.w500,
-        color: kGrey900,
-        height: 1.4,
-      ),
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 10, left: 4),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: kGrey900,
+          ),
+        ),
+      );
   Widget _input1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: Color(0xffFAFAFA), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10,
-            color: Colors.grey.withOpacity(0.03),
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xffEEEEEE), width: 1.5),
       ),
       child: TextFormField(
         controller: controller,
-        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        style: const TextStyle(color: Colors.black, fontSize: 15),
         validator: (value) {
           if (value == null || value.trim().isEmpty) {
             return t.nameErrorEmpty;
@@ -205,14 +236,13 @@ class _TextForm1 extends StatelessWidget {
         decoration: InputDecoration(
           hintText: t.nameHint,
           hintStyle: GoogleFonts.roboto(
-            fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: 1.5,
+            fontSize: 15,
             color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          errorStyle: const TextStyle(height: 0.8),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+          errorStyle: const TextStyle(height: 0.8, fontSize: 12),
         ),
       ),
     );
@@ -228,40 +258,32 @@ class _TextForm2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_label(context,t.email), _input1(context)],
+      children: [_label(context, t.email), _input1(context)],
     );
   }
 
   Widget _label(BuildContext context, String text) => Padding(
-    padding: const EdgeInsets.only(bottom: 10, left: 4),
-    child: Text(
-      text,
-      style: GoogleFonts.roboto(
-        fontSize: Responsive.responsiveFontSize(context, 20),
-        fontWeight: FontWeight.w500,
-        color: kGrey900,
-        height: Responsive.responsiveSpacing(context, 1.4),
-      ),
-    ),
-  );
+        padding: const EdgeInsets.only(bottom: 10, left: 4),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: kGrey900,
+          ),
+        ),
+      );
 
   Widget _input1(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: Color(0xffFAFAFA), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10,
-            color: Colors.grey.withOpacity(0.03),
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xffEEEEEE), width: 1.5),
       ),
       child: TextFormField(
         controller: controller,
-        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
+        style: const TextStyle(color: Colors.black, fontSize: 15),
         validator: (value) {
           if (value == null || value.isEmpty) {
             return t.emailErrorEmpty;
@@ -274,14 +296,13 @@ class _TextForm2 extends StatelessWidget {
         decoration: InputDecoration(
           hintText: t.emailHint,
           hintStyle: GoogleFonts.roboto(
-            fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: 15,
             color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          errorStyle: const TextStyle(height: 0.8),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+          errorStyle: const TextStyle(height: 0.8, fontSize: 12),
         ),
       ),
     );
@@ -304,42 +325,34 @@ class _TextForm3State extends State<_TextForm3> {
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [_labe2(context,widget.t.password), _input2(context)],
+      children: [_labe2(context, widget.t.password), _input2(context)],
     );
   }
 
   Widget _labe2(BuildContext context, String text) => Padding(
-  padding: const EdgeInsets.only(bottom: 10, left: 4),
-  child: Text(
-    text,
-    style: GoogleFonts.roboto(
-      fontSize: Responsive.responsiveFontSize(context, 20),
-      fontWeight: FontWeight.w500,
-      color: kGrey900,
-      height: Responsive.responsiveSpacing(context, 1.4),
-    ),
-  ),
-);
+        padding: const EdgeInsets.only(bottom: 10, left: 4),
+        child: Text(
+          text,
+          style: GoogleFonts.roboto(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: kGrey900,
+          ),
+        ),
+      );
   Widget _input2(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: const Color(0xffFAFAFA), width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10,
-            color: Colors.grey.withOpacity(0.03),
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: const Color(0xffEEEEEE), width: 1.5),
       ),
       child: TextFormField(
         controller: widget.controller,
         obscureText: _isObscure,
         style: const TextStyle(
           color: Colors.black,
-          fontWeight: FontWeight.w400,
+          fontSize: 15,
         ),
         validator: (value) {
           if (value == null || value.isEmpty) {
@@ -360,17 +373,17 @@ class _TextForm3State extends State<_TextForm3> {
             },
             icon: Icon(
               _isObscure ? Icons.visibility_off : Icons.visibility,
+              size: 22,
             ),
           ),
           hintStyle: GoogleFonts.roboto(
-            fontWeight: FontWeight.w400,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: 15,
             color: const Color(0xFFE0E0E0),
           ),
           border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
-          errorStyle: const TextStyle(height: 0.8),
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 16, horizontal: 18),
+          errorStyle: const TextStyle(height: 0.8, fontSize: 12),
         ),
       ),
     );
@@ -381,29 +394,34 @@ class Register extends StatelessWidget {
   final VoidCallback onPressed;
   final bool isLoading;
   final AppStrings t;
-  const Register({super.key, required this.onPressed, required this.t, this.isLoading = false});
+  const Register(
+      {super.key,
+      required this.onPressed,
+      required this.t,
+      this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isLoading ? () {} : onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Color(0xff54408C),
-        minimumSize: Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+        backgroundColor: const Color(0xff54408C),
+        minimumSize: const Size(double.infinity, 54),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
       ),
       child: isLoading
           ? const SizedBox(
               height: 24,
               width: 24,
-              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3),
+              child:
+                  CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
             )
           : Text(
               t.register,
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
-                fontSize: Responsive.responsiveFontSize(context, 16),
+                fontSize: 16,
               ),
             ),
     );
@@ -423,8 +441,7 @@ class _Line extends StatelessWidget {
           t.haveAccount,
           style: GoogleFonts.roboto(
             fontWeight: FontWeight.w500,
-            fontSize: Responsive.responsiveFontSize(context, 16),
-            height: Responsive.responsiveSpacing(context, 1.5),
+            fontSize: 15,
             color: Colors.grey[500],
           ),
         ),
@@ -440,9 +457,8 @@ class _Line extends StatelessWidget {
           child: Text(
             " ${t.signIn}",
             style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w500,
-              fontSize: Responsive.responsiveFontSize(context, 16),
-              height: Responsive.responsiveSpacing(context, 1.5),
+              fontWeight: FontWeight.w600,
+              fontSize: 15,
               color: kPrimaryColor,
             ),
           ),
@@ -466,8 +482,7 @@ class _SignUpFooter extends StatelessWidget {
             t.termsPrefix,
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
-              fontSize: Responsive.responsiveFontSize(context, 16),
-              height: Responsive.responsiveSpacing(context, 1.5),
+              fontSize: 13,
               color: Colors.grey[500],
             ),
             textAlign: TextAlign.center,
@@ -476,8 +491,7 @@ class _SignUpFooter extends StatelessWidget {
             t.termsSuffix,
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w500,
-              fontSize: Responsive.responsiveFontSize(context, 16),
-              height: Responsive.responsiveSpacing(context, 1.5),
+              fontSize: 13,
               color: kPrimaryColor,
             ),
             textAlign: TextAlign.center,

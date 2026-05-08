@@ -38,45 +38,44 @@ class VendorsView extends StatelessWidget {
         ],
       ),
 
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          const SizedBox(height: 8),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              t.ourVendors,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Color(0xFFA6A6A6),
-              ),
-            ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.maxContentWidth(context) ?? double.infinity,
           ),
-
-          const SizedBox(height: 2),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              t.vendors,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF54408C),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  t.ourVendors,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFFA6A6A6),
+                  ),
+                ),
               ),
-            ),
+              const SizedBox(height: 2),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  t.vendors,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF54408C),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+              const VendorsTabs(),
+              const SizedBox(height: 12),
+              const Expanded(child: VendorsGrid()),
+            ],
           ),
-
-          const SizedBox(height: 10),
-
-          const VendorsTabs(),
-
-          const SizedBox(height: 12),
-
-          const Expanded(child: VendorsGrid()),
-        ],
+        ),
       ),
     );
   }

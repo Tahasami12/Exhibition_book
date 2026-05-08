@@ -1,33 +1,45 @@
 class AuthorModel {
   final String id;
-  final String name;
+  final String nameAr;
+  final String nameEn;
   final String imageUrl;
-  final String bio;
+  final String bioAr;
+  final String bioEn;
   final int booksCount;
 
   AuthorModel({
     required this.id,
-    required this.name,
+    required this.nameAr,
+    required this.nameEn,
     required this.imageUrl,
-    required this.bio,
+    required this.bioAr,
+    required this.bioEn,
     required this.booksCount,
   });
+
+  // ─── Localized Getters ───────────────────────────────────────────────────
+  String name(bool isAr) => isAr ? nameAr : nameEn;
+  String bio(bool isAr) => isAr ? bioAr : bioEn;
 
   factory AuthorModel.fromFirestore(Map<String, dynamic> json, String id) {
     return AuthorModel(
       id: id,
-      name: json['name'] ?? 'Unknown Author',
+      nameAr: json['nameAr'] ?? json['name'] ?? 'مؤلف غير معروف',
+      nameEn: json['nameEn'] ?? json['name'] ?? 'Unknown Author',
       imageUrl: json['image'] ?? json['imageUrl'] ?? 'assets/images/author.png',
-      bio: json['bio'] ?? '',
+      bioAr: json['bioAr'] ?? json['bio'] ?? '',
+      bioEn: json['bioEn'] ?? json['bio'] ?? '',
       booksCount: json['booksCount'] is num ? (json['booksCount'] as num).toInt() : 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
+      'nameAr': nameAr,
+      'nameEn': nameEn,
       'imageUrl': imageUrl,
-      'bio': bio,
+      'bioAr': bioAr,
+      'bioEn': bioEn,
       'booksCount': booksCount,
     };
   }

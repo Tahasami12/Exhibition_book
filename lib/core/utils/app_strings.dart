@@ -22,6 +22,10 @@ class AppStrings {
     return AppStrings._(isArabic);
   }
 
+  static bool isArabic(BuildContext context) {
+    return context.read<LocaleCubit>().state.isArabic;
+  }
+
   String _t(String en, String ar) => _ar ? ar : en;
 
   // ─── Auth ──────────────────────────────────────────────────────────────────
@@ -134,8 +138,12 @@ class AppStrings {
   String get supportChats => _t('Support Chats', 'محادثات الدعم');
   String get addBook => _t('Add Book', 'إضافة كتاب');
   String get addAuthor => _t('Add Author', 'إضافة مؤلف');
+  String get editAuthor => _t('Edit Author', 'تعديل مؤلف');
   String get addVendor => _t('Add Vendor', 'إضافة مورد');
+  String get editVendor => _t('Edit Vendor', 'تعديل مورد');
   String get addPromo => _t('Add Promo', 'إضافة عرض');
+  String get editPromo => _t('Edit Promo', 'تعديل عرض');
+  String get editBook => _t('Edit Book', 'تعديل كتاب');
 
   // ─── Cart / Checkout ───────────────────────────────────────────────────────
   String get cart => _t('Cart', 'سلة التسوق');
@@ -304,4 +312,90 @@ class AppStrings {
     'Discover new worlds, join a vibrant reading community. Start your reading adventure effortlessly with us.',
     'اكتشف عوالم جديدة، انضم إلى مجتمع قراءة نابض بالحياة. ابدأ مغامرة القراءة الخاصة بك بسهولة معنا.'
   );
+
+  String get biography => _t('Biography', 'السيرة الذاتية');
+  String get authorInfo => _t('Author Information', 'معلومات المؤلف');
+  String get bookInfo => _t('Book Information', 'معلومات الكتاب');
+  String get vendorInfo => _t('Vendor Information', 'معلومات البائع');
+  String get priceLabel => _t('Price', 'السعر');
+  String get categoryLabel => _t('Category', 'التصنيف');
+  String get publisherLabel => _t('Publisher', 'الناشر');
+  String get descriptionLabel => _t('Description', 'الوصف');
+  String get confirmBtn => _t('Confirm', 'تأكيد');
+  String get bestVendorLabel => _t('Best Vendor', 'أفضل بائع');
+  String get featuredLabel => _t('Featured', 'مميز');
+  String get yesLabel => _t('Yes', 'نعم');
+  String get noLabel => _t('No', 'لا');
+  String get removeBtn => _t('Remove', 'إزالة');
+  String get customer => _t('Customer', 'العميل');
+  String get orderNoHash => _t('Order #', 'طلب #');
+  String booksLabelWithCount(int n) => _t('Books ($n)', 'الكتب ($n)');
+  String get moreItems => _t('more...', 'المزيد...');
+
+  // ─── Admin Forms ──────────────────────────────────────────────────────────
+  String get arabicInfo => _t('Arabic Information', 'معلومات بالعربية');
+  String get englishInfo => _t('English Information', 'معلومات بالإنجليزية');
+  String get generalInfo => _t('General Information', 'معلومات عامة');
+  String get bookTitleAr => _t('Title (Arabic)', 'العنوان (بالعربية)');
+  String get bookTitleEn => _t('Title (English)', 'العنوان (بالإنجليزية)');
+  String get categoryArLabel => _t('Category (Arabic)', 'التصنيف (بالعربية)');
+  String get categoryEnLabel => _t('Category (English)', 'التصنيف (بالإنجليزية)');
+  String get descriptionArLabel => _t('Description (Arabic)', 'الوصف (بالعربية)');
+  String get descriptionEnLabel => _t('Description (English)', 'الوصف (بالإنجليزية)');
+  String get author => _t('Author', 'المؤلف');
+  String get vendor => _t('Vendor', 'المورد');
+  String get stock => _t('Stock', 'المخزون');
+  String get rating => _t('Rating', 'التقييم');
+  String get imageUrlLabel => _t('Image URL', 'رابط الصورة');
+  String get requiredField => _t('Required', 'مطلوب');
+  String get selectAuthorVendor => _t('Please select both an Author and a Vendor', 'يرجى اختيار المؤلف والمورد');
+  String get failedToLoadData => _t('Failed to load required data.', 'فشل في تحميل البيانات المطلوبة.');
+  String get noAuthorsFound => _t('No Authors found!', 'لم يتم العثور على مؤلفين!');
+  String get noVendorsFound => _t('No Vendors found!', 'لم يتم العثور على موردين!');
+  String get mustAddAuthorVendorFirst => _t('You must add authors and vendors before you can create a book.', 'يجب إضافة المؤلفين والموردين أولاً قبل إنشاء كتاب.');
+  String get goBack => _t('Go Back', 'العودة');
+
+  // Author/Vendor Form
+  String get nameArLabel => _t('Name (Arabic)', 'الاسم (بالعربية)');
+  String get nameEnLabel => _t('Name (English)', 'الاسم (بالإنجليزية)');
+  String get bioArLabel => _t('Bio (Arabic)', 'السيرة الذاتية (بالعربية)');
+  String get bioEnLabel => _t('Bio (English)', 'السيرة الذاتية (بالإنجليزية)');
+  String get booksCount => _t('Books Count', 'عدد الكتب');
+  String get invalidInt => _t('Invalid Integer', 'رقم غير صحيح');
+  String get locationArLabel => _t('Location (Arabic)', 'الموقع (بالعربية)');
+  String get locationEnLabel => _t('Location (English)', 'الموقع (بالإنجليزية)');
+
+  // Chat
+  String get noSupportChats => _t('No support chats yet.', 'لا يوجد محادثات دعم بعد.');
+  String get replyToUser => _t('Reply to user...', 'رد على المستخدم...');
+
+  // Users
+  String get noUsersFound => _t('No users found.', 'لم يتم العثور على مستخدمين.');
+  String get adminLabel => _t('ADMIN', 'أدمن');
+  String get makeAdmin => _t('Make Admin', 'تعيين كأدمن');
+  String get revokeAdmin => _t('Revoke Admin', 'إلغاء صلاحية الأدمن');
+  String get deleteUser => _t('Delete User', 'حذف المستخدم');
+
+  // Promotions
+  String get managePromotions => _t('Manage Promotions', 'إدارة العروض');
+  String get noPromotionsFound => _t('No promotions found.', 'لم يتم العثور على عروض.');
+
+  // Books
+  String get stockLabel => _t('Stock', 'المخزون');
+
+  // Authors
+  String get manageAuthors => _t('Manage Authors', 'إدارة المؤلفين');
+  String get booksLabel => _t('Books', 'الكتب');
+
+  // Vendors
+  String get manageVendors => _t('Manage Vendors', 'إدارة الموردين');
+
+  // Promotion Form
+  String get addPromotion => _t('Add Promotion', 'إضافة عرض');
+  String get editPromotion => _t('Edit Promotion', 'تعديل عرض');
+  String get discountArLabel => _t('Discount (Arabic)', 'الخصم (بالعربية)');
+  String get discountEnLabel => _t('Discount (English)', 'الخصم (بالإنجليزية)');
+  String get activePromotion => _t('Active Promotion?', 'عرض نشط؟');
+  String get promoVisibilityHint => _t('Toggle visibility on the home screen.', 'تغيير الظهور في الشاشة الرئيسية.');
+  String get noMessages => _t('No messages yet', 'لا توجد رسائل بعد');
 }

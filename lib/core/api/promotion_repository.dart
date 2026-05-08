@@ -13,6 +13,12 @@ class PromotionRepository {
     }
   }
 
+  Stream<List<PromotionModel>> getPromotionsStream() {
+    return _db.collection('promotions').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => PromotionModel.fromJson(doc.data(), doc.id)).toList();
+    });
+  }
+
   Future<void> addPromotion(PromotionModel promotion) async {
     try {
       await _db.collection('promotions').add(promotion.toJson());

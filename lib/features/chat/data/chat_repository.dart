@@ -46,7 +46,7 @@ class ChatRepository {
         .snapshots()
         .map((snap) => snap.docs
             .map((doc) => MessageModel.fromFirestore(
-                doc.data() as Map<String, dynamic>, doc.id))
+                doc.data(), doc.id))
             .toList());
   }
 

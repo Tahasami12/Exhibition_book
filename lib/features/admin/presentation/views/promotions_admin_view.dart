@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,10 +22,13 @@ class _PromotionsAdminViewState extends State<PromotionsAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isArabic = AppStrings.isArabic(context);
+
     return Scaffold(
       backgroundColor: AdminTheme.bg,
       appBar: AdminTheme.adminAppBar(
-        title: 'Manage Promotions',
+        title: t.managePromotions,
         context: context,
         actions: [
           IconButton(
@@ -66,85 +70,93 @@ class _PromotionsAdminViewState extends State<PromotionsAdminView> {
           }
           if (state is AdminPromotionsLoaded) {
             if (state.promotions.isEmpty) {
-              return AdminTheme.emptyState('No promotions found.',
+              return AdminTheme.emptyState(t.noPromotionsFound,
                   icon: Icons.campaign_outlined);
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: state.promotions.length,
-              itemBuilder: (context, index) {
-                final promo = state.promotions[index];
-                return Container(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius:
-                        BorderRadius.circular(AdminTheme.radiusCard),
-                    boxShadow: AdminTheme.cardShadow,
-                  ),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
-                    leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
-                      child: promo.imageUrl.isNotEmpty
-                          ? Image.network(promo.imageUrl,
-                              width: 70,
-                              height: 50,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => const Icon(
-                                  Icons.campaign,
-                                  size: 40,
-                                  color: AdminTheme.primary))
-                          : const Icon(Icons.campaign,
-                              size: 40, color: AdminTheme.primary),
-                    ),
-                    title: Row(
-                      children: [
-                        Flexible(
-                          child: Text(promo.title,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: AdminTheme.textPrimary),
-                              overflow: TextOverflow.ellipsis),
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: state.promotions.length,
+                  itemBuilder: (context, index) {
+                    final promo = state.promotions[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(AdminTheme.radiusCard),
+                        boxShadow: AdminTheme.cardShadow,
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        leading: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: promo.imageUrl.isNotEmpty
+                              ? Image.network(promo.imageUrl,
+                                  width: 70,
+                                  height: 50,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (_, __, ___) => const Icon(
+                                      Icons.campaign,
+                                      size: 40,
+                                      color: AdminTheme.primary))
+                              : const Icon(Icons.campaign,
+                                  size: 40, color: AdminTheme.primary),
                         ),
-                        if (!promo.isActive)
-                          const Padding(
-                            padding: EdgeInsets.only(left: 6),
-                            child: Icon(Icons.visibility_off,
-                                color: AdminTheme.textSub, size: 16),
-                          ),
-                      ],
-                    ),
-                    subtitle: Text(promo.discount,
-                        style: const TextStyle(color: AdminTheme.textSub)),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit_outlined,
-                              color: AdminTheme.primary),
-                          onPressed: () =>
-                              context.push('/add_edit_promotion', extra: promo),
+                        title: Row(
+                          children: [
+                            Flexible(
+                              child: Text(promo.title(isArabic),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: AdminTheme.textPrimary),
+                                  overflow: TextOverflow.ellipsis),
+                            ),
+                            if (!promo.isActive)
+                               Padding(
+                                padding: EdgeInsets.only(
+                                  left: isArabic ? 0 : 6,
+                                  right: isArabic ? 6 : 0,
+                                ),
+                                child: const Icon(Icons.visibility_off,
+                                    color: AdminTheme.textSub, size: 16),
+                              ),
+                          ],
                         ),
-                        IconButton(
-                          icon: const Icon(Icons.delete_outline,
-                              color: AdminTheme.danger),
-                          onPressed: () async {
-                            final confirmed = await AdminTheme.confirmDelete(
-                                context, promo.title);
-                            if (confirmed && context.mounted) {
-                              context
-                                  .read<AdminPromotionsCubit>()
-                                  .deletePromotion(promo.id);
-                            }
-                          },
+                        subtitle: Text(promo.discount(isArabic),
+                            style: const TextStyle(color: AdminTheme.textSub)),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit_outlined,
+                                  color: AdminTheme.primary),
+                              onPressed: () =>
+                                  context.push('/add_edit_promotion', extra: promo),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete_outline,
+                                  color: AdminTheme.danger),
+                              onPressed: () async {
+                                final confirmed = await AdminTheme.confirmDelete(
+                                    context, promo.title(isArabic));
+                                if (confirmed && context.mounted) {
+                                  context
+                                      .read<AdminPromotionsCubit>()
+                                      .deletePromotion(promo.id);
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                      ),
+                    );
+                  },
+                ),
+              ),
             );
           }
           return const SizedBox.shrink();

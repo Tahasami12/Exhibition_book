@@ -13,6 +13,12 @@ class BookRepository {
     }
   }
 
+  Stream<List<BookModel>> getBooksStream() {
+    return _db.collection('books').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => BookModel.fromJson(doc.data(), doc.id)).toList();
+    });
+  }
+
   Future<void> addBook(BookModel book) async {
     try {
       final docRef = _db.collection('books').doc();

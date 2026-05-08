@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +19,7 @@ class AuthorDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return BlocProvider(
       create: (context) {
         final cubit = AuthorDetailsCubit(context.read<AuthorRepository>());
@@ -26,7 +28,7 @@ class AuthorDetailsView extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Author Details'),
+          title: Text(t.authors),
           centerTitle: true,
         ),
         body: BlocBuilder<AuthorDetailsCubit, AuthorDetailsState>(
@@ -42,7 +44,9 @@ class AuthorDetailsView extends StatelessWidget {
               return _DetailsErrorState(
                 message: state.message,
                 onRetry: () {
-                  context.read<AuthorDetailsCubit>().fetchAuthorDetails(authorId);
+                  context
+                      .read<AuthorDetailsCubit>()
+                      .fetchAuthorDetails(authorId);
                 },
               );
             }
@@ -66,6 +70,9 @@ class _AuthorDetailsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isAr = AppStrings.isArabic(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -86,7 +93,7 @@ class _AuthorDetailsBody extends StatelessWidget {
           const SizedBox(height: 20),
           Center(
             child: Text(
-              author.name,
+              author.name(isAr),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 24,
@@ -98,18 +105,18 @@ class _AuthorDetailsBody extends StatelessWidget {
           Center(
             child: _InfoChip(
               icon: Icons.menu_book_rounded,
-              label: '${author.booksCount} books',
+              label: t.orderItems(author.booksCount),
             ),
           ),
           const SizedBox(height: 28),
-          const Text(
-            'Biography',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          Text(
+            t.biography,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           _DetailsCard(
             child: Text(
-              author.bio.isEmpty ? 'No biography added yet.' : author.bio,
+              author.bio(isAr).isEmpty ? t.notProvided : author.bio(isAr),
               style: const TextStyle(
                 fontSize: 15,
                 height: 1.5,
@@ -118,22 +125,22 @@ class _AuthorDetailsBody extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
-            'Author Information',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          Text(
+            t.authorInfo,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           _DetailsCard(
             child: Column(
               children: [
-                _DetailsRow(label: 'Name', value: author.name),
+                _DetailsRow(label: t.nameLabel, value: author.name(isAr)),
                 const SizedBox(height: 12),
                 _DetailsRow(
-                  label: 'Books Count',
+                  label: t.qtyLabel,
                   value: author.booksCount.toString(),
                 ),
                 const SizedBox(height: 12),
-                _DetailsRow(label: 'Document ID', value: author.id),
+                _DetailsRow(label: 'ID', value: author.id),
               ],
             ),
           ),

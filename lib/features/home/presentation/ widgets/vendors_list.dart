@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +16,7 @@ class VendorsList extends StatelessWidget {
     final listHeight = Responsive.responsiveSpacing(
       context,
       126,
-      tabletSpacing: 146,
+      tabletSpacing: 130, // Reduced from 146
       desktopSpacing: 160,
     );
 
@@ -55,7 +56,7 @@ class VendorsList extends StatelessWidget {
                     width: Responsive.responsiveSpacing(
                       context,
                       96,
-                      tabletSpacing: 110,
+                      tabletSpacing: 100,
                       desktopSpacing: 120,
                     ),
                     margin: EdgeInsets.only(
@@ -126,7 +127,7 @@ class _VendorHomeCard extends StatelessWidget {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: Text(
-                  vendor.name,
+                  vendor.name(AppStrings.isArabic(context)),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,

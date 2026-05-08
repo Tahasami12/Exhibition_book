@@ -1,17 +1,25 @@
 class PromotionModel {
   final String id;
-  final String title;
-  final String discount;
+  final String titleAr;
+  final String titleEn;
+  final String discountAr;
+  final String discountEn;
   final String imageUrl;
   final bool isActive;
 
   PromotionModel({
     required this.id,
-    required this.title,
-    required this.discount,
+    required this.titleAr,
+    required this.titleEn,
+    required this.discountAr,
+    required this.discountEn,
     required this.imageUrl,
     this.isActive = true,
   });
+
+  // ─── Localized Getters ───────────────────────────────────────────────────
+  String title(bool isAr) => isAr ? titleAr : titleEn;
+  String discount(bool isAr) => isAr ? discountAr : discountEn;
 
   factory PromotionModel.fromJson(Map<String, dynamic> json, String id) {
     dynamic activeRaw = json['isActive'];
@@ -24,8 +32,10 @@ class PromotionModel {
 
     return PromotionModel(
       id: id,
-      title: json['title'] ?? 'Special Offer',
-      discount: json['discount'] ?? '',
+      titleAr: json['titleAr'] ?? json['title'] ?? 'عرض خاص',
+      titleEn: json['titleEn'] ?? json['title'] ?? 'Special Offer',
+      discountAr: json['discountAr'] ?? json['discount'] ?? '',
+      discountEn: json['discountEn'] ?? json['discount'] ?? '',
       imageUrl: json['imageUrl'] ?? 'assets/images/book.png',
       isActive: activeFlag,
     );
@@ -33,8 +43,10 @@ class PromotionModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'title': title,
-      'discount': discount,
+      'titleAr': titleAr,
+      'titleEn': titleEn,
+      'discountAr': discountAr,
+      'discountEn': discountEn,
       'imageUrl': imageUrl,
       'isActive': isActive,
     };

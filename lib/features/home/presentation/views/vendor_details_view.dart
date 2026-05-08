@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +19,7 @@ class VendorDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return BlocProvider(
       create: (context) {
         final cubit = VendorDetailsCubit(context.read<VendorRepository>());
@@ -26,7 +28,7 @@ class VendorDetailsView extends StatelessWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Vendor Details'),
+          title: Text(t.vendors),
           centerTitle: true,
         ),
         body: BlocBuilder<VendorDetailsCubit, VendorDetailsState>(
@@ -42,7 +44,9 @@ class VendorDetailsView extends StatelessWidget {
               return _DetailsErrorState(
                 message: state.message,
                 onRetry: () {
-                  context.read<VendorDetailsCubit>().fetchVendorDetails(vendorId);
+                  context
+                      .read<VendorDetailsCubit>()
+                      .fetchVendorDetails(vendorId);
                 },
               );
             }
@@ -66,6 +70,9 @@ class _VendorDetailsBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isAr = AppStrings.isArabic(context);
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -86,7 +93,7 @@ class _VendorDetailsBody extends StatelessWidget {
           const SizedBox(height: 24),
           Center(
             child: Text(
-              vendor.name,
+              vendor.name(isAr),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 24,
@@ -103,37 +110,39 @@ class _VendorDetailsBody extends StatelessWidget {
               children: [
                 _InfoChip(
                   icon: Icons.star_rounded,
-                  label: 'Rating ${vendor.rating.toStringAsFixed(1)}',
+                  label: '${t.review} ${vendor.rating.toStringAsFixed(1)}',
                 ),
                 _InfoChip(
-                  icon: vendor.isBestVendor ? Icons.workspace_premium : Icons.store,
-                  label: vendor.isBestVendor ? 'Best Vendor' : 'Vendor',
+                  icon: vendor.isBestVendor
+                      ? Icons.workspace_premium
+                      : Icons.store,
+                  label: vendor.isBestVendor ? t.bestVendorLabel : t.vendors,
                 ),
               ],
             ),
           ),
           const SizedBox(height: 28),
-          const Text(
-            'Vendor Information',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+          Text(
+            t.vendorInfo,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
           _DetailsCard(
             child: Column(
               children: [
-                _DetailsRow(label: 'Name', value: vendor.name),
+                _DetailsRow(label: t.nameLabel, value: vendor.name(isAr)),
                 const SizedBox(height: 12),
                 _DetailsRow(
-                  label: 'Rating',
+                  label: t.review,
                   value: vendor.rating.toStringAsFixed(1),
                 ),
                 const SizedBox(height: 12),
                 _DetailsRow(
-                  label: 'Featured',
-                  value: vendor.isBestVendor ? 'Yes' : 'No',
+                  label: t.featuredLabel,
+                  value: vendor.isBestVendor ? t.yesLabel : t.noLabel,
                 ),
                 const SizedBox(height: 12),
-                _DetailsRow(label: 'Document ID', value: vendor.id),
+                _DetailsRow(label: 'ID', value: vendor.id),
               ],
             ),
           ),

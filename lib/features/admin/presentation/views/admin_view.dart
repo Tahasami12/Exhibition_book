@@ -6,6 +6,7 @@ import 'package:exhibition_book/core/utils/app_colors.dart';
 import 'package:exhibition_book/features/admin/presentation/admin_theme.dart';
 import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart';
 import 'package:exhibition_book/core/widgets/language_toggle_button.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:exhibition_book/core/utils/app_strings.dart';
 
 class AdminView extends StatelessWidget {
@@ -37,132 +38,141 @@ class AdminView extends StatelessWidget {
             tooltip: t.signOut,
             onPressed: () async {
               await context.read<AuthCubit>().signOut();
-              context.go('/login');
+              if (context.mounted) {
+                context.go('/login');
+              }
             },
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // ─── Welcome banner ─────────────────────────────────────────
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppColors.primary, Color(0xFF6669BE)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(AdminTheme.radiusCard),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${t.adminWelcome}, $adminName 👋',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.maxContentWidth(context) ?? double.infinity,
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ─── Welcome banner ─────────────────────────────────────────
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [AppColors.primary, Color(0xFF6669BE)],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(AdminTheme.radiusCard),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    t.adminSubtitle,
-                    style: const TextStyle(color: Colors.white70, fontSize: 14),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        '${t.adminWelcome}, $adminName 👋',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        t.adminSubtitle,
+                        style: const TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
+                ),
+                const SizedBox(height: 24),
 
-            AdminTheme.sectionTitle(t.mainSections),
-            GridView.count(
-              crossAxisCount: 2,
-              crossAxisSpacing: 14,
-              mainAxisSpacing: 14,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              childAspectRatio: 1.1,
-              children: [
-                _ModuleCard(
-                  title: t.books,
-                  subtitle: t.manageBooks,
-                  icon: Icons.book_outlined,
-                  route: '/admin_books',
+                AdminTheme.sectionTitle(t.mainSections),
+                GridView.count(
+                  crossAxisCount: Responsive.responsiveGridCount(context),
+                  crossAxisSpacing: 14,
+                  mainAxisSpacing: 14,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  childAspectRatio: 1.25,
+                  children: [
+                    _ModuleCard(
+                      title: t.books,
+                      subtitle: t.manageBooks,
+                      icon: Icons.book_outlined,
+                      route: '/admin_books',
+                    ),
+                    _ModuleCard(
+                      title: t.authorsLabel,
+                      subtitle: t.manageAuth,
+                      icon: Icons.person_outline,
+                      route: '/admin_authors',
+                    ),
+                    _ModuleCard(
+                      title: t.vendors,
+                      subtitle: t.manageVend,
+                      icon: Icons.store_outlined,
+                      route: '/admin_vendors',
+                    ),
+                    _ModuleCard(
+                      title: t.users,
+                      subtitle: t.manageUsers,
+                      icon: Icons.people_outline,
+                      route: '/admin_users',
+                    ),
+                    _ModuleCard(
+                      title: t.orders,
+                      subtitle: t.manageOrders,
+                      icon: Icons.receipt_long_outlined,
+                      route: '/admin_orders',
+                    ),
+                    _ModuleCard(
+                      title: t.promotions,
+                      subtitle: t.managePromos,
+                      icon: Icons.campaign_outlined,
+                      route: '/admin_promotions',
+                    ),
+                    _ModuleCard(
+                      title: t.chats,
+                      subtitle: t.supportChats,
+                      icon: Icons.chat_bubble_outline,
+                      route: '/admin_chats',
+                    ),
+                  ],
                 ),
-                _ModuleCard(
-                  title: t.authorsLabel,
-                  subtitle: t.manageAuth,
-                  icon: Icons.person_outline,
-                  route: '/admin_authors',
-                ),
-                _ModuleCard(
-                  title: t.vendors,
-                  subtitle: t.manageVend,
-                  icon: Icons.store_outlined,
-                  route: '/admin_vendors',
-                ),
-                _ModuleCard(
-                  title: t.users,
-                  subtitle: t.manageUsers,
-                  icon: Icons.people_outline,
-                  route: '/admin_users',
-                ),
-                _ModuleCard(
-                  title: t.orders,
-                  subtitle: t.manageOrders,
-                  icon: Icons.receipt_long_outlined,
-                  route: '/admin_orders',
-                ),
-                _ModuleCard(
-                  title: t.promotions,
-                  subtitle: t.managePromos,
-                  icon: Icons.campaign_outlined,
-                  route: '/admin_promotions',
-                ),
-                _ModuleCard(
-                  title: t.chats,
-                  subtitle: t.supportChats,
-                  icon: Icons.chat_bubble_outline,
-                  route: '/admin_chats',
+                const SizedBox(height: 28),
+
+                AdminTheme.sectionTitle(t.quickActions),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  children: [
+                    _QuickChip(
+                      label: t.addBook,
+                      icon: Icons.add_box_outlined,
+                      route: '/add_edit_book',
+                    ),
+                    _QuickChip(
+                      label: t.addAuthor,
+                      icon: Icons.person_add_outlined,
+                      route: '/add_edit_author',
+                    ),
+                    _QuickChip(
+                      label: t.addVendor,
+                      icon: Icons.add_business_outlined,
+                      route: '/add_edit_vendor',
+                    ),
+                    _QuickChip(
+                      label: t.addPromo,
+                      icon: Icons.add_alert_outlined,
+                      route: '/add_edit_promotion',
+                    ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 28),
-
-            AdminTheme.sectionTitle(t.quickActions),
-            Wrap(
-              spacing: 12,
-              runSpacing: 12,
-              children: [
-                _QuickChip(
-                  label: t.addBook,
-                  icon: Icons.add_box_outlined,
-                  route: '/add_edit_book',
-                ),
-                _QuickChip(
-                  label: t.addAuthor,
-                  icon: Icons.person_add_outlined,
-                  route: '/add_edit_author',
-                ),
-                _QuickChip(
-                  label: t.addVendor,
-                  icon: Icons.add_business_outlined,
-                  route: '/add_edit_vendor',
-                ),
-                _QuickChip(
-                  label: t.addPromo,
-                  icon: Icons.add_alert_outlined,
-                  route: '/add_edit_promotion',
-                ),
-              ],
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -205,7 +215,7 @@ class _ModuleCard extends StatelessWidget {
                 color: AdminTheme.primaryLight,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 28, color: AdminTheme.primary),
+                child: Icon(icon, size: 24, color: AdminTheme.primary),
             ),
             const SizedBox(height: 10),
             Text(

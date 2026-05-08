@@ -16,13 +16,13 @@ abstract class AdminTheme {
   static const Color divider = AppColors.grey200;
 
   // ─── Border radius ───────────────────────────────────────────────────────────
-  static const double radiusCard = 16;
-  static const double radiusSmall = 10;
+  static const double radiusCard = 12;
+  static const double radiusSmall = 8;
 
   // ─── Shadows ─────────────────────────────────────────────────────────────────
   static List<BoxShadow> get cardShadow => [
         BoxShadow(
-          color: Colors.black.withOpacity(0.06),
+          color: Colors.black.withValues(alpha: 0.05),
           blurRadius: 10,
           offset: const Offset(0, 4),
         ),
@@ -62,7 +62,7 @@ abstract class AdminTheme {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 46,
       child: ElevatedButton(
         onPressed: loading ? null : onPressed,
         style: ElevatedButton.styleFrom(
@@ -102,7 +102,7 @@ abstract class AdminTheme {
   }) {
     return SizedBox(
       width: double.infinity,
-      height: 50,
+      height: 46,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -139,8 +139,8 @@ abstract class AdminTheme {
         child: Text(
           text,
           style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
             color: textPrimary,
           ),
         ),
@@ -240,6 +240,21 @@ abstract class AdminTheme {
       ),
       contentPadding:
           const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    );
+  }
+
+  static InputDecoration inputDecoration(String label) => fieldDecoration(label);
+
+  static ButtonStyle primaryButtonStyle(BuildContext context) {
+    return ElevatedButton.styleFrom(
+      backgroundColor: primary,
+      foregroundColor: Colors.white,
+      elevation: 0,
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(radiusSmall),
+      ),
+      textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
     );
   }
 

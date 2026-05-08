@@ -26,210 +26,274 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = AppStrings.of(context);
     final theme = Theme.of(context);
-    final cs = theme.colorScheme;
+    final cs = theme.colorScheme;    final isMobile = Responsive.isMobile(context);
 
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(
+          t.profile,
+          style: TextStyle(
+            color: cs.onSurface,
+            fontWeight: FontWeight.w700,
+            fontSize: 18,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: theme.scaffoldBackgroundColor,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+      ),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.maxContentWidth(context) ?? double.infinity,
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 16)),
+              child: isMobile
+                  ? _buildMobileLayout(context, t, theme, cs)
+                  : _buildTabletLayout(context, t, theme, cs),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMobileLayout(
+    BuildContext context,
+    AppStrings t,
+    ThemeData theme,
+    ColorScheme cs,
+  ) {
+    return Column(
+      children: [
+        _buildProfileHeader(context, t, theme, cs),
+        const Divider(height: 32),
+        _buildNavigationMenu(context, t),
+        const Divider(height: 32),
+        _buildLanguageToggle(context, t, theme, cs),
+        SizedBox(height: Responsive.responsiveSpacing(context, 16)),
+      ],
+    );
+  }
+
+  Widget _buildTabletLayout(
+    BuildContext context,
+    AppStrings t,
+    ThemeData theme,
+    ColorScheme cs,
+  ) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Left Column: Profile Info
+        Expanded(
+          flex: 2,
+          child: Column(
+            children: [
+              _buildProfileHeader(context, t, theme, cs),
+              const SizedBox(height: 24),
+              _buildLanguageToggle(context, t, theme, cs),
+            ],
+          ),
+        ),
+        const SizedBox(width: 32),
+        // Right Column: Menu Items
+        Expanded(
+          flex: 3,
+          child: Card(
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.1)),
+            ),
+            child: Column(
+              children: [
+                _buildNavigationMenu(context, t),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildProfileHeader(
+    BuildContext context,
+    AppStrings t,
+    ThemeData theme,
+    ColorScheme cs,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+      child: Row(
         children: [
-          // ── App Bar area ──
-          AppBar(
-            title: Text(
-              t.profile,
-              style: TextStyle(
-                color: cs.onSurface,
-                fontWeight: FontWeight.w700,
-                fontSize: 18,
+          CircleAvatar(
+            radius: Responsive.responsiveSpacing(context, 35),
+            backgroundColor: AppColors.grey200,
+            backgroundImage: FirebaseAuth.instance.currentUser?.photoURL != null
+                ? NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!)
+                : const AssetImage("assets/images/test-img.jpg")
+                    as ImageProvider,
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  FirebaseAuth.instance.currentUser?.displayName ??
+                      t.userNamePlaceholder,
+                  style: TextStyle(
+                    color: cs.onSurface,
+                    fontWeight: FontWeight.w700,
+                    fontSize: Responsive.responsiveFontSize(context, 16),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  FirebaseAuth.instance.currentUser?.email ?? t.emailPlaceholder,
+                  style: TextStyle(
+                    color: cs.onSurface.withValues(alpha: 0.6),
+                    fontSize: Responsive.responsiveFontSize(context, 14),
+                    fontWeight: FontWeight.w400,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () => _showLogoutSheet(context, t),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Text(
+                t.logout,
+                style: const TextStyle(
+                  color: AppColors.red,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
               ),
             ),
-            centerTitle: true,
-            backgroundColor: theme.scaffoldBackgroundColor,
-            elevation: 0,
-            automaticallyImplyLeading: false,
           ),
-          const Divider(height: 1),
+        ],
+      ),
+    );
+  }
 
-          // ── User info row ──
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 10),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: AppColors.grey200,
-                  backgroundImage:
-                      FirebaseAuth.instance.currentUser?.photoURL != null
-                          ? NetworkImage(
-                            FirebaseAuth.instance.currentUser!.photoURL!,
-                          )
-                          : const AssetImage("assets/images/test-img.jpg")
-                              as ImageProvider,
-                ),
-                const SizedBox(width: 20),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        FirebaseAuth.instance.currentUser?.displayName ??
-                            t.userNamePlaceholder,
-                        style: TextStyle(
-                          color: cs.onSurface,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        FirebaseAuth.instance.currentUser?.email ??
-                            t.emailPlaceholder,
-                        style: TextStyle(
-                          color: cs.onSurface.withValues(alpha: 0.6),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
+  Widget _buildNavigationMenu(BuildContext context, AppStrings t) {
+    return Column(
+      children: [
+        _buildMenuItem(
+          context,
+          t.myAccount,
+          "profile.svg",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => MyAccount()),
+          ),
+        ),
+        _buildMenuItem(
+          context,
+          t.offersPromos,
+          "offer.svg",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => Offers()),
+          ),
+        ),
+        _buildMenuItem(
+          context,
+          t.yourFavorites,
+          "favorite.svg",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const Favorites()),
+          ),
+        ),
+        _buildMenuItem(
+          context,
+          t.orderHistory,
+          "history.svg",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => OrderHistory()),
+          ),
+        ),
+        _buildMenuItem(
+          context,
+          t.helpCenter,
+          "help.svg",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => HelpCenter()),
+          ),
+        ),
+        _buildMenuItem(
+          context,
+          t.supportChat,
+          "help.svg",
+          () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const UserChatView()),
+          ),
+        ),
+      ],
+    );
+  }
 
-                // Logout button
-                GestureDetector(
-                  onTap: () {
-                    _showLogoutSheet(context, t);
-                  },
-                  child: SizedBox(
-                    width: 60,
-                    height: 50,
-                    child: Center(
-                      child: Text(
-                        t.logout,
-                        style: const TextStyle(
-                          color: AppColors.red,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const Divider(height: 1),
+  Widget _buildMenuItem(
+    BuildContext context,
+    String label,
+    String icon,
+    VoidCallback onTap,
+  ) {
+    return InkWell(
+      onTap: onTap,
+      child: makeNavigationRecord(
+        context: context,
+        label: label,
+        avatarName: icon,
+      ),
+    );
+  }
 
-          // ── Navigation menu items ──
-          InkWell(
-            child: makeNavigationRecord(
-              context: context,
-              label: t.myAccount,
-              avatarName: "profile.svg",
+  Widget _buildLanguageToggle(
+    BuildContext context,
+    AppStrings t,
+    ThemeData theme,
+    ColorScheme cs,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: theme.cardTheme.color ?? cs.surface,
+              borderRadius: BorderRadius.circular(20),
             ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => MyAccount()),
-              );
-            },
+            child: Icon(Icons.language, color: cs.primary),
           ),
-
-          InkWell(
-            child: makeNavigationRecord(
-              context: context,
-              label: t.offersPromos,
-              avatarName: "offer.svg",
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => Offers()),
-              );
-            },
-          ),
-          InkWell(
-            child: makeNavigationRecord(
-              context: context,
-              label: t.yourFavorites,
-              avatarName: "favorite.svg",
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const Favorites()),
-              );
-            },
-          ),
-          InkWell(
-            child: makeNavigationRecord(
-              context: context,
-              label: t.orderHistory,
-              avatarName: "history.svg",
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => OrderHistory()),
-              );
-            },
-          ),
-          InkWell(
-            child: makeNavigationRecord(
-              context: context,
-              label: t.helpCenter,
-              avatarName: "help.svg",
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => HelpCenter()),
-              );
-            },
-          ),
-          InkWell(
-            child: makeNavigationRecord(
-              context: context,
-              label: t.supportChat,
-              avatarName: "help.svg",
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const UserChatView()),
-              );
-            },
-          ),
-
-          // ── Language Toggle ──
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12),
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: theme.cardTheme.color ?? cs.surface,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Icon(Icons.language, color: cs.primary),
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  t.language,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: cs.onSurface,
-                  ),
-                ),
-                const Spacer(),
-                const LanguageToggleButton(),
-              ],
+          const SizedBox(width: 10),
+          Text(
+            t.language,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              color: cs.onSurface,
             ),
           ),
-          SizedBox(height: Responsive.responsiveSpacing(context, 16)),
+          const Spacer(),
+          const LanguageToggleButton(),
         ],
       ),
     );

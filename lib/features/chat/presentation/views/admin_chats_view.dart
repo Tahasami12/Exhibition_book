@@ -1,4 +1,5 @@
 import 'package:exhibition_book/core/utils/app_colors.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:exhibition_book/features/admin/presentation/admin_theme.dart';
 import 'package:exhibition_book/features/chat/data/chat_repository.dart';
 import 'package:exhibition_book/features/chat/data/models/chat_model.dart';
@@ -17,36 +18,42 @@ class AdminChatsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return BlocProvider(
       create: (_) => AdminChatsCubit(ChatRepository())..startListening(),
       child: Scaffold(
         backgroundColor: AdminTheme.bg,
-        appBar: AdminTheme.adminAppBar(title: 'Support Chats', context: context),
-        body: BlocBuilder<AdminChatsCubit, AdminChatsState>(
-          builder: (context, state) {
-            if (state is AdminChatsLoading || state is AdminChatsInitial) {
-              return const Center(child: CircularProgressIndicator(color: AdminTheme.primary));
-            }
-            if (state is AdminChatsError) {
-              return AdminTheme.errorState(state.message, () {
-                context.read<AdminChatsCubit>().startListening();
-              });
-            }
-            if (state is AdminChatsLoaded) {
-              if (state.chats.isEmpty) {
-                return AdminTheme.emptyState('No support chats yet.', icon: Icons.chat_bubble_outline);
-              }
-              return ListView.builder(
-                padding: const EdgeInsets.all(12),
-                itemCount: state.chats.length,
-                itemBuilder: (context, index) {
-                  final chat = state.chats[index];
-                  return _ChatListTile(chat: chat);
-                },
-              );
-            }
-            return const SizedBox.shrink();
-          },
+        appBar: AdminTheme.adminAppBar(title: t.supportChats, context: context),
+        body: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: BlocBuilder<AdminChatsCubit, AdminChatsState>(
+              builder: (context, state) {
+                if (state is AdminChatsLoading || state is AdminChatsInitial) {
+                  return const Center(child: CircularProgressIndicator(color: AdminTheme.primary));
+                }
+                if (state is AdminChatsError) {
+                  return AdminTheme.errorState(state.message, () {
+                    context.read<AdminChatsCubit>().startListening();
+                  });
+                }
+                if (state is AdminChatsLoaded) {
+                  if (state.chats.isEmpty) {
+                    return AdminTheme.emptyState(t.noSupportChats, icon: Icons.chat_bubble_outline);
+                  }
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(12),
+                    itemCount: state.chats.length,
+                    itemBuilder: (context, index) {
+                      final chat = state.chats[index];
+                      return _ChatListTile(chat: chat, t: t);
+                    },
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -55,7 +62,8 @@ class AdminChatsView extends StatelessWidget {
 
 class _ChatListTile extends StatelessWidget {
   final ChatModel chat;
-  const _ChatListTile({required this.chat});
+  final AppStrings t;
+  const _ChatListTile({required this.chat, required this.t});
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +86,7 @@ class _ChatListTile extends StatelessWidget {
         title: Text(chat.userName,
             style: const TextStyle(fontWeight: FontWeight.bold, color: AdminTheme.textPrimary)),
         subtitle: Text(
-          chat.lastMessage.isEmpty ? 'No messages yet' : chat.lastMessage,
+          chat.lastMessage.isEmpty ? t.noMessages : chat.lastMessage,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: const TextStyle(color: AdminTheme.textSub, fontSize: 13),
@@ -150,6 +158,7 @@ class _AdminChatBodyState extends State<_AdminChatBody> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     final adminId = FirebaseAuth.instance.currentUser?.uid ?? 'admin';
 
     return Scaffold(
@@ -185,7 +194,7 @@ class _AdminChatBodyState extends State<_AdminChatBody> {
                 Expanded(
                   child: state.messages.isEmpty
                       ? Center(
-                          child: Text('No messages yet.',
+                          child: Text(t.noMessages,
                               style: TextStyle(color: Colors.grey.shade500)))
                       : ListView.builder(
                           controller: _scrollController,
@@ -198,7 +207,7 @@ class _AdminChatBodyState extends State<_AdminChatBody> {
                           },
                         ),
                 ),
-                _buildInputBar(context, state.chatId, adminId),
+                _buildInputBar(context, state.chatId, adminId, t),
               ],
             );
           }
@@ -208,7 +217,7 @@ class _AdminChatBodyState extends State<_AdminChatBody> {
     );
   }
 
-  Widget _buildInputBar(BuildContext context, String chatId, String adminId) {
+  Widget _buildInputBar(BuildContext context, String chatId, String adminId, AppStrings t) {
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.fromLTRB(12, 8, 8, 16),
@@ -224,10 +233,10 @@ class _AdminChatBodyState extends State<_AdminChatBody> {
                 controller: _controller,
                 textCapitalization: TextCapitalization.sentences,
                 maxLines: null,
-                decoration: const InputDecoration(
-                  hintText: 'Reply to user...',
+                decoration: InputDecoration(
+                  hintText: t.replyToUser,
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 ),
               ),
             ),

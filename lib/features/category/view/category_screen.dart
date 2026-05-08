@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,47 +24,58 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isAr = AppStrings.isArabic(context);
+    final allLabel = isAr ? 'الكل' : 'All';
+
+    // If selectedCategory was "All" in previous locale, update it to the new "All" translation if needed,
+    // but usually it's better to keep a key like "All".
+    // Let's keep "All" as a logic key but display localized label.
+
     return SafeArea(
-      child: BlocBuilder<BooksCubit, BooksState>(
-        builder: (context, state) {
-          List<String> categories = ["All"];
-          if (state is BooksLoaded) {
-            final uniqueCategories = state.books
-                .map((b) => b.category)
-                .where((c) => c.trim().isNotEmpty)
-                .toSet()
-                .toList();
-            categories.addAll(uniqueCategories);
-          }
+      child: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: Responsive.maxContentWidth(context) ?? double.infinity,
+          ),
+          child: BlocBuilder<BooksCubit, BooksState>(
+            builder: (context, state) {
+              List<String> categories = ["All"];
+              if (state is BooksLoaded) {
+                final uniqueCategories = state.books
+                    .map((b) => b.category(isAr))
+                    .where((c) => c.trim().isNotEmpty)
+                    .toSet()
+                    .toList();
+                categories.addAll(uniqueCategories);
+              }
 
-          return Column(
-            children: [
-              const CategoryIcon(),
-
-              SizedBox(
-                height: Responsive.responsiveSpacing(context, 12),
-              ),
-
-              CategoriesBar(
-                categories: categories,
-                selectedCategory: selectedCategory,
-                onCategorySelected: (cat) {
-                  setState(() {
-                    selectedCategory = cat;
-                  });
-                },
-              ),
-
-              SizedBox(
-                height: Responsive.responsiveSpacing(context, 10),
-              ),
-
-              Expanded(
-                child: BooksGridView(selectedCategory: selectedCategory),
-              ),
-            ],
-          );
-        },
+              return Column(
+                children: [
+                  const CategoryIcon(),
+                  SizedBox(
+                    height: Responsive.responsiveSpacing(context, 12),
+                  ),
+                  CategoriesBar(
+                    categories: categories,
+                    selectedCategory: selectedCategory,
+                    onCategorySelected: (cat) {
+                      setState(() {
+                        selectedCategory = cat;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: Responsive.responsiveSpacing(context, 10),
+                  ),
+                  Expanded(
+                    child: BooksGridView(selectedCategory: selectedCategory),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/utils/responsive.dart';
@@ -44,7 +45,7 @@ class BookCard extends StatelessWidget {
               horizontal: Responsive.responsiveSpacing(context, 3),
             ),
             child: Text(
-              book.title,
+              book.title(AppStrings.isArabic(context)),
               style: Styles.body.copyWith(
                 fontWeight: FontWeight.w500,
                 color: const Color(0xff121212),

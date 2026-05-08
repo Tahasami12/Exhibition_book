@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,10 +22,12 @@ class _AuthorsAdminViewState extends State<AuthorsAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isAr = AppStrings.isArabic(context);
     return Scaffold(
       backgroundColor: AdminTheme.bg,
       appBar: AdminTheme.adminAppBar(
-        title: 'Manage Authors',
+        title: t.manageAuthors,
         context: context,
         actions: [
           IconButton(
@@ -57,8 +60,7 @@ class _AuthorsAdminViewState extends State<AuthorsAdminView> {
         builder: (context, state) {
           if (state is AdminAuthorsLoading) {
             return Center(
-                child: CircularProgressIndicator(
-                    color: AdminTheme.primary));
+                child: CircularProgressIndicator(color: AdminTheme.primary));
           }
           if (state is AdminAuthorsError) {
             return AdminTheme.errorState(state.message,
@@ -66,31 +68,35 @@ class _AuthorsAdminViewState extends State<AuthorsAdminView> {
           }
           if (state is AdminAuthorsLoaded) {
             if (state.authors.isEmpty) {
-              return AdminTheme.emptyState('No authors found.',
+              return AdminTheme.emptyState(t.noAuthorsFound,
                   icon: Icons.person_outline);
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: state.authors.length,
-              itemBuilder: (context, index) {
-                final author = state.authors[index];
-                return _AuthorCard(
-                  name: author.name,
-                  booksCount: author.booksCount,
-                  imageUrl: author.imageUrl,
-                  onEdit: () =>
-                      context.push('/add_edit_author', extra: author),
-                  onDelete: () async {
-                    final confirmed = await AdminTheme.confirmDelete(
-                        context, author.name);
-                    if (confirmed && context.mounted) {
-                      context
-                          .read<AdminAuthorsCubit>()
-                          .deleteAuthor(author.id);
-                    }
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: state.authors.length,
+                  itemBuilder: (context, index) {
+                    final author = state.authors[index];
+                    final displayName = author.name(isAr);
+                    return _AuthorCard(
+                      name: displayName,
+                      booksCount: author.booksCount,
+                      imageUrl: author.imageUrl,
+                      t: t,
+                      onEdit: () => context.push('/add_edit_author', extra: author),
+                      onDelete: () async {
+                        final confirmed =
+                            await AdminTheme.confirmDelete(context, displayName);
+                        if (confirmed && context.mounted) {
+                          context.read<AdminAuthorsCubit>().deleteAuthor(author.id);
+                        }
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ),
             );
           }
           return const SizedBox.shrink();
@@ -107,6 +113,7 @@ class _AuthorCard extends StatelessWidget {
     required this.imageUrl,
     required this.onEdit,
     required this.onDelete,
+    required this.t,
   });
 
   final String name;
@@ -114,6 +121,7 @@ class _AuthorCard extends StatelessWidget {
   final String imageUrl;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final AppStrings t;
 
   @override
   Widget build(BuildContext context) {
@@ -141,7 +149,7 @@ class _AuthorCard extends StatelessWidget {
             style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: AdminTheme.textPrimary)),
-        subtitle: Text('Books: $booksCount',
+        subtitle: Text('${t.booksLabel}: $booksCount',
             style: const TextStyle(
                 color: AdminTheme.textSub, fontSize: 13)),
         trailing: Row(

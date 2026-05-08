@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -21,15 +22,17 @@ class _BooksAdminViewState extends State<BooksAdminView> {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
+    final isAr = AppStrings.isArabic(context);
     return Scaffold(
       backgroundColor: AdminTheme.bg,
       appBar: AdminTheme.adminAppBar(
-        title: 'Manage Books',
+        title: t.manageBooks,
         context: context,
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            tooltip: 'Add Book',
+            tooltip: t.addBook,
             onPressed: () => context.push('/add_edit_book'),
           ),
         ],
@@ -58,8 +61,7 @@ class _BooksAdminViewState extends State<BooksAdminView> {
         builder: (context, state) {
           if (state is AdminBooksLoading) {
             return Center(
-                child: CircularProgressIndicator(
-                    color: AdminTheme.primary));
+                child: CircularProgressIndicator(color: AdminTheme.primary));
           }
           if (state is AdminBooksError) {
             return AdminTheme.errorState(state.message,
@@ -67,31 +69,36 @@ class _BooksAdminViewState extends State<BooksAdminView> {
           }
           if (state is AdminBooksLoaded) {
             if (state.books.isEmpty) {
-              return AdminTheme.emptyState('No books found.',
+              return AdminTheme.emptyState(t.noBooksFound,
                   icon: Icons.book_outlined);
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(12),
-              itemCount: state.books.length,
-              itemBuilder: (context, index) {
-                final book = state.books[index];
-                return _BookCard(
-                  title: book.title,
-                  price: book.price,
-                  stock: book.stock,
-                  imageUrl: book.imageUrl,
-                  onEdit: () => context.push('/add_edit_book', extra: book),
-                  onDelete: () async {
-                    final confirmed = await AdminTheme.confirmDelete(
-                        context, book.title);
-                    if (confirmed && context.mounted) {
-                      context
-                          .read<AdminBooksCubit>()
-                          .deleteBook(book.id);
-                    }
+            return Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 900),
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(12),
+                  itemCount: state.books.length,
+                  itemBuilder: (context, index) {
+                    final book = state.books[index];
+                    final displayTitle = book.title(isAr);
+                    return _BookCard(
+                      title: displayTitle,
+                      price: book.price,
+                      stock: book.stock,
+                      imageUrl: book.imageUrl,
+                      t: t,
+                      onEdit: () => context.push('/add_edit_book', extra: book),
+                      onDelete: () async {
+                        final confirmed =
+                            await AdminTheme.confirmDelete(context, displayTitle);
+                        if (confirmed && context.mounted) {
+                          context.read<AdminBooksCubit>().deleteBook(book.id);
+                        }
+                      },
+                    );
                   },
-                );
-              },
+                ),
+              ),
             );
           }
           return const SizedBox.shrink();
@@ -109,6 +116,7 @@ class _BookCard extends StatelessWidget {
     required this.imageUrl,
     required this.onEdit,
     required this.onDelete,
+    required this.t,
   });
 
   final String title;
@@ -117,6 +125,7 @@ class _BookCard extends StatelessWidget {
   final String imageUrl;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final AppStrings t;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +154,7 @@ class _BookCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: AdminTheme.textPrimary)),
         subtitle: Text(
-          'EGP ${price.toStringAsFixed(2)}  •  Stock: $stock',
+          'EGP ${price.toStringAsFixed(2)}  •  ${t.stockLabel}: $stock',
           style: const TextStyle(
               color: AdminTheme.textSub, fontSize: 13),
         ),

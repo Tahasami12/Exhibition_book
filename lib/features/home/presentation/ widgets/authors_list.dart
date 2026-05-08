@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,7 +13,7 @@ class AuthorsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Responsive.responsiveSpacing(context, 220),
+      height: Responsive.responsiveSpacing(context, 180, tabletSpacing: 200),
       child: BlocBuilder<AuthorsCubit, AuthorsState>(
         builder: (context, state) {
           if (state is AuthorsLoading || state is AuthorsInitial) {
@@ -44,14 +45,14 @@ class AuthorsList extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    width: Responsive.responsiveSpacing(context, 120),
+                    width: Responsive.responsiveSpacing(context, 100, tabletSpacing: 110),
                     margin: EdgeInsets.only(
                       right: Responsive.responsiveSpacing(context, 14),
                     ),
                     child: Column(
                       children: [
                         CircleAvatar(
-                          radius: Responsive.responsiveSpacing(context, 50),
+                          radius: Responsive.responsiveSpacing(context, 40, tabletSpacing: 45),
                           backgroundImage: author.imageUrl.startsWith('http')
                               ? NetworkImage(author.imageUrl)
                               : AssetImage(author.imageUrl) as ImageProvider,
@@ -61,7 +62,7 @@ class AuthorsList extends StatelessWidget {
                           height: Responsive.responsiveSpacing(context, 8),
                         ),
                         Text(
-                          author.name,
+                          author.name(AppStrings.isArabic(context)),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           textAlign: TextAlign.center,

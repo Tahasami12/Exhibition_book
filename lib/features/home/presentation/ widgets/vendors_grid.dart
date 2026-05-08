@@ -1,3 +1,5 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
+import 'package:exhibition_book/core/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,8 +27,8 @@ class VendorsGrid extends StatelessWidget {
           if (state is VendorsLoaded) {
             return GridView.builder(
               itemCount: state.vendors.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: Responsive.responsiveGridCount(context),
                 crossAxisSpacing: 12,
                 mainAxisSpacing: 12,
                 childAspectRatio: 101 / 153,
@@ -50,9 +52,11 @@ class VendorsGrid extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
-                        height: 101,
-                        width: 101,
-                        padding: const EdgeInsets.all(12),
+                        height: Responsive.responsiveSpacing(context, 101),
+                        width: Responsive.responsiveSpacing(context, 101),
+                        padding: EdgeInsets.all(
+                          Responsive.responsiveSpacing(context, 12),
+                        ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFF5F5F5),
                           borderRadius: BorderRadius.circular(12),
@@ -75,28 +79,29 @@ class VendorsGrid extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        vendor.name,
+                        vendor.name(AppStrings.isArabic(context)),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: Responsive.responsiveFontSize(context, 16),
                           fontWeight: FontWeight.w500,
-                          color: Color(0xFF121212),
+                          color: const Color(0xFF121212),
                         ),
                       ),
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.star,
-                            size: 16,
-                            color: Color(0xFFFFC107),
+                            size: Responsive.responsiveIconSize(context, 16),
+                            color: const Color(0xFFFFC107),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             vendor.rating.toStringAsFixed(1),
-                            style: const TextStyle(
-                              fontSize: 13,
+                            style: TextStyle(
+                              fontSize:
+                                  Responsive.responsiveFontSize(context, 13),
                               fontWeight: FontWeight.w500,
                             ),
                           ),

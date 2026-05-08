@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 /// Central brand color — used in both themes.
 const _kPrimary = Color(0xFF54408C); // original purple brand
-const _kPrimaryDark = Color(0xFF9B8ED4); // lighter variant readable on dark bg
 
 // ─── Light surface palette ──────────────────────────────────────────────────
 const _kLightBg = Color(0xFFFFFFFF);

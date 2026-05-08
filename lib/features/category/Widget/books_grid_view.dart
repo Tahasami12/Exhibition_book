@@ -1,3 +1,4 @@
+import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +19,9 @@ class BooksGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isAr = AppStrings.isArabic(context);
+    final isAll = selectedCategory == "All" || selectedCategory == "الكل";
+
     return BlocBuilder<BooksCubit, BooksState>(
       builder: (context, state) {
         if (state is BooksLoading || state is BooksInitial) {
@@ -26,8 +30,8 @@ class BooksGridView extends StatelessWidget {
           return Center(child: Text("Error: ${state.message}"));
         } else if (state is BooksLoaded) {
           var books = state.books;
-          if (selectedCategory != "All") {
-            books = books.where((b) => b.category == selectedCategory).toList();
+          if (!isAll) {
+            books = books.where((b) => b.category(isAr) == selectedCategory).toList();
           }
           
           if (books.isEmpty) {
@@ -45,7 +49,12 @@ class BooksGridView extends StatelessWidget {
             ),
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: Responsive.responsiveGridCount(context),
-              childAspectRatio: 0.73,
+              childAspectRatio: Responsive.responsiveValue(
+                context,
+                mobile: 0.73,
+                tablet: 0.65,
+                desktop: 0.65,
+              ),
               crossAxisSpacing: Responsive.responsiveSpacing(context, 10),
               mainAxisSpacing: Responsive.responsiveSpacing(context, 10),
             ),
