@@ -1,5 +1,6 @@
 import 'package:exhibition_book/features/admin/presentation/cubit/admin_books_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'features/notification_feature/presentation/cubit/notification_cubit.dart';
 import 'firebase_options.dart';
 import 'package:exhibition_book/core/api/book_repository.dart';
 import 'package:exhibition_book/features/home/presentation/cubit/books_cubit.dart';
@@ -58,6 +59,8 @@ void main() async {
         providers: [
           BlocProvider(create: (_) => AuthCubit(AuthRepository())),
           BlocProvider(create: (_) => CartCubit()),
+
+          BlocProvider(create: (_) => NotificationCubit()),
           BlocProvider(create: (_) => BooksCubit(bookRepository)..fetchBooks()),
           BlocProvider(create: (_) => AdminBooksCubit(bookRepository)),
           BlocProvider(create: (_) => AdminAuthorsCubit(authorRepository)),

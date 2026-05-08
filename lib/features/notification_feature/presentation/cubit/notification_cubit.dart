@@ -50,7 +50,8 @@ class NotificationCubit extends Cubit<NotificationState> {
           type: 'information',
           date: 'Sept 16',
           time: '11.00',
-          description: 'new_book_available',
+
+      description: 'new_book_available',
         ),
       ],
     ),
