@@ -402,7 +402,10 @@ class Register extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return Semantics(
+      label: isLoading ? t.loading : t.register,
+      button: true,
+      child: ElevatedButton(
       onPressed: isLoading ? () {} : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xff54408C),
@@ -424,6 +427,7 @@ class Register extends StatelessWidget {
                 fontSize: 16,
               ),
             ),
+      ),
     );
   }
 }

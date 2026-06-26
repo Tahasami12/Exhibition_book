@@ -89,9 +89,13 @@ class _FavoriteBookTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAr = AppStrings.isArabic(context);
-    return InkWell(
-      onTap: () {
-        Navigator.push(
+    final t = AppStrings.of(context);
+    return Semantics(
+      label: '${isAr ? t.favoriteBook : "Favorite Book"}: ${favorite.title(isAr)}, ${isAr ? t.authorLabelAccessibility : "Author"}: ${favorite.author(isAr)}, ${isAr ? t.priceLabelAccessibility : "Price"}: ${favorite.price} ${isAr ? t.egpLabelAccessibility : "EGP"}',
+      button: true,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => BookDetailsPage(book: favorite.toBook()),
@@ -148,19 +152,44 @@ class _FavoriteBookTile extends StatelessWidget {
                 ],
               ),
             ),
-            IconButton(
-              onPressed: () {
-                context.read<FavoritesCubit>().removeFavorite(favorite.id);
-              },
-              icon: const Icon(
-                Icons.favorite,
-                color: AppColors.primary,
+            Semantics(
+              label: t.removeFromFav,
+              child: IconButton(
+                iconSize: 28,
+                padding: const EdgeInsets.all(12),
+                onPressed: () {
+                  final removedBook = favorite.toBook();
+                  final removedTitle = favorite.title(AppStrings.isArabic(context));
+                  final favoritesCubit = context.read<FavoritesCubit>();
+                  favoritesCubit.removeFavorite(favorite.id);
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '"$removedTitle" ${AppStrings.of(context).removedFromFav}',
+                      ),
+                      action: SnackBarAction(
+                        label: t.undo,
+                        textColor: Colors.yellow,
+                        onPressed: () {
+                          favoritesCubit.toggleFavorite(removedBook);
+                        },
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 4),
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.favorite,
+                  color: AppColors.primary,
+                ),
               ),
             ),
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
@@ -202,31 +231,32 @@ class _EmptyFavoritesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = AppStrings.of(context);
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(
+          children: [
+            const Icon(
               Icons.favorite_border,
               size: 60,
               color: AppColors.grey500,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
-              'No favorite books yet.',
-              style: TextStyle(
+              t.noFavoritesYet,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppColors.grey900,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Text(
-              'Tap the heart icon on any book details page to add it here.',
+              t.favHint,
               textAlign: TextAlign.center,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
                 color: AppColors.grey500,
               ),

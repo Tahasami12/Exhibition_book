@@ -381,28 +381,32 @@ class Login extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading ? () {} : onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xff54408C),
-        minimumSize: const Size(double.infinity, 54),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
-      ),
-      child: isLoading
-          ? const SizedBox(
-              height: 24,
-              width: 24,
-              child:
-                  CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
-            )
-          : Text(
-              t.login,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 16,
+    return Semantics(
+      label: isLoading ? t.loading : t.loginButton,
+      button: true,
+      child: ElevatedButton(
+        onPressed: isLoading ? () {} : onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xff54408C),
+          minimumSize: const Size(double.infinity, 54),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(27)),
+        ),
+        child: isLoading
+            ? const SizedBox(
+                height: 24,
+                width: 24,
+                child:
+                    CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
+              )
+            : Text(
+                t.login,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
               ),
-            ),
+      ),
     );
   }
 }

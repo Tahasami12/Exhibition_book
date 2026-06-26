@@ -55,8 +55,28 @@ class CartScreen extends StatelessWidget {
                               context.read<CartCubit>().increaseQuantity(item.id),
                           onDecrease: () =>
                               context.read<CartCubit>().decreaseQuantity(item.id),
-                          onRemove: () =>
-                              context.read<CartCubit>().removeItem(item.id),
+                          onRemove: () {
+                              final removedItem = item;
+                              final cartCubit = context.read<CartCubit>();
+                              cartCubit.removeItem(item.id);
+                              ScaffoldMessenger.of(context).clearSnackBars();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    '${AppStrings.of(context).removeBtn}: "${removedItem.title(AppStrings.isArabic(context))}"',
+                                  ),
+                                  action: SnackBarAction(
+                                    label: t.undo,
+                                    textColor: Colors.yellow,
+                                    onPressed: () {
+                                      cartCubit.addItem(removedItem);
+                                    },
+                                  ),
+                                  behavior: SnackBarBehavior.floating,
+                                  duration: const Duration(seconds: 4),
+                                ),
+                              );
+                            },
                         );
                       },
                     ),
@@ -148,11 +168,15 @@ class _CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.only(
-        bottom: Responsive.responsiveSpacing(context, 16),
-      ),
-      child: Padding(
+    final isAr = AppStrings.isArabic(context);
+    final t = AppStrings.of(context);
+    return Semantics(
+      label: '${isAr ? t.cartBook : "Cart Book"}: ${item.title(isAr)}, ${isAr ? t.qtyLabelAccessibility : "Quantity"}: ${item.quantity}, ${isAr ? t.priceLabelAccessibility : "Price"}: ${item.price} ${isAr ? t.egpLabelAccessibility : "EGP"}',
+      child: Card(
+        margin: EdgeInsets.only(
+          bottom: Responsive.responsiveSpacing(context, 16),
+        ),
+        child: Padding(
         padding: EdgeInsets.all(
           Responsive.responsiveSpacing(context, 12),
         ),
@@ -165,7 +189,7 @@ class _CartItemCard extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 
   Widget _buildCover(BuildContext context) {
@@ -300,7 +324,7 @@ class _CheckoutBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
+            color: Colors.grey.withValues(alpha: 0.2),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, -2),

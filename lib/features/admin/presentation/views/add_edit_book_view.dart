@@ -318,8 +318,8 @@ class _AddEditBookViewState extends State<AddEditBookView> {
         price: double.tryParse(_priceController.text) ?? 0.0,
         rating: double.tryParse(_ratingController.text) ?? 5.0,
         imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : 'https://via.placeholder.com/150',
-        categoryAr: _categoryArController.text,
-        categoryEn: _categoryEnController.text,
+        categoryAr: _categoryArController.text.trim(),
+        categoryEn: _categoryEnController.text.trim(),
         stock: int.tryParse(_stockController.text) ?? 0,
         createdAt: widget.book?.createdAt,
       );

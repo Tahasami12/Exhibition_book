@@ -398,4 +398,39 @@ class AppStrings {
   String get activePromotion => _t('Active Promotion?', 'عرض نشط؟');
   String get promoVisibilityHint => _t('Toggle visibility on the home screen.', 'تغيير الظهور في الشاشة الرئيسية.');
   String get noMessages => _t('No messages yet', 'لا توجد رسائل بعد');
+
+  String get undo => _t('Undo', 'تراجع');
+  String get removeFromFav => _t('Remove from favorites', 'إزالة من المفضلة');
+  String get addToFav => _t('Add to favorites', 'إضافة إلى المفضلة');
+  String get noFavoritesYet => _t('No favorite books yet.', 'لا توجد كتب مفضلة بعد.');
+  String get favHint => _t('Tap the heart icon on any book details page to add it here.', 'اضغط على أيقونة القلب في صفحة تفاصيل أي كتاب لإضافته هنا.');
+  String get increaseQty => _t('Increase quantity', 'زيادة الكمية');
+  String get decreaseQty => _t('Decrease quantity', 'تقليل الكمية');
+  String get loading => _t('Loading', 'جاري التحميل');
+  String get loginButton => _t('Login button', 'زر تسجيل الدخول');
+  
+  // Accessibility Labels
+  String get cartBook => _t('Cart Book', 'كتاب في السلة');
+  String get favoriteBook => _t('Favorite Book', 'كتاب في المفضلة');
+  String get qtyLabelAccessibility => _t('Quantity', 'الكمية');
+  String get priceLabelAccessibility => _t('Price', 'السعر');
+  String get egpLabelAccessibility => _t('EGP', 'جنيه');
+  String get bookLabelAccessibility => _t('Book', 'كتاب');
+  String get authorLabelAccessibility => _t('Author', 'المؤلف');
+
+  // Admin Actions
+  String get authorAdded => _t('Author added successfully', 'تم إضافة المؤلف بنجاح');
+  String get authorUpdated => _t('Author updated successfully', 'تم تحديث بيانات المؤلف بنجاح');
+  String get authorDeleted => _t('Author deleted successfully', 'تم حذف المؤلف بنجاح');
+  String get bookAdded => _t('Book added successfully', 'تم إضافة الكتاب بنجاح');
+  String get bookUpdated => _t('Book updated successfully', 'تم تحديث بيانات الكتاب بنجاح');
+  String get bookDeleted => _t('Book deleted successfully', 'تم حذف الكتاب بنجاح');
+  String get vendorAdded => _t('Vendor added successfully', 'تم إضافة المورد بنجاح');
+  String get vendorUpdated => _t('Vendor updated successfully', 'تم تحديث بيانات المورد بنجاح');
+  String get vendorDeleted => _t('Vendor deleted successfully', 'تم حذف المورد بنجاح');
+  String get promoAdded => _t('Promotion added successfully', 'تم إضافة العرض بنجاح');
+  String get promoUpdated => _t('Promotion updated successfully', 'تم تحديث العرض بنجاح');
+  String get promoDeleted => _t('Promotion deleted successfully', 'تم حذف العرض بنجاح');
+  String get userDeleted => _t('User deleted successfully', 'تم حذف المستخدم بنجاح');
+  String get userRoleUpdated => _t('User role updated successfully', 'تم تحديث صلاحيات المستخدم بنجاح');
 }

@@ -15,6 +15,7 @@ import 'package:exhibition_book/features/auth/presentation/cubit/auth_cubit.dart
 import 'package:exhibition_book/core/widgets/language_toggle_button.dart';
 import 'package:exhibition_book/core/utils/app_strings.dart';
 
+
 /// Profile tab content.
 /// Returns only body content — MainShell provides the Scaffold + BottomNav.
 /// Removed GetMaterialApp wrapper (was creating a separate app tree

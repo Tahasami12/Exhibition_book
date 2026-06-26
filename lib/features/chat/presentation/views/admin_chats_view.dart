@@ -35,7 +35,7 @@ class AdminChatsView extends StatelessWidget {
                 if (state is AdminChatsError) {
                   return AdminTheme.errorState(state.message, () {
                     context.read<AdminChatsCubit>().startListening();
-                  });
+                  }, context);
                 }
                 if (state is AdminChatsLoaded) {
                   if (state.chats.isEmpty) {

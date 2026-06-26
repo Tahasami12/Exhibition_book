@@ -22,7 +22,7 @@ class AuthorsList extends StatelessWidget {
             return Center(child: Text("Error: ${state.message}"));
           } else if (state is AuthorsLoaded) {
             if (state.authors.isEmpty) {
-              return const Center(child: Text("No authors found."));
+              return Center(child: Text(AppStrings.of(context).noAuthorsFound));
             }
             return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -44,47 +44,52 @@ class AuthorsList extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Container(
-                    width: Responsive.responsiveSpacing(context, 100, tabletSpacing: 110),
-                    margin: EdgeInsets.only(
-                      right: Responsive.responsiveSpacing(context, 14),
-                    ),
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: Responsive.responsiveSpacing(context, 40, tabletSpacing: 45),
-                          backgroundImage: author.imageUrl.startsWith('http')
-                              ? NetworkImage(author.imageUrl)
-                              : AssetImage(author.imageUrl) as ImageProvider,
-                          onBackgroundImageError: (_, __) {},
-                        ),
-                        SizedBox(
-                          height: Responsive.responsiveSpacing(context, 8),
-                        ),
-                        Text(
-                          author.name(AppStrings.isArabic(context)),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize:
-                                Responsive.responsiveFontSize(context, 16),
-                            fontWeight: FontWeight.w600,
-                            color: const Color(0xFF121212),
+                  child: Semantics(
+                    button: true,
+                    label: '${author.name(AppStrings.isArabic(context))} author',
+                    hint: AppStrings.isArabic(context) ? 'انقر لعرض تفاصيل المؤلف' : 'Tap to view author details',
+                    child: Container(
+                      width: Responsive.responsiveSpacing(context, 100, tabletSpacing: 110),
+                      margin: EdgeInsets.only(
+                        right: Responsive.responsiveSpacing(context, 14),
+                      ),
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: Responsive.responsiveSpacing(context, 40, tabletSpacing: 45),
+                            backgroundImage: author.imageUrl.startsWith('http')
+                                ? NetworkImage(author.imageUrl)
+                                : AssetImage(author.imageUrl) as ImageProvider,
+                            onBackgroundImageError: (_, __) {},
                           ),
-                        ),
-                        SizedBox(
-                          height: Responsive.responsiveSpacing(context, 4),
-                        ),
-                        Text(
-                          '${author.booksCount} books',
-                          style: TextStyle(
-                            fontSize:
-                                Responsive.responsiveFontSize(context, 14),
-                            color: const Color(0xFFA6A6A6),
+                          SizedBox(
+                            height: Responsive.responsiveSpacing(context, 8),
                           ),
-                        ),
-                      ],
+                          Text(
+                            author.name(AppStrings.isArabic(context)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize:
+                                  Responsive.responsiveFontSize(context, 16),
+                              fontWeight: FontWeight.w600,
+                              color: const Color(0xFF121212),
+                            ),
+                          ),
+                          SizedBox(
+                            height: Responsive.responsiveSpacing(context, 4),
+                          ),
+                          Text(
+                            AppStrings.of(context).orderItems(author.booksCount),
+                            style: TextStyle(
+                              fontSize:
+                                  Responsive.responsiveFontSize(context, 14),
+                              color: const Color(0xFFA6A6A6),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );

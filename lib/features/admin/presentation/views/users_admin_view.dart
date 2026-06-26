@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:exhibition_book/features/admin/presentation/admin_theme.dart';
@@ -31,8 +31,12 @@ class _UsersAdminViewState extends State<UsersAdminView> {
       body: BlocConsumer<AdminUsersCubit, AdminUsersState>(
         listener: (context, state) {
           if (state is AdminUsersActionSuccess) {
+            String msg = state.message;
+            if (state.message.contains('deleted')) msg = t.userDeleted;
+            if (state.message.contains('role')) msg = t.userRoleUpdated;
+
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.message),
+              content: Text(msg),
               backgroundColor: AdminTheme.success,
               behavior: SnackBarBehavior.floating,
             ));
@@ -57,7 +61,7 @@ class _UsersAdminViewState extends State<UsersAdminView> {
           }
           if (state is AdminUsersError) {
             return AdminTheme.errorState(state.message,
-                () => context.read<AdminUsersCubit>().fetchUsers());
+                () => context.read<AdminUsersCubit>().fetchUsers(), context);
           }
           if (state is AdminUsersLoaded) {
             if (state.users.isEmpty) {

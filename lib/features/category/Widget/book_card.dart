@@ -13,8 +13,13 @@ class BookCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
+    final isAr = AppStrings.isArabic(context);
+    final t = AppStrings.of(context);
+    return Semantics(
+      label: '${isAr ? t.bookLabelAccessibility : "Book"}: ${book.title(isAr)}, ${isAr ? t.priceLabelAccessibility : "Price"}: ${book.price} ${isAr ? t.egpLabelAccessibility : "EGP"}',
+      button: true,
+      child: GestureDetector(
+        onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => BookDetailsPage(book: book)),
@@ -73,6 +78,6 @@ class BookCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }

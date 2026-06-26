@@ -58,7 +58,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                     Container(
                       padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 20)),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6C47FF).withOpacity(0.08),
+                        color: const Color(0xFF6C47FF).withValues(alpha: 0.08),
                         borderRadius: BorderRadius.circular(
                           Responsive.responsiveBorderRadius(context, 60),
                         ),
@@ -107,12 +107,12 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                     Container(
                       padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 20)),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF6C47FF).withOpacity(0.05),
+                        color: const Color(0xFF6C47FF).withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(
                           Responsive.responsiveBorderRadius(context, 16),
                         ),
                         border: Border.all(
-                          color: const Color(0xFF6C47FF).withOpacity(0.1),
+                          color: const Color(0xFF6C47FF).withValues(alpha: 0.1),
                           width: 1,
                         ),
                       ),
@@ -150,7 +150,7 @@ class _OrderReceivedScreenState extends State<OrderReceivedScreen> {
                                       Icons.star,
                                       color: isSelected
                                           ? Colors.amber
-                                          : Colors.grey.withOpacity(0.3),
+                                          : Colors.grey.withValues(alpha: 0.3),
                                       size: Responsive.responsiveIconSize(context, 32),
                                     ),
                                   ),

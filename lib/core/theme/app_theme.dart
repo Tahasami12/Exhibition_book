@@ -48,7 +48,7 @@ abstract class AppTheme {
     cardTheme: CardThemeData(
       color: _kLightCard,
       elevation: 2,
-      shadowColor: Colors.black.withOpacity(0.08),
+      shadowColor: Colors.black.withValues(alpha: 0.08),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
 
@@ -128,8 +128,8 @@ abstract class AppTheme {
       trackColor: WidgetStateProperty.resolveWith(
         (s) =>
             s.contains(WidgetState.selected)
-                ? _kPrimary.withOpacity(0.5)
-                : Colors.grey.withOpacity(0.3),
+                ? _kPrimary.withValues(alpha: 0.5)
+                : Colors.grey.withValues(alpha: 0.3),
       ),
     ),
 

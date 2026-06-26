@@ -178,8 +178,45 @@ class _MotionTabBarWrapperState
       t.navProfile,
     ];
 
+    List<IconData> icons = [
+      Icons.home_outlined,
+      Icons.grid_view_outlined,
+      Icons.shopping_cart_outlined,
+      Icons.person_outline,
+    ];
+
+    List<Widget?> badges = [
+      null,
+      null,
+      Positioned(
+        top: 0,
+        right: 0,
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 6,
+            vertical: 2,
+          ),
+          decoration: BoxDecoration(
+            color: Colors.red,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Text(
+            cartItems.length.toString(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      null,
+    ];
+
     if (isAr) {
       labels = labels.reversed.toList();
+      icons = icons.reversed.toList();
+      badges = badges.reversed.toList();
     }
 
     final internalIndex =
@@ -200,47 +237,9 @@ class _MotionTabBarWrapperState
 
         labels: labels,
 
-        icons: const [
-          Icons.home_outlined,
-          Icons.grid_view_outlined,
-          Icons.shopping_cart_outlined,
-          Icons.person_outline,
-        ],
+        icons: icons,
 
-        badges: [
-          null,
-          null,
-
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              padding:
-              const EdgeInsets.symmetric(
-                horizontal: 6,
-                vertical: 2,
-              ),
-
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius:
-                BorderRadius.circular(12),
-              ),
-
-              child: Text(
-                cartItems.length.toString(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 10,
-                  fontWeight:
-                  FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-
-          null,
-        ],
+        badges: badges,
 
         tabSize: 50,
         tabBarHeight: 55,

@@ -156,7 +156,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.12),
+            color: Colors.black.withValues(alpha: 0.12),
             blurRadius: 16,
             offset: const Offset(0, 8),
           ),
@@ -188,26 +188,39 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
           builder: (context, state) {
             final isFavorite =
                 context.read<FavoritesCubit>().isFavorite(widget.book.id);
-            return IconButton(
-              onPressed: () {
-                final favoritesCubit = context.read<FavoritesCubit>();
-                final wasFavorite = favoritesCubit.isFavorite(widget.book.id);
-                favoritesCubit.toggleFavorite(widget.book);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      wasFavorite
-                          ? '"${widget.book.title(AppStrings.isArabic(context))}" ${t.removedFromFav}'
-                          : '"${widget.book.title(AppStrings.isArabic(context))}" ${t.addedToFav}',
+            return Semantics(
+              label: isFavorite ? t.removeFromFav : t.addToFav,
+              button: true,
+              child: IconButton(
+                tooltip: isFavorite ? t.removedFromFav : t.addedToFav,
+                onPressed: () {
+                  final favoritesCubit = context.read<FavoritesCubit>();
+                  final wasFavorite = favoritesCubit.isFavorite(widget.book.id);
+                  favoritesCubit.toggleFavorite(widget.book);
+                  ScaffoldMessenger.of(context).clearSnackBars();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        wasFavorite
+                            ? '"${widget.book.title(AppStrings.isArabic(context))}" ${t.removedFromFav}'
+                            : '"${widget.book.title(AppStrings.isArabic(context))}" ${t.addedToFav}',
+                      ),
+                      action: SnackBarAction(
+                        label: t.undo,
+                        textColor: Colors.yellow,
+                        onPressed: () {
+                          favoritesCubit.toggleFavorite(widget.book);
+                        },
+                      ),
+                      duration: const Duration(seconds: 4),
                     ),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              },
-              icon: Icon(
-                isFavorite ? Icons.favorite : Icons.favorite_border,
-                color: _primaryColor,
-                size: 24,
+                  );
+                },
+                icon: Icon(
+                  isFavorite ? Icons.favorite : Icons.favorite_border,
+                  color: _primaryColor,
+                  size: 28,
+                ),
               ),
             );
           },
@@ -433,15 +446,20 @@ class _QuantityButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: backgroundColor,
-      shape: const CircleBorder(),
-      child: InkWell(
-        customBorder: const CircleBorder(),
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Icon(icon, color: iconColor, size: 18),
+    final t = AppStrings.of(context);
+    return Semantics(
+      label: icon == Icons.add ? t.increaseQty : t.decreaseQty,
+      button: true,
+      child: Material(
+        color: backgroundColor,
+        shape: const CircleBorder(),
+        child: InkWell(
+          customBorder: const CircleBorder(),
+          onTap: onPressed,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Icon(icon, color: iconColor, size: 20),
+          ),
         ),
       ),
     );

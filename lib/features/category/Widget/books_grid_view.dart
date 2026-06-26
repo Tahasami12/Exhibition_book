@@ -9,18 +9,18 @@ import 'book_card.dart';
 
 class BooksGridView extends StatelessWidget {
   final bool isScrollable;
-  final String selectedCategory;
+  /// Stable English key: "All" means show all, otherwise filter by categoryEn (lowercase).
+  final String selectedCategoryKey;
 
   const BooksGridView({
-    super.key, 
+    super.key,
     this.isScrollable = true,
-    this.selectedCategory = "All",
+    this.selectedCategoryKey = "All",
   });
 
   @override
   Widget build(BuildContext context) {
-    final isAr = AppStrings.isArabic(context);
-    final isAll = selectedCategory == "All" || selectedCategory == "الكل";
+    final isAll = selectedCategoryKey == "All";
 
     return BlocBuilder<BooksCubit, BooksState>(
       builder: (context, state) {
@@ -31,11 +31,13 @@ class BooksGridView extends StatelessWidget {
         } else if (state is BooksLoaded) {
           var books = state.books;
           if (!isAll) {
-            books = books.where((b) => b.category(isAr) == selectedCategory).toList();
+            final sel = selectedCategoryKey.trim().toLowerCase();
+            // Always filter by English key (locale-independent)
+            books = books.where((b) => b.categoryEn.trim().toLowerCase() == sel).toList();
           }
           
           if (books.isEmpty) {
-            return const Center(child: Text("No books found."));
+            return Center(child: Text(AppStrings.of(context).noBooksFound));
           }
 
           return GridView.builder(

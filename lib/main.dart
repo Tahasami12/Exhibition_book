@@ -21,6 +21,7 @@ import 'package:exhibition_book/core/utils/cache_helper.dart';
 import 'package:exhibition_book/core/cubit/locale_cubit.dart';
 import 'package:exhibition_book/core/theme/app_theme.dart';
 import 'core/utils/app_router.dart';
+import 'core/services/fcm_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:exhibition_book/features/admin/data/repositories/admin_users_repository.dart';
@@ -35,6 +36,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await CacheHelper.init();
+  await FcmService.instance.init(); // Initialize push notifications
 
   final bookRepository = BookRepository();
   final promotionRepository = PromotionRepository();

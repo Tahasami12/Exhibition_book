@@ -17,15 +17,16 @@ class BooksList extends StatelessWidget {
       height: Responsive.responsiveSpacing(context, 235, tabletSpacing: 280),
       child: BlocBuilder<BooksCubit, BooksState>(
         builder: (context, state) {
+          final t = AppStrings.of(context);
           if (state is BooksLoading || state is BooksInitial) {
             return const Center(child: CircularProgressIndicator());
           } else if (state is BooksError) {
-            return Center(child: Text("Error: ${state.message}"));
+            return Center(child: Text("${t.retry}: ${state.message}"));
           } else if (state is BooksLoaded) {
             final books = state.books;
             
             if (books.isEmpty) {
-              return const Center(child: Text("No books found in Firestore."));
+              return Center(child: Text(t.noBooksFound));
             }
 
             return ListView.builder(
@@ -36,16 +37,21 @@ class BooksList extends StatelessWidget {
               itemCount: books.length,
               itemBuilder: (_, i) {
                 final book = books[i];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => BookDetailsPage(book: book),
-                      ),
-                    );
-                  },
-                  child: Container(
+                final isAr = AppStrings.isArabic(context);
+                final t = AppStrings.of(context);
+                return Semantics(
+                  label: '${isAr ? t.bookLabelAccessibility : "Book"}: ${book.title(isAr)}, ${isAr ? t.priceLabelAccessibility : "Price"}: ${book.price} ${isAr ? t.egpLabelAccessibility : "EGP"}',
+                  button: true,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BookDetailsPage(book: book),
+                        ),
+                      );
+                    },
+                    child: Container(
                     width: Responsive.responsiveSpacing(context, 115, tabletSpacing: 140),
                     margin: EdgeInsets.only(
                       right: Responsive.responsiveSpacing(context, 12),
@@ -61,7 +67,7 @@ class BooksList extends StatelessWidget {
                             ),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.08),
+                                color: Colors.black.withValues(alpha: 0.08),
                                 blurRadius: 8,
                                 offset: const Offset(0, 4),
                               ),
@@ -114,7 +120,7 @@ class BooksList extends StatelessWidget {
                       ],
                     ),
                   ),
-                );
+                ));
               },
             );
           }

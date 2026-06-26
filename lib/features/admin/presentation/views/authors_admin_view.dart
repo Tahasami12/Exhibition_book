@@ -1,4 +1,4 @@
-import 'package:exhibition_book/core/utils/app_strings.dart';
+﻿import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -39,8 +39,13 @@ class _AuthorsAdminViewState extends State<AuthorsAdminView> {
       body: BlocConsumer<AdminAuthorsCubit, AdminAuthorsState>(
         listener: (context, state) {
           if (state is AdminAuthorsActionSuccess) {
+            String msg = state.message;
+            if (state.message.contains('deleted')) return; // Handled manually in onDelete with Undo
+            if (state.message.contains('added')) msg = t.authorAdded;
+            if (state.message.contains('updated')) msg = t.authorUpdated;
+            
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.message),
+              content: Text(msg),
               backgroundColor: AdminTheme.success,
               behavior: SnackBarBehavior.floating,
             ));
@@ -64,7 +69,7 @@ class _AuthorsAdminViewState extends State<AuthorsAdminView> {
           }
           if (state is AdminAuthorsError) {
             return AdminTheme.errorState(state.message,
-                () => context.read<AdminAuthorsCubit>().fetchAuthors());
+                () => context.read<AdminAuthorsCubit>().fetchAuthors(), context);
           }
           if (state is AdminAuthorsLoaded) {
             if (state.authors.isEmpty) {
@@ -90,7 +95,21 @@ class _AuthorsAdminViewState extends State<AuthorsAdminView> {
                         final confirmed =
                             await AdminTheme.confirmDelete(context, displayName);
                         if (confirmed && context.mounted) {
-                          context.read<AdminAuthorsCubit>().deleteAuthor(author.id);
+                          final deletedAuthor = author;
+                          final adminCubit = context.read<AdminAuthorsCubit>();
+                          adminCubit.deleteAuthor(author.id);
+                          
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(t.authorDeleted),
+                            action: SnackBarAction(
+                              label: t.undo,
+                              textColor: Colors.yellow,
+                              onPressed: () => adminCubit.addAuthor(deletedAuthor),
+                            ),
+                            backgroundColor: AdminTheme.success,
+                            behavior: SnackBarBehavior.floating,
+                          ));
                         }
                       },
                     );

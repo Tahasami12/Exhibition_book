@@ -11,7 +11,7 @@ import '../Widget/categories_bar.dart';
 import '../Widget/category_icon.dart';
 
 /// Category tab content.
-/// Returns only the body — MainShell provides the Scaffold + BottomNav.
+/// Uses a stable internal key "All" for logic, independent of locale.
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
 
@@ -20,17 +20,13 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  String selectedCategory = "All";
+  /// Internal key — always "All" for the "show all" state.
+  /// Category names from books are stored as-is per locale.
+  String _selectedKey = "All";
 
   @override
   Widget build(BuildContext context) {
-    final t = AppStrings.of(context);
     final isAr = AppStrings.isArabic(context);
-    final allLabel = isAr ? 'الكل' : 'All';
-
-    // If selectedCategory was "All" in previous locale, update it to the new "All" translation if needed,
-    // but usually it's better to keep a key like "All".
-    // Let's keep "All" as a logic key but display localized label.
 
     return SafeArea(
       child: Center(
@@ -40,36 +36,54 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
           child: BlocBuilder<BooksCubit, BooksState>(
             builder: (context, state) {
-              List<String> categories = ["All"];
+              // Build category list using EN keys always (locale-independent keys)
+              // We store English category as the key, display localized label
+              final Map<String, String> categoryKeys = {};
+              // "All" key → localized display
+              final String allLabel = isAr ? 'الكل' : 'All';
+              categoryKeys["All"] = allLabel;
+
               if (state is BooksLoaded) {
-                final uniqueCategories = state.books
-                    .map((b) => b.category(isAr))
-                    .where((c) => c.trim().isNotEmpty)
-                    .toSet()
-                    .toList();
-                categories.addAll(uniqueCategories);
+                for (var b in state.books) {
+                  final keyEn = b.categoryEn.trim();
+                  if (keyEn.isNotEmpty && !categoryKeys.containsKey(keyEn.toLowerCase())) {
+                    // Use English key, show localized label
+                    final display = b.category(isAr).trim();
+                    if (display.isNotEmpty) {
+                      categoryKeys[keyEn.toLowerCase()] = display;
+                    }
+                  }
+                }
               }
+
+              // Build display list for bar (localized labels)
+              final List<String> displayLabels = categoryKeys.values.toList();
+              // Find the current display label for _selectedKey
+              final String currentDisplay = categoryKeys[_selectedKey.toLowerCase()] ?? allLabel;
 
               return Column(
                 children: [
                   const CategoryIcon(),
-                  SizedBox(
-                    height: Responsive.responsiveSpacing(context, 12),
-                  ),
+                  SizedBox(height: Responsive.responsiveSpacing(context, 12)),
                   CategoriesBar(
-                    categories: categories,
-                    selectedCategory: selectedCategory,
-                    onCategorySelected: (cat) {
+                    categories: displayLabels,
+                    selectedCategory: currentDisplay,
+                    onCategorySelected: (displayName) {
+                      // Find the EN key for this display label
+                      final key = categoryKeys.entries
+                          .firstWhere(
+                            (e) => e.value == displayName,
+                            orElse: () => const MapEntry("All", "All"),
+                          )
+                          .key;
                       setState(() {
-                        selectedCategory = cat;
+                        _selectedKey = key;
                       });
                     },
                   ),
-                  SizedBox(
-                    height: Responsive.responsiveSpacing(context, 10),
-                  ),
+                  SizedBox(height: Responsive.responsiveSpacing(context, 10)),
                   Expanded(
-                    child: BooksGridView(selectedCategory: selectedCategory),
+                    child: BooksGridView(selectedCategoryKey: _selectedKey),
                   ),
                 ],
               );

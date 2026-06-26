@@ -74,7 +74,7 @@ class _BannerSectionState extends State<BannerSection> {
                       color:
                           active
                               ? const Color(0xFF54408C)
-                              : const Color(0xFF54408C).withOpacity(0.3),
+                              : const Color(0xFF54408C).withValues(alpha: 0.3),
                       borderRadius: BorderRadius.circular(20),
                     ),
                   );
@@ -97,24 +97,26 @@ class _BannerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isAr = AppStrings.isArabic(context);
     final t = AppStrings.of(context);
-    return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: Responsive.responsiveSpacing(context, 16),
-      ),
-      padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 16)),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFAF9FD),
-        borderRadius: BorderRadius.circular(
-          Responsive.responsiveSpacing(context, 16),
+    return Semantics(
+      label: 'Promotional banner: ${promotion.title(isAr)}. ${promotion.discount(isAr)}',
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: Responsive.responsiveSpacing(context, 16),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+        padding: EdgeInsets.all(Responsive.responsiveSpacing(context, 16)),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFAF9FD),
+          borderRadius: BorderRadius.circular(
+            Responsive.responsiveSpacing(context, 16),
           ),
-        ],
-      ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
       child: Row(
         children: [
           Expanded(
@@ -176,6 +178,7 @@ class _BannerCard extends StatelessWidget {
             ),
           ),
         ],
+        ),
       ),
     );
   }

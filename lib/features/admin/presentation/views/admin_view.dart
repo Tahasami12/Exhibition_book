@@ -95,7 +95,7 @@ class AdminView extends StatelessWidget {
                   mainAxisSpacing: 14,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  childAspectRatio: 1.25,
+                  childAspectRatio: 1.0,
                   children: [
                     _ModuleCard(
                       title: t.books,
@@ -218,18 +218,28 @@ class _ModuleCard extends StatelessWidget {
                 child: Icon(icon, size: 24, color: AdminTheme.primary),
             ),
             const SizedBox(height: 10),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: AdminTheme.textPrimary,
+            Flexible(
+              child: Text(
+                title,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: AdminTheme.textPrimary,
+                ),
               ),
             ),
             const SizedBox(height: 3),
-            Text(
-              subtitle,
-              style: const TextStyle(fontSize: 12, color: AdminTheme.textSub),
+            Flexible(
+              child: Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 12, color: AdminTheme.textSub),
+              ),
             ),
           ],
         ),

@@ -1,4 +1,4 @@
-import 'package:exhibition_book/core/utils/app_strings.dart';
+﻿import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,8 +40,13 @@ class _PromotionsAdminViewState extends State<PromotionsAdminView> {
       body: BlocConsumer<AdminPromotionsCubit, AdminPromotionsState>(
         listener: (context, state) {
           if (state is AdminPromotionsActionSuccess) {
+            String msg = state.message;
+            if (state.message.contains('deleted')) return; // Handled manually in onDelete with Undo
+            if (state.message.contains('added')) msg = t.promoAdded;
+            if (state.message.contains('updated')) msg = t.promoUpdated;
+
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.message),
+              content: Text(msg),
               backgroundColor: AdminTheme.success,
               behavior: SnackBarBehavior.floating,
             ));
@@ -66,7 +71,7 @@ class _PromotionsAdminViewState extends State<PromotionsAdminView> {
           }
           if (state is AdminPromotionsError) {
             return AdminTheme.errorState(state.message,
-                () => context.read<AdminPromotionsCubit>().fetchPromotions());
+                () => context.read<AdminPromotionsCubit>().fetchPromotions(), context);
           }
           if (state is AdminPromotionsLoaded) {
             if (state.promotions.isEmpty) {
@@ -144,9 +149,21 @@ class _PromotionsAdminViewState extends State<PromotionsAdminView> {
                                 final confirmed = await AdminTheme.confirmDelete(
                                     context, promo.title(isArabic));
                                 if (confirmed && context.mounted) {
-                                  context
-                                      .read<AdminPromotionsCubit>()
-                                      .deletePromotion(promo.id);
+                                  final deletedPromo = promo;
+                                  final adminCubit = context.read<AdminPromotionsCubit>();
+                                  adminCubit.deletePromotion(promo.id);
+                                  
+                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(t.promoDeleted),
+                                    action: SnackBarAction(
+                                      label: t.undo,
+                                      textColor: Colors.yellow,
+                                      onPressed: () => adminCubit.addPromotion(deletedPromo),
+                                    ),
+                                    backgroundColor: AdminTheme.success,
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
                                 }
                               },
                             ),

@@ -50,9 +50,29 @@ class AuthorRepository {
 
   Future<void> updateAuthor(AuthorModel author) async {
     try {
-      await _firestore.collection('authors').doc(author.id).update(author.toJson());
+      final batch = _firestore.batch();
+      
+      // 1. Update the author document
+      final authorRef = _firestore.collection('authors').doc(author.id);
+      batch.update(authorRef, author.toJson());
+
+      // 2. Find all books by this author
+      final booksSnapshot = await _firestore
+          .collection('books')
+          .where('authorId', isEqualTo: author.id)
+          .get();
+
+      // 3. Update the author name in each book
+      for (var doc in booksSnapshot.docs) {
+        batch.update(doc.reference, {
+          'authorAr': author.nameAr,
+          'authorEn': author.nameEn,
+        });
+      }
+
+      await batch.commit();
     } catch (e) {
-      throw Exception('Failed to update author: $e');
+      throw Exception('Failed to update author and their books: $e');
     }
   }
 

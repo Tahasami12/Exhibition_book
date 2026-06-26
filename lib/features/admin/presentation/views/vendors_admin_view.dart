@@ -1,4 +1,4 @@
-import 'package:exhibition_book/core/utils/app_strings.dart';
+﻿import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -41,8 +41,13 @@ class _VendorsAdminViewState extends State<VendorsAdminView> {
       body: BlocConsumer<AdminVendorsCubit, AdminVendorsState>(
         listener: (context, state) {
           if (state is AdminVendorsActionSuccess) {
+            String msg = state.message;
+            if (state.message.contains('deleted')) return; // Handled manually in onDelete with Undo
+            if (state.message.contains('added')) msg = t.vendorAdded;
+            if (state.message.contains('updated')) msg = t.vendorUpdated;
+
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.message),
+              content: Text(msg),
               backgroundColor: AdminTheme.success,
               behavior: SnackBarBehavior.floating,
             ));
@@ -67,7 +72,7 @@ class _VendorsAdminViewState extends State<VendorsAdminView> {
           }
           if (state is AdminVendorsError) {
             return AdminTheme.errorState(state.message,
-                () => context.read<AdminVendorsCubit>().fetchVendors());
+                () => context.read<AdminVendorsCubit>().fetchVendors(), context);
           }
           if (state is AdminVendorsLoaded) {
             if (state.vendors.isEmpty) {
@@ -144,9 +149,21 @@ class _VendorsAdminViewState extends State<VendorsAdminView> {
                                 final confirmed = await AdminTheme.confirmDelete(
                                     context, vendorName);
                                 if (confirmed && context.mounted) {
-                                  context
-                                      .read<AdminVendorsCubit>()
-                                      .deleteVendor(vendor.id);
+                                  final deletedVendor = vendor;
+                                  final adminCubit = context.read<AdminVendorsCubit>();
+                                  adminCubit.deleteVendor(vendor.id);
+                                  
+                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text(t.vendorDeleted),
+                                    action: SnackBarAction(
+                                      label: t.undo,
+                                      textColor: Colors.yellow,
+                                      onPressed: () => adminCubit.addVendor(deletedVendor),
+                                    ),
+                                    backgroundColor: AdminTheme.success,
+                                    behavior: SnackBarBehavior.floating,
+                                  ));
                                 }
                               },
                             ),

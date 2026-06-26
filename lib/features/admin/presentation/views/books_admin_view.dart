@@ -1,4 +1,4 @@
-import 'package:exhibition_book/core/utils/app_strings.dart';
+﻿import 'package:exhibition_book/core/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,8 +40,13 @@ class _BooksAdminViewState extends State<BooksAdminView> {
       body: BlocConsumer<AdminBooksCubit, AdminBooksState>(
         listener: (context, state) {
           if (state is AdminBooksActionSuccess) {
+            String msg = state.message;
+            if (state.message.contains('deleted')) return; // Handled manually in onDelete with Undo
+            if (state.message.contains('added')) msg = t.bookAdded;
+            if (state.message.contains('updated')) msg = t.bookUpdated;
+
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(state.message),
+              content: Text(msg),
               backgroundColor: AdminTheme.success,
               behavior: SnackBarBehavior.floating,
             ));
@@ -65,7 +70,7 @@ class _BooksAdminViewState extends State<BooksAdminView> {
           }
           if (state is AdminBooksError) {
             return AdminTheme.errorState(state.message,
-                () => context.read<AdminBooksCubit>().fetchBooks());
+                () => context.read<AdminBooksCubit>().fetchBooks(), context);
           }
           if (state is AdminBooksLoaded) {
             if (state.books.isEmpty) {
@@ -92,7 +97,21 @@ class _BooksAdminViewState extends State<BooksAdminView> {
                         final confirmed =
                             await AdminTheme.confirmDelete(context, displayTitle);
                         if (confirmed && context.mounted) {
-                          context.read<AdminBooksCubit>().deleteBook(book.id);
+                          final deletedBook = book;
+                          final adminCubit = context.read<AdminBooksCubit>();
+                          adminCubit.deleteBook(book.id);
+                          
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(t.bookDeleted),
+                            action: SnackBarAction(
+                              label: t.undo,
+                              textColor: Colors.yellow,
+                              onPressed: () => adminCubit.addBook(deletedBook),
+                            ),
+                            backgroundColor: AdminTheme.success,
+                            behavior: SnackBarBehavior.floating,
+                          ));
                         }
                       },
                     );
@@ -154,7 +173,7 @@ class _BookCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 color: AdminTheme.textPrimary)),
         subtitle: Text(
-          'EGP ${price.toStringAsFixed(2)}  •  ${t.stockLabel}: $stock',
+          'EGP ${price.toStringAsFixed(2)}  â€¢  ${t.stockLabel}: $stock',
           style: const TextStyle(
               color: AdminTheme.textSub, fontSize: 13),
         ),

@@ -30,7 +30,7 @@ class VendorsList extends StatelessWidget {
             return Center(child: Text("Error: ${state.message}"));
           } else if (state is VendorsLoaded) {
             if (state.vendors.isEmpty) {
-              return const Center(child: Text("No vendors found."));
+              return Center(child: Text(AppStrings.of(context).noVendorsFound));
             }
             return ListView.builder(
               scrollDirection: Axis.horizontal,
@@ -52,17 +52,22 @@ class VendorsList extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Container(
-                    width: Responsive.responsiveSpacing(
-                      context,
-                      96,
-                      tabletSpacing: 100,
-                      desktopSpacing: 120,
+                  child: Semantics(
+                    button: true,
+                    label: '${vendor.name(AppStrings.isArabic(context))} vendor',
+                    hint: AppStrings.isArabic(context) ? 'انقر لعرض التفاصيل' : 'Tap to view details',
+                    child: Container(
+                      width: Responsive.responsiveSpacing(
+                        context,
+                        96,
+                        tabletSpacing: 100,
+                        desktopSpacing: 120,
+                      ),
+                      margin: EdgeInsets.only(
+                        right: Responsive.responsiveSpacing(context, 10),
+                      ),
+                      child: _VendorHomeCard(vendor: vendor),
                     ),
-                    margin: EdgeInsets.only(
-                      right: Responsive.responsiveSpacing(context, 10),
-                    ),
-                    child: _VendorHomeCard(vendor: vendor),
                   ),
                 );
               },
@@ -108,7 +113,7 @@ class _VendorHomeCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: borderRadius,
                 color: Colors.grey[100],
-                border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.2)),
               ),
               child: ClipRRect(
                 borderRadius: borderRadius,

@@ -217,58 +217,63 @@ class _SearchResults extends StatelessWidget {
               ),
               itemBuilder: (context, index) {
                 final book = results[index];
-                return InkWell(
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (_) => BookDetailsPage(book: book)),
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            book.imageUrl,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => Container(
-                              color: Colors.grey.shade200,
-                              child: const Icon(Icons.book,
-                                  color: Colors.grey, size: 40),
+                final t = AppStrings.of(context);
+                return Semantics(
+                  label: '${isAr ? t.bookLabelAccessibility : "Book"}: ${book.title(isAr)}, ${isAr ? t.authorLabelAccessibility : "Author"}: ${book.author(isAr)}, ${isAr ? t.priceLabelAccessibility : "Price"}: ${book.price} ${isAr ? t.egpLabelAccessibility : "EGP"}',
+                  button: true,
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (_) => BookDetailsPage(book: book)),
+                    ),
+                    borderRadius: BorderRadius.circular(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              book.imageUrl,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => Container(
+                                color: Colors.grey.shade200,
+                                child: const Icon(Icons.book,
+                                    color: Colors.grey, size: 40),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        book.title(isAr),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
+                        const SizedBox(height: 8),
+                        Text(
+                          book.title(isAr),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        book.author(isAr),
-                        style: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 12,
+                        Text(
+                          book.author(isAr),
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 12,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'EGP ${book.price.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Color(0xFF6C47FF),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
+                        const SizedBox(height: 4),
+                        Text(
+                          'EGP ${book.price.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: Color(0xFF6C47FF),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 );
               },
@@ -282,7 +287,11 @@ class _SearchResults extends StatelessWidget {
 
   Widget _buildSearchResultItem(
       BuildContext context, BookModel book, bool isAr) {
-    return InkWell(
+    final t = AppStrings.of(context);
+    return Semantics(
+      label: '${isAr ? t.bookLabelAccessibility : "Book"}: ${book.title(isAr)}, ${isAr ? t.authorLabelAccessibility : "Author"}: ${book.author(isAr)}, ${isAr ? t.priceLabelAccessibility : "Price"}: ${book.price} ${isAr ? t.egpLabelAccessibility : "EGP"}',
+      button: true,
+      child: InkWell(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => BookDetailsPage(book: book)),
@@ -369,6 +378,7 @@ class _SearchResults extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

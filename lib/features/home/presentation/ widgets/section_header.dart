@@ -24,20 +24,27 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: Responsive.responsiveFontSize(context, 16),
-              fontWeight: FontWeight.w700,
+          Semantics(
+            header: true,
+            child: Text(
+              title,
+              style: TextStyle(
+                fontSize: Responsive.responsiveFontSize(context, 16),
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-          GestureDetector(
-            onTap: onTap,
-            child: Text(
-              AppStrings.of(context).seeAll,
-              style: TextStyle(
-                fontSize: Responsive.responsiveFontSize(context, 12),
-                color: AppColors.primary,
+          Semantics(
+            button: true,
+            label: '${AppStrings.of(context).seeAll} $title',
+            child: GestureDetector(
+              onTap: onTap,
+              child: Text(
+                AppStrings.of(context).seeAll,
+                style: TextStyle(
+                  fontSize: Responsive.responsiveFontSize(context, 12),
+                  color: AppColors.primary,
+                ),
               ),
             ),
           ),

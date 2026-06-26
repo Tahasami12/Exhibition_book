@@ -23,8 +23,7 @@ class CategoryIcon extends StatelessWidget {
       builder: (context, state) {
 
         /// عدد الإشعارات
-        final int notificationCount =
-            state.deliveries.length + state.news.length;
+        final int notificationCount = state.totalCount;
 
         return Padding(
           padding: EdgeInsets.fromLTRB(
@@ -66,6 +65,7 @@ class CategoryIcon extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
+                      context.read<NotificationCubit>().markAllAsRead();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -81,31 +81,32 @@ class CategoryIcon extends StatelessWidget {
                   ),
 
                   /// Counter
-                  Positioned(
-                    right: 4,
-                    top: 4,
-                    child: Container(
-                      padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 18,
-                        minHeight: 18,
-                      ),
-                      child: Center(
-                        child: Text(
-                          '$notificationCount',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                  if (notificationCount > 0)
+                    Positioned(
+                      right: 4,
+                      top: 4,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        child: Center(
+                          child: Text(
+                            notificationCount > 99 ? '99+' : '$notificationCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ],

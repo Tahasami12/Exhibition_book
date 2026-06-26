@@ -204,7 +204,7 @@ class _DetailsErrorState extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: onRetry,
-              child: const Text('Try Again'),
+              child: Text(AppStrings.of(context).retry),
             ),
           ],
         ),
@@ -260,7 +260,7 @@ class _DetailsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

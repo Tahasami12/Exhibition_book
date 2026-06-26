@@ -193,7 +193,11 @@ class _MyAccountScreenState extends State<MyAccount> {
             .child('user_profiles')
             .child('${user.uid}.jpg');
         
-        await storageRef.putFile(_pickedImage!);
+        // Use putFile and wait for it to complete
+        final uploadTask = storageRef.putFile(_pickedImage!);
+        await uploadTask;
+        
+        // Now it's safe to get the download URL
         photoUrl = await storageRef.getDownloadURL();
         await user.updatePhotoURL(photoUrl);
       }

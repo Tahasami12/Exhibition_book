@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:exhibition_book/core/utils/app_colors.dart';
+import 'package:exhibition_book/core/utils/app_strings.dart';
 
 /// Shared UI helpers for the Admin panel.
 /// All hardcoded colors removed — everything derives from [AppColors].
@@ -191,6 +192,8 @@ abstract class AdminTheme {
   // ─── Delete confirmation dialog ───────────────────────────────────────────────
   static Future<bool> confirmDelete(
       BuildContext context, String itemName) async {
+    final t = AppStrings.of(context);
+    final isAr = AppStrings.isArabic(context);
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -200,22 +203,24 @@ abstract class AdminTheme {
           children: [
             Icon(Icons.warning_amber_rounded, color: danger),
             const SizedBox(width: 8),
-            const Text('Confirm Delete'),
+            Text(isAr ? 'تأكيد الحذف' : 'Confirm Delete'),
           ],
         ),
-        content: Text('Are you sure you want to delete "$itemName"? This cannot be undone.'),
+        content: Text(isAr
+            ? 'هل أنت متأكد من حذف "$itemName"؟ (يمكنك التراجع من الإشعارات).'
+            : 'Are you sure you want to delete "$itemName"? (You can undo this from the notification).'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel',
-                style: TextStyle(color: textSub)),
+            child: Text(t.cancel,
+                style: const TextStyle(color: textSub)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
                 backgroundColor: danger, foregroundColor: Colors.white),
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(t.removeBtn,
+                style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -275,7 +280,8 @@ abstract class AdminTheme {
   }
 
   // ─── Error state ──────────────────────────────────────────────────────────────
-  static Widget errorState(String message, VoidCallback onRetry) {
+  static Widget errorState(String message, VoidCallback onRetry, BuildContext context) {
+    final t = AppStrings.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -289,7 +295,7 @@ abstract class AdminTheme {
           ElevatedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
+            label: Text(t.retry),
             style: ElevatedButton.styleFrom(
               backgroundColor: primary,
               foregroundColor: Colors.white,
