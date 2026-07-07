@@ -1,16 +1,132 @@
 # Exhibition_book
 
-A new Flutter project.
+# 📚 Bookly
 
-## Getting Started
+A smart mobile application that transforms the traditional book fair experience by enabling users to discover, purchase, and receive books from multiple publishers. Bookly also provides powerful dashboards for vendors and administrators to manage books, orders, users, and promotions efficiently.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## ✨ Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### 👤 Customer App
+- User Authentication
+- Browse Books
+- Search Books
+- Categories
+- Book Details
+- Shopping Cart
+- Secure Checkout
+- Order Tracking
+- Home Delivery
+- Notifications
+- Favorites
+- User Profile
+- Arabic & English Localization
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### 🏪 Vendor Dashboard
+- Manage Store
+- Add/Edit Books
+- Manage Inventory
+- Process Orders
+- Sales Overview
+
+### 🛠 Admin Dashboard
+- Books Management
+- Authors Management
+- Vendors Management
+- Users Management
+- Orders Management
+- Promotions Management
+- Customer Support Chat
+
+---
+
+## 🛠 Tech Stack
+
+- Flutter
+- Dart
+- Firebase Authentication
+- Cloud Firestore
+- Firebase Storage
+- Firebase Cloud Messaging
+- MVVM Architecture
+- BLoC
+- Provider
+- Hive
+- Go Router
+
+---
+
+## 📂 Project Structure
+
+```
+lib/
+├── core/
+├── features/
+│   ├── auth/
+│   ├── home/
+│   ├── categories/
+│   ├── search/
+│   ├── cart/
+│   ├── orders/
+│   ├── profile/
+│   ├── dashboard/
+│   └── notifications/
+├── shared/
+└── main.dart
+```
+
+---
+
+## 🚀 Getting Started
+
+### Clone the repository
+
+```bash
+git clone https://github.com/USERNAME/REPOSITORY.git
+```
+
+### Install dependencies
+
+```bash
+flutter pub get
+```
+
+### Run the application
+
+```bash
+flutter run
+```
+
+---
+
+## 📱 Screens
+
+- Splash Screen
+- Authentication
+- Home
+- Categories
+- Search
+- Book Details
+- Cart
+- Checkout
+- Orders
+- Profile
+- Vendor Dashboard
+- Admin Dashboard
+
+---
+
+## 👥 Team
+
+- **Taha Sami** — Team Leader & Flutter Developer
+- Ahmed Ramadan Srour — Flutter Developer
+- Ahmed Basem — Flutter Developer
+- Mariam Saad — Flutter Developer
+- Alsayed Ali — Flutter Developer
+
+---
+
+## 📄 License
+
+This project was developed as a Graduation Project..
