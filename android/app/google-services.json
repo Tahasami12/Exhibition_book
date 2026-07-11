@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "961937741224-kvoie70961a5p1d4p17q7pcivqvup7lj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bazar_book",
+            "certificate_hash": "3754aa909fb0046b608137aff4f1ea9f0ab4b42b"
+          }
+        },
+        {
           "client_id": "961937741224-rh5h8pqd64ptitbqicddidppq2cdnkm5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
