@@ -10,7 +10,7 @@ import '../cubit/auth_state.dart';
 
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/utils/app_strings.dart';
-import '../../../../core/cubit/locale_cubit.dart';
+import 'package:exhibition_book/core/widgets/language_toggle_button.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,14 +47,9 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             automaticallyImplyLeading: false,
-            actions: [
-              IconButton(
-                onPressed: () {
-                  context.read<LocaleCubit>().toggle();
-                },
-                icon: const Icon(Icons.language, color: kPrimaryColor),
-              ),
-              const SizedBox(width: 10),
+            actions: const [
+              LanguageToggleIconButton(color: kPrimaryColor),
+              SizedBox(width: 10),
             ],
           ),
         ),

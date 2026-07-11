@@ -23,7 +23,11 @@ class AppStrings {
   }
 
   static bool isArabic(BuildContext context) {
-    return context.read<LocaleCubit>().state.isArabic;
+    try {
+      return context.watch<LocaleCubit>().state.isArabic;
+    } catch (_) {
+      return context.read<LocaleCubit>().state.isArabic;
+    }
   }
 
   String _t(String en, String ar) => _ar ? ar : en;

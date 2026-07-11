@@ -54,7 +54,8 @@ class LanguageToggleButton extends StatelessWidget {
 
 /// Compact icon button — for AppBar actions
 class LanguageToggleIconButton extends StatelessWidget {
-  const LanguageToggleIconButton({super.key});
+  final Color? color;
+  const LanguageToggleIconButton({super.key, this.color});
 
   @override
   Widget build(BuildContext context) {
@@ -80,11 +81,15 @@ class LanguageToggleIconButton extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(Icons.language, size: 20),
+                  Icon(Icons.language, size: 20, color: color),
                   const SizedBox(width: 4),
                   Text(
                     state.isArabic ? 'EN' : 'AR',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                      color: color,
+                    ),
                   ),
                 ],
               ),

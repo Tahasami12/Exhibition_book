@@ -5,6 +5,7 @@ import 'package:exhibition_book/costants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:exhibition_book/core/widgets/language_toggle_button.dart';
 
 class OnBoarding extends StatefulWidget {
   const OnBoarding({super.key});
@@ -72,7 +73,7 @@ class _OnBoardingState extends State<OnBoarding>
       child: Column(
         children: [
           SizedBox(height: Responsive.responsiveSpacing(context, 12)),
-          _buildSkipButton(t),
+          _buildTopBar(t),
           Expanded(
             flex: 8,
             child: _buildImage(),
@@ -95,7 +96,7 @@ class _OnBoardingState extends State<OnBoarding>
       padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: Column(
         children: [
-          _buildSkipButton(t),
+          _buildTopBar(t),
           Expanded(
             child: Row(
               children: [
@@ -127,23 +128,26 @@ class _OnBoardingState extends State<OnBoarding>
     );
   }
 
-  Widget _buildSkipButton(AppStrings t) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () async {
-          await CacheHelper.setOnboardingSeen();
-          if (mounted) context.go('/login');
-        },
-        child: Text(
-          t.skip,
-          style: GoogleFonts.roboto(
-            fontWeight: FontWeight.w500,
-            fontSize: 16,
-            color: kPrimaryColor,
+  Widget _buildTopBar(AppStrings t) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const LanguageToggleIconButton(color: kPrimaryColor),
+        TextButton(
+          onPressed: () async {
+            await CacheHelper.setOnboardingSeen();
+            if (mounted) context.go('/login');
+          },
+          child: Text(
+            t.skip,
+            style: GoogleFonts.roboto(
+              fontWeight: FontWeight.w500,
+              fontSize: 16,
+              color: kPrimaryColor,
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 
